@@ -10,11 +10,13 @@ public class Pelicula {
 	private ArrayList<Genero> generos;
 	private int añoLanzamiento;
 	private int duracion;
-	private int edadRecomendada;
+	private EdadRecomendada edadRecomendada;
 	private double puntuacionMedia;
+	// Faltan comentarios
+	
 	
 	public Pelicula(String titulo, String director, ArrayList<String> reparto, ArrayList<Genero> generos,
-			int añoLanzamiento, int duracion, int edadRecomendada, double puntuacionMedia) {
+			int añoLanzamiento, int duracion, EdadRecomendada edadRecomendada, double puntuacionMedia) {
 		
 		super();
 		this.titulo = titulo;
@@ -60,7 +62,7 @@ public class Pelicula {
 		return duracion;
 	}
 
-	public int getEdadRecomendada() {
+	public EdadRecomendada getEdadRecomendada() {
 		return edadRecomendada;
 	}
 
