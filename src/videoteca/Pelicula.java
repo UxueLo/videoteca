@@ -63,8 +63,13 @@ public class Pelicula {
 	public int getEdadRecomendada() {
 		return edadRecomendada;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Pelicula [titulo=" + titulo + ", director=" + director + ", reparto=" + reparto + ", generos=" + generos
+				+ ", añoLanzamiento=" + añoLanzamiento + ", duracion=" + duracion + ", edadRecomendada="
+				+ edadRecomendada + ", puntuacionMedia=" + puntuacionMedia + "]";
+	}
 	
 	
 	
