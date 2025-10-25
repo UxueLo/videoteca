@@ -11,8 +11,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class RegistrarFrame extends JFrame{
-	//private JLabel textoIniciarSesion;
-		private JLabel textoIniciarSesion;
+	//private JLabel textoRegistrarse;
+		private JLabel textoRegistrarse;
 		private JLabel labelUsuario;
 		private JLabel labelEmail;
 		private JLabel labelContraseña;
@@ -50,13 +50,13 @@ public class RegistrarFrame extends JFrame{
 			//Crea variable local panelPrincipal
 			JPanel panelPrincipal = (JPanel) getContentPane();
 			
-			//textoIniciarSesion
-			textoIniciarSesion = new JLabel();
-			textoIniciarSesion.setText("REGISTRARSE");
-			textoIniciarSesion.setForeground(colorTexto);
-			textoIniciarSesion.setFont(fuenteTexto);
-			textoIniciarSesion.setBounds(0,40,800,50);;
-			textoIniciarSesion.setHorizontalAlignment(JLabel.CENTER);
+			//textoRegistrarse
+			textoRegistrarse = new JLabel();
+			textoRegistrarse.setText("REGISTRARSE");
+			textoRegistrarse.setForeground(colorTexto);
+			textoRegistrarse.setFont(fuenteTexto);
+			textoRegistrarse.setBounds(0,40,800,50);;
+			textoRegistrarse.setHorizontalAlignment(JLabel.CENTER);
 			
 			//labelUsuario
 			labelUsuario = new JLabel();
@@ -95,7 +95,7 @@ public class RegistrarFrame extends JFrame{
 			contraseña = new JPasswordField();
 			contraseña.setForeground(colorTexto);
 			contraseña.setFont(fuenteTexto);
-			contraseña.setBounds(350,285,220,30);
+			contraseña.setBounds(350,230,430,35);
 			
 			//labelRepetirContraseña
 			labelRepetirContraseña = new JLabel();
@@ -123,24 +123,29 @@ public class RegistrarFrame extends JFrame{
 			fechaNacimiento.setFont(fuenteTexto);
 			fechaNacimiento.setBounds(350,340,430,35);
 			
-			//botonIniciarSesion
+			//botonRegistrarse
 			botonInicarSesion = new JButton();
 			botonInicarSesion.setBackground(colorTexto);
 			botonInicarSesion.setText("Registrarse");
 			botonInicarSesion.setFont(fuenteTexto);
 			botonInicarSesion.setBounds(290,405,220,50);
 			botonInicarSesion.addActionListener(e ->{
-				if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
-					System.out.println("Usuario "+usuario.getText()+" ha iniciado sesión");
-				}else {
+				if(usuario.getText().isBlank() && email.getText().isBlank() &&contraseña.getPassword().length == 0 && 
+						repetirContraseña.getPassword().length == 0 && fechaNacimiento.getText().isBlank()) {
 					System.err.println("Rellena todos los campos, por favor");
+				}else if(!email.getText().contains("@") || !email.getText().contains(".")){
+					System.err.println("Email no valido");
+				}else if (contraseña.getPassword() != repetirContraseña.getPassword()) {
+					System.err.println("Las dos contraseñas no son iguales");
+				}else {
+					System.out.println("Usuario "+usuario.getText()+" ha iniciado sesión");
 				}
 				
 			});
 			
 			
 			//adds
-			panelPrincipal.add(textoIniciarSesion);
+			panelPrincipal.add(textoRegistrarse);
 			panelPrincipal.add(labelUsuario);
 			panelPrincipal.add(usuario);
 			panelPrincipal.add(labelEmail);
