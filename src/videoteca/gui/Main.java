@@ -3,7 +3,6 @@ package videoteca.gui;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
@@ -86,6 +85,8 @@ public class Main {
 //		UsuarioFrame frame = new UsuarioFrame(usuario);
 //		frame.setVisible(true);
 		
+		//Para ir probando Ventana Catalogo
+		new VentanaCatalogo(usuario, peliculas);
 	}
 	
 }
