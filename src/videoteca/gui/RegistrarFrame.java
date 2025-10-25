@@ -55,7 +55,7 @@ public class RegistrarFrame extends JFrame{
 			textoRegistrarse.setText("REGISTRARSE");
 			textoRegistrarse.setForeground(colorTexto);
 			textoRegistrarse.setFont(fuenteTexto);
-			textoRegistrarse.setBounds(0,40,800,50);;
+			textoRegistrarse.setBounds(0,20,800,50);;
 			textoRegistrarse.setHorizontalAlignment(JLabel.CENTER);
 			
 			//labelUsuario
@@ -63,72 +63,72 @@ public class RegistrarFrame extends JFrame{
 			labelUsuario.setText("Usuario: ");
 			labelUsuario.setForeground(colorTexto);
 			labelUsuario.setFont(fuenteTexto);
-			labelUsuario.setBounds(120,120,150,30);;
+			labelUsuario.setBounds(80,90,150,30);;
 			
 			//usuario
 			usuario = new JTextField();
 			usuario.setForeground(colorTexto);
 			usuario.setFont(fuenteTexto);
-			usuario.setBounds(350,120,430,35);
+			usuario.setBounds(310,90,430,35);
 			
 			//labelEmail
 			labelEmail = new JLabel();
 			labelEmail.setText("Email: ");
 			labelEmail.setForeground(colorTexto);
 			labelEmail.setFont(fuenteTexto);
-			labelEmail.setBounds(120,175,150,30);;
+			labelEmail.setBounds(80,140,150,30);;
 			
 			//email
 			email = new JTextField();
 			email.setForeground(colorTexto);
 			email.setFont(fuenteTexto);
-			email.setBounds(350,175,430,35);
+			email.setBounds(310,140,430,35);
 			
 			//labelContraseña
 			labelContraseña = new JLabel();
 			labelContraseña.setText("Contraseña: ");
 			labelContraseña.setForeground(colorTexto);
 			labelContraseña.setFont(fuenteTexto);
-			labelContraseña.setBounds(120,230,200,30);;
+			labelContraseña.setBounds(80,190,200,30);;
 			
 			//contraseña
 			contraseña = new JPasswordField();
 			contraseña.setForeground(colorTexto);
 			contraseña.setFont(fuenteTexto);
-			contraseña.setBounds(350,230,430,35);
+			contraseña.setBounds(310,190,430,35);
 			
 			//labelRepetirContraseña
 			labelRepetirContraseña = new JLabel();
 			labelRepetirContraseña.setText("Repetir Contraseña: ");
 			labelRepetirContraseña.setForeground(colorTexto);
 			labelRepetirContraseña.setFont(fuenteTexto);
-			labelRepetirContraseña.setBounds(120,285,220,20);
+			labelRepetirContraseña.setBounds(80,240,220,30);
 			
 			//repetirContraseña
 			repetirContraseña = new JPasswordField();
 			repetirContraseña.setForeground(colorTexto);
 			repetirContraseña.setFont(fuenteTexto);
-			repetirContraseña.setBounds(350,285,430,35);
+			repetirContraseña.setBounds(310,240,430,35);
 			
 			//labelfechaNacimiento
 			labelFechaNacimiento = new JLabel();
 			labelFechaNacimiento.setText("Fecha Nacimiento: ");
 			labelFechaNacimiento.setForeground(colorTexto);
 			labelFechaNacimiento.setFont(fuenteTexto);
-			labelFechaNacimiento.setBounds(120,340,230,30);;
+			labelFechaNacimiento.setBounds(80,290,230,30);;
 			
 			//fechaNacimiento
 			fechaNacimiento = new JTextField();
 			fechaNacimiento.setForeground(colorTexto);
 			fechaNacimiento.setFont(fuenteTexto);
-			fechaNacimiento.setBounds(350,340,430,35);
+			fechaNacimiento.setBounds(310,290,430,35);
 			
 			//botonRegistrarse
 			botonInicarSesion = new JButton();
 			botonInicarSesion.setBackground(colorTexto);
 			botonInicarSesion.setText("Registrarse");
 			botonInicarSesion.setFont(fuenteTexto);
-			botonInicarSesion.setBounds(290,405,220,50);
+			botonInicarSesion.setBounds(310,350,220,50);
 			botonInicarSesion.addActionListener(e ->{
 				if(usuario.getText().isBlank() && email.getText().isBlank() &&contraseña.getPassword().length == 0 && 
 						repetirContraseña.getPassword().length == 0 && fechaNacimiento.getText().isBlank()) {
