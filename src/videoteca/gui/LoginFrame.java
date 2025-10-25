@@ -16,7 +16,7 @@ public class LoginFrame extends JFrame{
 	private JLabel textoIniciarSesion;
 	private JLabel labelUsuario;
 	private JLabel labelContraseña;
-	private JTextField nombreUsuario;
+	private JTextField usuario;
 	private JPasswordField contraseña;
 	private JButton botonInicarSesion;
 	private Color colorTexto = new Color(204,0,0);
@@ -60,11 +60,11 @@ public class LoginFrame extends JFrame{
 		labelUsuario.setFont(fuenteTexto);
 		labelUsuario.setBounds(80,120,150,40);;
 		
-		//nombreUsuario
-		nombreUsuario = new JTextField();
-		nombreUsuario.setForeground(colorTexto);
-		nombreUsuario.setFont(fuenteTexto);
-		nombreUsuario.setBounds(240,120,480,40);
+		//usuario
+		usuario = new JTextField();
+		usuario.setForeground(colorTexto);
+		usuario.setFont(fuenteTexto);
+		usuario.setBounds(240,120,480,40);
 		
 		//labelContraseña
 		labelContraseña = new JLabel();
@@ -73,7 +73,7 @@ public class LoginFrame extends JFrame{
 		labelContraseña.setFont(fuenteTexto);
 		labelContraseña.setBounds(80,200,200,40);;
 		
-		//nombreUsuario
+		//contraseña
 		contraseña = new JPasswordField();
 		contraseña.setForeground(colorTexto);
 		contraseña.setFont(fuenteTexto);
@@ -86,8 +86,8 @@ public class LoginFrame extends JFrame{
 		botonInicarSesion.setFont(fuenteTexto);
 		botonInicarSesion.setBounds(290,290,220,60);
 		botonInicarSesion.addActionListener(e ->{
-			if(!nombreUsuario.getText().isBlank() && contraseña.getPassword().length > 0) {
-				System.out.println("Usuario "+nombreUsuario.getText()+" ha iniciado sesión");
+			if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
+				System.out.println("Usuario "+usuario.getText()+" ha iniciado sesión");
 			}else {
 				System.err.println("Rellena todos los campos, por favor");
 			}
@@ -98,7 +98,7 @@ public class LoginFrame extends JFrame{
 		//adds
 		panelPrincipal.add(textoIniciarSesion);
 		panelPrincipal.add(labelUsuario);
-		panelPrincipal.add(nombreUsuario);
+		panelPrincipal.add(usuario);
 		panelPrincipal.add(labelContraseña);
 		panelPrincipal.add(contraseña);
 		panelPrincipal.add(botonInicarSesion);
