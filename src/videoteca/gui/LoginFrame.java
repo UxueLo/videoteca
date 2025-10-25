@@ -26,7 +26,7 @@ public class LoginFrame extends JFrame{
 	public LoginFrame() {
 		setTitle("Iniciar Sesión");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(800,400);
+		setSize(800,500);
 		setLocationRelativeTo(null);
 		
 		//panel principal
@@ -42,12 +42,15 @@ public class LoginFrame extends JFrame{
 
 	private void inicializarPanel() {
 		
+		//Crea variable local panelPrincipal
+		JPanel panelPrincipal = (JPanel) getContentPane();
+		
 		//textoIniciarSesion
 		textoIniciarSesion = new JLabel();
 		textoIniciarSesion.setText("INICIAR SESION");
 		textoIniciarSesion.setForeground(colorTexto);
 		textoIniciarSesion.setFont(fuenteTexto);
-		textoIniciarSesion.setBounds(0,60,800,50);;
+		textoIniciarSesion.setBounds(0,30,800,50);;
 		textoIniciarSesion.setHorizontalAlignment(JLabel.CENTER);
 		
 		//labelUsuario
@@ -55,19 +58,42 @@ public class LoginFrame extends JFrame{
 		labelUsuario.setText("Usuario: ");
 		labelUsuario.setForeground(colorTexto);
 		labelUsuario.setFont(fuenteTexto);
-		labelUsuario.setBounds(160,200,150,40);;
+		labelUsuario.setBounds(80,120,150,40);;
 		
 		//nombreUsuario
 		nombreUsuario = new JTextField();
 		nombreUsuario.setForeground(colorTexto);
 		nombreUsuario.setFont(fuenteTexto);
-		nombreUsuario.setBounds(380,200,400,40);
+		nombreUsuario.setBounds(240,120,480,40);
+		
+		//labelContraseña
+		labelContraseña = new JLabel();
+		labelContraseña.setText("Contraseña: ");
+		labelContraseña.setForeground(colorTexto);
+		labelContraseña.setFont(fuenteTexto);
+		labelContraseña.setBounds(80,200,200,40);;
+		
+		//nombreUsuario
+		contraseña = new JPasswordField();
+		contraseña.setForeground(colorTexto);
+		contraseña.setFont(fuenteTexto);
+		contraseña.setBounds(240,200,480,40);
+		
+		//botonIniciarSesion
+		botonInicarSesion = new JButton();
+		botonInicarSesion.setBackground(colorTexto);
+		botonInicarSesion.setText("Iniciar Sesión");
+		botonInicarSesion.setFont(fuenteTexto);
+		botonInicarSesion.setBounds(290,290,220,60);
 		
 		
 		//adds
 		panelPrincipal.add(textoIniciarSesion);
-		this.add(labelUsuario);
-		this.add(nombreUsuario);
+		panelPrincipal.add(labelUsuario);
+		panelPrincipal.add(nombreUsuario);
+		panelPrincipal.add(labelContraseña);
+		panelPrincipal.add(contraseña);
+		panelPrincipal.add(botonInicarSesion);
 	}
 	
 }
