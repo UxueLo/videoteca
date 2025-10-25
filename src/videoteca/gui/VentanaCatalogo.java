@@ -103,30 +103,20 @@ public class VentanaCatalogo extends JFrame {
             ImageIcon icon = archivo.exists() ? new ImageIcon(ruta) : new ImageIcon("images/default.jpg");
             lblImg.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH)));
 
-            // Título y edad
+            // Título 
             JLabel lblTitulo = new JLabel(p.getTitulo(), SwingConstants.CENTER);
             lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
             lblTitulo.setForeground(Color.WHITE);
             lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
             lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
 
-            JLabel lblEdad = new JLabel(p.getEdadRecomendada().toString(), SwingConstants.CENTER);
-            lblEdad.setFont(new Font("SansSerif", Font.BOLD, 12));
-            lblEdad.setForeground(Color.LIGHT_GRAY);
-            lblEdad.setAlignmentX(CENTER_ALIGNMENT);
-
+        
             JButton btnCarrito = new JButton("🛒 Añadir al carrito");
             estiloBotonRojo(btnCarrito);
             btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
             btnCarrito.addActionListener(e -> agregarAlCarrito(p));
 
-            if (p.getEdadRecomendada() == EdadRecomendada.PLUS18) {
-                JLabel lbl18 = new JLabel("🔞");
-                lbl18.setFont(new Font("SansSerif", Font.BOLD, 20));
-                lbl18.setForeground(Color.RED);
-                lbl18.setAlignmentX(CENTER_ALIGNMENT);
-                card.add(lbl18);
-            }
+
 
          // Click en la película → abrir ventana de detalles 
             card.addMouseListener(new MouseAdapter() { 
@@ -146,7 +136,20 @@ public class VentanaCatalogo extends JFrame {
             card.add(lblImg);
             card.add(Box.createVerticalStrut(5));
             card.add(lblTitulo);
-            card.add(lblEdad);
+            // Edad solo si es PLUS18
+            if (p.getEdadRecomendada() == EdadRecomendada.PLUS18) {
+                JLabel lblEdad = new JLabel(p.getEdadRecomendada().toString(), SwingConstants.CENTER);
+                lblEdad.setFont(new Font("SansSerif", Font.BOLD, 12));
+                lblEdad.setForeground(Color.LIGHT_GRAY);
+                lblEdad.setAlignmentX(CENTER_ALIGNMENT);
+                card.add(lblEdad);
+
+                JLabel lbl18 = new JLabel("🔞");
+                lbl18.setFont(new Font("SansSerif", Font.BOLD, 20));
+                lbl18.setForeground(Color.RED);
+                lbl18.setAlignmentX(CENTER_ALIGNMENT);
+                card.add(lbl18);
+            }
             card.add(Box.createVerticalStrut(10));
             card.add(btnCarrito);
 
