@@ -61,7 +61,6 @@ public class UsuarioFrame extends JFrame{
 	}
 
 	private void inicializarTablaPeliculas() {
-		// TODO Auto-generated method stub
 		
 	}
 
