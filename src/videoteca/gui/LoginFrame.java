@@ -1,4 +1,4 @@
-package videoteca;
+package videoteca.gui;
 
 import java.awt.Color;
 
@@ -23,7 +23,6 @@ public class LoginFrame extends JFrame{
 		setLocationRelativeTo(null);
 		getContentPane().setBackground(new Color(96, 96, 96));
 		setOpacity(1f);
-		
 		
 		//Llama a constructor de objetos
 		inicializarPanel();

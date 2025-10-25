@@ -1,4 +1,4 @@
-package videoteca;
+package videoteca.domain;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

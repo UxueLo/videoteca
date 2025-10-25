@@ -1,4 +1,4 @@
-package videoteca;
+package videoteca.domain;
 
 public enum Genero {
 	ACCION, AVENTURA, COMEDIA, DRAMA, TERROR, CIENCIA_FICCION, FANTASIA, DOCUMENTAL, THRILLER, CRIMEN, POLICIACA, ROMACE,

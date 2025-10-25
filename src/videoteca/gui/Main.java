@@ -1,4 +1,4 @@
-package videoteca;
+package videoteca.gui;
 
 public class Main {
 

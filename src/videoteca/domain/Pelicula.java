@@ -1,4 +1,4 @@
-package videoteca;
+package videoteca.domain;
 
 import java.util.ArrayList;
 
