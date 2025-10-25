@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.ImageIcon;
+
 import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
@@ -76,11 +78,11 @@ public class Main {
 		peliculas.add(new Pelicula("Mission Impossible", "Brian De Palma", new ArrayList<>(Arrays.asList("Tom Cruise", "Jon Voight", "Emmanuelle Béart")), new ArrayList<>(Arrays.asList(Genero.ACCION, Genero.THRILLER)), 1996, 110, EdadRecomendada.PLUS13, 7.1));
 		peliculas.add(new Pelicula("James Bond", "Martin Campbell", new ArrayList<>(Arrays.asList("Daniel Craig", "Eva Green", "Mads Mikkelsen")), new ArrayList<>(Arrays.asList(Genero.ACCION, Genero.THRILLER)), 2006, 144, EdadRecomendada.PLUS13, 8.0));
 		peliculas.add(new Pelicula("Wonder Woman", "Patty Jenkins", new ArrayList<>(Arrays.asList("Gal Gadot", "Chris Pine", "Robin Wright")), new ArrayList<>(Arrays.asList(Genero.ACCION, Genero.AVENTURA)), 2017, 141, EdadRecomendada.PLUS13, 7.4));
-
+		
 		
 		//Prueba del Frame Principal
 		Usuario usuario= new Usuario("Nerea", "nerea.f.m@opendeusto.es", 19, LocalDate.of(1, 1, 1), "1234");
-		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario);
+		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
 		//Para ir probando los JFrames
 //		UsuarioFrame frame = new UsuarioFrame(usuario);

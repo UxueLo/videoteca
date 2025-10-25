@@ -2,6 +2,8 @@ package videoteca.domain;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
 public class Pelicula {
 	
 	private String titulo;
@@ -10,6 +12,7 @@ public class Pelicula {
 	private ArrayList<Genero> generos;
 	private int añoLanzamiento;
 	private int duracion;
+	private ImageIcon poster;
 	private EdadRecomendada edadRecomendada;
 	private double puntuacionMedia;
 	// Faltan comentarios
@@ -19,6 +22,7 @@ public class Pelicula {
 			int añoLanzamiento, int duracion, EdadRecomendada edadRecomendada, double puntuacionMedia) {
 		
 		super();
+		this.poster=new ImageIcon("Images/iconoUsuario.png");
 		this.titulo = titulo;
 		this.director = director;
 		this.reparto = reparto;
@@ -29,6 +33,17 @@ public class Pelicula {
 		this.puntuacionMedia = puntuacionMedia;
 		
 	}
+	
+
+	public ImageIcon getPoster() {
+		return poster;
+	}
+
+
+	public void setPoster(ImageIcon poster) {
+		this.poster = poster;
+	}
+
 
 	public double getPuntuacionMedia() {
 		return puntuacionMedia;
@@ -66,12 +81,14 @@ public class Pelicula {
 		return edadRecomendada;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Pelicula [titulo=" + titulo + ", director=" + director + ", reparto=" + reparto + ", generos=" + generos
-				+ ", añoLanzamiento=" + añoLanzamiento + ", duracion=" + duracion + ", edadRecomendada="
-				+ edadRecomendada + ", puntuacionMedia=" + puntuacionMedia + "]";
+				+ ", añoLanzamiento=" + añoLanzamiento + ", duracion=" + duracion + ", poster=" + poster
+				+ ", edadRecomendada=" + edadRecomendada + ", puntuacionMedia=" + puntuacionMedia + "]";
 	}
+
 	
 	
 }
