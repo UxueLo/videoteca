@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
 
@@ -39,7 +40,8 @@ public class UsuarioFrame extends JFrame{
 		panelUsuario.setLayout(null);
 		panelUsuario.setBackground(new Color(96, 96, 96));
 		panelUsuario.setOpaque(true);
-		setContentPane(panelUsuario);
+		panelUsuario.setPreferredSize(new Dimension(800, 100));
+
 		
 		inicializarPanelUsuario();
 		
@@ -66,16 +68,20 @@ public class UsuarioFrame extends JFrame{
 	private void inicializarPanelUsuario() {
 		
 		//Icono usuario
-		ImageIcon iconoUsuario = new ImageIcon("Images/user");
+		ImageIcon iconoUsuario = new ImageIcon("Images/iconoUsuario.jpg");
 		JLabel labelIconoUsuario = new JLabel();
 		labelIconoUsuario.setIcon(iconoUsuario);
-		labelIconoUsuario.setBounds(getBounds());
+		labelIconoUsuario.setBounds(10,5,50,50);
 		
 		//Labels datos usuario
-		JLabel holaUsuario = new JLabel("Hola!"+this.usuario.getNombre());
-		holaUsuario.setBounds(350,10,100,20);
+		JLabel holaUsuario = new JLabel("Hola! "+this.usuario.getNombre());
+		holaUsuario.setBounds(350,10,200,20);
+		holaUsuario.setForeground(colorTexto);
+		holaUsuario.setFont(fuenteTexto);
 		JLabel saldoUsuario = new JLabel("Saldo: "+this.usuario.getSaldo());
-		saldoUsuario.setBounds(350,35,100,20);
+		saldoUsuario.setBounds(350,50,200,20);
+		saldoUsuario.setForeground(colorTexto);
+		saldoUsuario.setFont(fuenteTexto);
 		
 		//adds
 		this.panelUsuario.add(labelIconoUsuario);
