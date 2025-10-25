@@ -36,7 +36,7 @@ public class VentanaCatalogo extends JFrame {
         // --- PANEL SUPERIOR ---
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelFiltros.setBackground(Color.BLACK);
-        panelFiltros.setBorder(new MatteBorder(0, 0, 2, 0, new Color(180, 0, 0)));
+        
 
         comboGenero = new JComboBox<>(Genero.values());
         comboGenero.insertItemAt(null, 0);
