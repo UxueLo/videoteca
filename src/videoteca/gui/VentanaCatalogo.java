@@ -27,7 +27,7 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void inicializarVentana() {
-        setTitle("🎬 Catálogo de Películas");
+        setTitle("Catálogo de Películas");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -58,12 +58,12 @@ public class VentanaCatalogo extends JFrame {
         estiloBotonRojo(btnCarrito);
         btnCarrito.addActionListener(e -> abrirCarrito());
 
-        JLabel lblGenero = new JLabel("🎭 Género:");
+        JLabel lblGenero = new JLabel("Género:");
         lblGenero.setForeground(Color.WHITE);
         panelFiltros.add(lblGenero);
         panelFiltros.add(comboGenero);
 
-        JLabel lblEdad = new JLabel("🔞 Edad Recomendada:");
+        JLabel lblEdad = new JLabel("Edad Recomendada:");
         lblEdad.setForeground(Color.WHITE);
         panelFiltros.add(lblEdad);
         panelFiltros.add(comboEdad);
