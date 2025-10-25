@@ -68,10 +68,10 @@ public class UsuarioFrame extends JFrame{
 	private void inicializarPanelUsuario() {
 		
 		//Icono usuario
-		ImageIcon iconoUsuario = new ImageIcon("Images/iconoUsuario.jpg");
+		ImageIcon iconoUsuario = new ImageIcon("Images/iconoUsuario.png");
 		JLabel labelIconoUsuario = new JLabel();
 		labelIconoUsuario.setIcon(iconoUsuario);
-		labelIconoUsuario.setBounds(10,5,50,50);
+		labelIconoUsuario.setBounds(10,5,70,70);
 		
 		//Labels datos usuario
 		JLabel holaUsuario = new JLabel("Hola! "+this.usuario.getNombre());
