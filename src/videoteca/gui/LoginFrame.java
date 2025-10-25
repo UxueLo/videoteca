@@ -85,6 +85,14 @@ public class LoginFrame extends JFrame{
 		botonInicarSesion.setText("Iniciar Sesión");
 		botonInicarSesion.setFont(fuenteTexto);
 		botonInicarSesion.setBounds(290,290,220,60);
+		botonInicarSesion.addActionListener(e ->{
+			if(!nombreUsuario.getText().isBlank() && contraseña.getPassword().length > 0) {
+				System.out.println("Usuario "+nombreUsuario.getText()+" ha iniciado sesión");
+			}else {
+				System.err.println("Rellena todos los campos, por favor");
+			}
+			
+		});
 		
 		
 		//adds
