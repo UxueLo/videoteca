@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import videoteca.domain.Usuario;
 
@@ -22,7 +23,6 @@ public class VentanaInicioFrame extends JFrame{
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //abrirlo en pantalla completa
 		setResizable(false); //siempre estara en pantalla completa
 		getContentPane().setBackground(new Color(32,32,32)); //cambiar el fondo
-		
 		
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout
@@ -42,6 +42,7 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel peliculas= new JPanel();
 		centro.add(peliculas, BorderLayout.CENTER);
 		peliculas.setBackground(new Color(32,32,32));
+		JScrollPane scrollPeliculas= new JScrollPane(peliculas);
 		
 		//menu del lado
 		JPanel menu = new JPanel();
