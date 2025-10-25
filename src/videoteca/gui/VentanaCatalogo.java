@@ -138,12 +138,6 @@ public class VentanaCatalogo extends JFrame {
             card.add(lblTitulo);
             // Edad solo si es PLUS18
             if (p.getEdadRecomendada() == EdadRecomendada.PLUS18) {
-                JLabel lblEdad = new JLabel(p.getEdadRecomendada().toString(), SwingConstants.CENTER);
-                lblEdad.setFont(new Font("SansSerif", Font.BOLD, 12));
-                lblEdad.setForeground(Color.LIGHT_GRAY);
-                lblEdad.setAlignmentX(CENTER_ALIGNMENT);
-                card.add(lblEdad);
-
                 JLabel lbl18 = new JLabel("🔞");
                 lbl18.setFont(new Font("SansSerif", Font.BOLD, 20));
                 lbl18.setForeground(Color.RED);
