@@ -138,7 +138,7 @@ public class VentanaCatalogo extends JFrame {
             card.add(lblTitulo);
             
          // Precio 
-            JLabel lblPrecio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()), SwingConstants.CENTER);
+            JLabel lblPrecio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
             lblPrecio.setFont(new Font("SansSerif", Font.BOLD, 13));
             lblPrecio.setForeground(Color.WHITE);
             lblPrecio.setAlignmentX(CENTER_ALIGNMENT);
