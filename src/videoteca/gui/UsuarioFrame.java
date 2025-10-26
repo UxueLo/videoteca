@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,6 +36,13 @@ public class UsuarioFrame extends JFrame{
 	private Color colorTexto = new Color(204,0,0);
 	private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,30);
 	private DefaultTableModel modeloTablaPeliculas;
+	private JLabel labelTitulo;
+	private JLabel labelTituloPelicula;
+	private JLabel labelDirector;
+	private JLabel labelDirectorPelicula;
+	private JLabel labelFechaEstreno;
+	private JButton botonReseñar;
+
 
 
 	public UsuarioFrame(Usuario usuario) {
@@ -67,9 +76,9 @@ public class UsuarioFrame extends JFrame{
 		//panel Pelicula
 		panelPelicula = new JPanel();
 		panelPelicula.setLayout(null);
-		panelPelicula.setBackground(new Color(96, 96, 96));
+		panelPelicula.setBackground(new Color(128,128,128));
 		panelPelicula.setOpaque(true);
-		panelPelicula.setVisible(false);
+		panelPelicula.setBounds(20, 240, 740, 85);
 
 		
 		//crear table model
@@ -120,13 +129,14 @@ public class UsuarioFrame extends JFrame{
 		//Insertar tabla Peliculas en un scrollPane
 		JScrollPane scrollPanePeliculas = new JScrollPane(this.tablaPeliculas);
 		scrollPanePeliculas.setBorder(new TitledBorder("Tus Reservas: "));
+		scrollPanePeliculas.setBounds(20, 20, 740, 200);
 		
 		//cargar Peliculas
 		cargarPeliculas();
 		
 		//adds
-		panelCentral.add(scrollPanePeliculas,JPanel.TOP_ALIGNMENT);
-		panelCentral.add(panelPelicula,JPanel.BOTTOM_ALIGNMENT);
+		panelCentral.add(scrollPanePeliculas);
+		panelCentral.add(panelPelicula);
         this.add(panelUsuario, BorderLayout.NORTH);
         this.add(panelCentral, BorderLayout.CENTER);
 
@@ -134,20 +144,84 @@ public class UsuarioFrame extends JFrame{
 	
 	private void pintarDatosPelicula(Pelicula p) {
 		
-		//Label titulo
-		//label director
-		//label fecha estreno
+		panelPelicula.setVisible(true);
+		panelPelicula.removeAll();
+		Font fuenteDatos = new Font("Times New Roman",Font.BOLD,20);
+		
+		Font fuenteTituloDato = new Font("Times New Roman", Font.BOLD, 14); // fuente descriptiva
+	    Font fuenteValorDato = new Font("Times New Roman", Font.PLAIN, 16); // fuente de valor
+
+	    Color colorDescripcion = Color.BLACK; // para diferenciar los títulos
+	    Color colorValor = colorTexto;        // rojo oscuro para los datos
+
+	    // labelTitulo
+	    JLabel labelTitulo= new JLabel("Título:");
+	    labelTitulo.setForeground(colorDescripcion);
+	    labelTitulo.setFont(fuenteTituloDato);
+	    labelTitulo.setBounds(20, 5, 200, 20);
+
+	    // labeltituloPelicula
+	    labelTituloPelicula = new JLabel(p.getTitulo());
+	    labelTituloPelicula.setForeground(colorValor);
+	    labelTituloPelicula.setFont(fuenteValorDato);
+	    labelTituloPelicula.setBounds(20, 25, 200, 30);
+
+	    // labelDirector
+	    JLabel labelDirector = new JLabel("Director:");
+	    labelDirector.setForeground(colorDescripcion);
+	    labelDirector.setFont(fuenteTituloDato);
+	    labelDirector.setBounds(250, 5, 200, 20);
+
+	    // labelDirectorPelicula
+	    labelDirectorPelicula = new JLabel(p.getDirector());
+	    labelDirectorPelicula.setForeground(colorValor);
+	    labelDirectorPelicula.setFont(fuenteValorDato);
+	    labelDirectorPelicula.setBounds(250, 25, 200, 30);
+
+	    // labelFecha
+	    JLabel labelFecha = new JLabel("Año:");
+	    labelFecha.setForeground(colorDescripcion);
+	    labelFecha.setFont(fuenteTituloDato);
+	    labelFecha.setBounds(480, 5, 80, 20);
+
+	    // labelFechaEstreno
+	    labelFechaEstreno = new JLabel(String.valueOf(p.getAñoLanzamiento()));
+	    labelFechaEstreno.setForeground(colorValor);
+	    labelFechaEstreno.setFont(fuenteValorDato);
+	    labelFechaEstreno.setBounds(480, 25, 80, 30);
+		
 		//boton reseñar
+		botonReseñar = new JButton();
+		botonReseñar.setBackground(colorTexto);
+		botonReseñar.setText("Reseñar");
+		botonReseñar.setFont(fuenteDatos);
+		botonReseñar.addActionListener(e ->{
+			System.out.println("Reseña hecha");
+		});
+		botonReseñar.setBounds(600, 25, 120, 30);
+		
 		//adds
+	    panelPelicula.add(labelTitulo);
+	    panelPelicula.add(labelTituloPelicula);
+	    panelPelicula.add(labelDirector);
+	    panelPelicula.add(labelDirectorPelicula);
+	    panelPelicula.add(labelFecha);
+	    panelPelicula.add(labelFechaEstreno);
+	    panelPelicula.add(botonReseñar);
+		//volver a pintar panel
+		panelPelicula.revalidate();
+		panelPelicula.repaint();
 		
 	}
 
 	private void ocultarDatosPelicula() {
-		panelPelicula.setSize(new Dimension(0,0));
 		panelPelicula.setVisible(false);
 	}
 
 	private void cargarPeliculas() {
+	    modeloTablaPeliculas.setColumnIdentifiers(new Object[] {
+	            "Título", "Fecha de Reserva", "Fecha de Devolución"
+	        });
 		
 		ArrayList<Reserva> listaReservas = usuario.getPeliculasAlquiladas();
 		for(Reserva r : listaReservas) {

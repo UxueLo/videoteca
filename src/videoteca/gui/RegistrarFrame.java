@@ -23,7 +23,7 @@ public class RegistrarFrame extends JFrame{
 		private JPasswordField contraseña;
 		private JPasswordField repetirContraseña;
 		private JTextField fechaNacimiento; //Cambiar por calendario 
-		private JButton botonInicarSesion;
+		private JButton botonIniciarSesion;
 		private Color colorTexto = new Color(204,0,0);
 		private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,20);
 		
@@ -124,12 +124,12 @@ public class RegistrarFrame extends JFrame{
 			fechaNacimiento.setBounds(310,290,430,35);
 			
 			//botonRegistrarse
-			botonInicarSesion = new JButton();
-			botonInicarSesion.setBackground(colorTexto);
-			botonInicarSesion.setText("Registrarse");
-			botonInicarSesion.setFont(fuenteTexto);
-			botonInicarSesion.setBounds(310,350,220,50);
-			botonInicarSesion.addActionListener(e ->{
+			botonIniciarSesion = new JButton();
+			botonIniciarSesion.setBackground(colorTexto);
+			botonIniciarSesion.setText("Registrarse");
+			botonIniciarSesion.setFont(fuenteTexto);
+			botonIniciarSesion.setBounds(310,350,220,50);
+			botonIniciarSesion.addActionListener(e ->{
 				if(usuario.getText().isBlank() && email.getText().isBlank() &&contraseña.getPassword().length == 0 && 
 						repetirContraseña.getPassword().length == 0 && fechaNacimiento.getText().isBlank()) {
 					System.err.println("Rellena todos los campos, por favor");
@@ -156,7 +156,7 @@ public class RegistrarFrame extends JFrame{
 			panelPrincipal.add(repetirContraseña);
 			panelPrincipal.add(labelFechaNacimiento);
 			panelPrincipal.add(fechaNacimiento);
-			panelPrincipal.add(botonInicarSesion);
+			panelPrincipal.add(botonIniciarSesion);
 		}
 		
 	}

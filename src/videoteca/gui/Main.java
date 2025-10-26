@@ -86,7 +86,7 @@ public class Main {
 		
 		//Prueba UsuarioFrame
 		for (Pelicula p : peliculas) {
-			Reserva reserva = new Reserva(p,LocalDate.of(1, 1, 1));
+			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
 			usuario.addrReserva(reserva);
 		}
 		UsuarioFrame frame = new UsuarioFrame(usuario);
