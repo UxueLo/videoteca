@@ -14,6 +14,12 @@ public class Reserva {
 		this.fechaReserva = fechaReserva;
 		this.fechaDevolucion = fechaDevolucion;
 	}
+	
+	public Reserva(Pelicula pelicula, LocalDate fechaReserva) {
+		this.pelicula = pelicula;
+		this.fechaReserva = fechaReserva;
+		this.fechaDevolucion = fechaReserva.plusDays(15);
+	}
 
 	// Getters
 	public Pelicula getPelicula() {

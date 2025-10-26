@@ -58,5 +58,10 @@ public class Usuario {
 		return peliculasAlquiladas;
 	}
 	
+	//metodos
+	public void addrReserva(Reserva reserva) {
+		this.peliculasAlquiladas.add(reserva);
+	}
+	
 	
 }

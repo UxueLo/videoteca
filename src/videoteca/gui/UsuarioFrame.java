@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -18,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
 public class UsuarioFrame extends JFrame{
@@ -50,14 +52,21 @@ public class UsuarioFrame extends JFrame{
 		
 		inicializarPanelUsuario();
 		
+		//crear table model
+		DefaultTableModel modeloTablaPeliculas = new DefaultTableModel() {
+			  @Override
+			    public boolean isCellEditable(int row, int column) {
+			        return false;
+			    }
+		};
+		modeloTablaPeliculas.setColumnIdentifiers(new Vector<String>(Arrays.asList("Título","Fecha Reserva","Fecha Caducidad")));
+		
 		//JTables central
-		tablaPeliculas = new JTable();
+		tablaPeliculas = new JTable(modeloTablaPeliculas);
 		
 		//Insertar tabla Peliculas en un scrollPane
 		JScrollPane scrollPanePeliculas = new JScrollPane(this.tablaPeliculas);
 		scrollPanePeliculas.setBorder(new TitledBorder("Tus Reservas: "));
-		
-		inicializarTablaPeliculas();
 		
 		//cargar Peliculas
 		cargarPeliculas();
@@ -69,32 +78,14 @@ public class UsuarioFrame extends JFrame{
 	}
 
 	private void cargarPeliculas() {
-		//Se borran los datos del modelo de datos
-		this.modeloDatosPeliculas.setRowCount(0);
-		//Se añaden los comics uno a uno al modelo de datos
-		this.usuario.getPeliculasAlquiladas().forEach(r -> this.modeloDatosPeliculas.addRow(
-				new Object[] {r.getPelicula().getDirector(),r.getPelicula().getGeneros(),""} )
-		);
+		
+		ArrayList<Reserva> listaReservas = usuario.getPeliculasAlquiladas();
+		for(Reserva r : listaReservas) {
+			modeloDatosPeliculas.addRow(new Object[] {r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
+		}
 
 	}
 
-	private void inicializarTablaPeliculas() {
-		
-		//Cabecera del modelo de datos
-		Vector<String> cabeceraPeliculas = new Vector<String>(Arrays.asList( "TITULO", "DIRECTOR", "GENERO", "RESEÑAR"));
-		//Se crea el modelo de datos para la tabla de peliculas sólo con la cabecera
-		this.modeloDatosPeliculas = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPeliculas);
-		//Se crea la tabla de peliculas con el modelo de datos
-		this.tablaPeliculas = new JTable(this.modeloDatosPeliculas);
-		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
-		this.tablaPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//Se define el comportamiento el evento de selección de una fila de la tabla
-		this.tablaPeliculas.getSelectionModel().addListSelectionListener(e -> {
-			//Cuando se selecciona una fila, se actualiza la tabla de personajes
-			
-		});
-		
-	}
 
 	private void inicializarPanelUsuario() {
 		

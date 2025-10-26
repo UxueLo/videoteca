@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
+import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
 public class Main {
@@ -81,14 +82,18 @@ public class Main {
 		
 		//Prueba del Frame Principal
 		Usuario usuario= new Usuario("Nerea", "nerea.f.m@opendeusto.es", 19, LocalDate.of(1, 1, 1), "1234");
-		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
+		//VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
-		//Para ir probando los JFrames
-//		UsuarioFrame frame = new UsuarioFrame(usuario);
-//		frame.setVisible(true);
+		//Prueba UsuarioFrame
+		for (Pelicula p : peliculas) {
+			Reserva reserva = new Reserva(p,LocalDate.of(1, 1, 1));
+			usuario.addrReserva(reserva);
+		}
+		UsuarioFrame frame = new UsuarioFrame(usuario);
+		frame.setVisible(true);
 		
 		//Para ir probando Ventana Catalogo
-		new VentanaCatalogo(usuario, peliculas);
+		//new VentanaCatalogo(usuario, peliculas);
 	}
 	
 }
