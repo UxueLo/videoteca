@@ -17,8 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
@@ -28,7 +31,7 @@ public class UsuarioFrame extends JFrame{
 	private JTable tablaPeliculas;
 	private Color colorTexto = new Color(204,0,0);
 	private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,30);
-	private DefaultTableModel modeloDatosPeliculas;
+	private DefaultTableModel modeloTablaPeliculas;
 
 	public UsuarioFrame(Usuario usuario) {
 		
@@ -47,19 +50,57 @@ public class UsuarioFrame extends JFrame{
 		panelUsuario.setLayout(null);
 		panelUsuario.setBackground(new Color(96, 96, 96));
 		panelUsuario.setOpaque(true);
-		panelUsuario.setPreferredSize(new Dimension(800, 150));
+		panelUsuario.setPreferredSize(new Dimension(800, 115));
 
 		
 		inicializarPanelUsuario();
 		
 		//crear table model
-		DefaultTableModel modeloTablaPeliculas = new DefaultTableModel() {
+		this.modeloTablaPeliculas = new DefaultTableModel() {
 			  @Override
 			    public boolean isCellEditable(int row, int column) {
 			        return false;
 			    }
 		};
 		modeloTablaPeliculas.setColumnIdentifiers(new Vector<String>(Arrays.asList("Título","Fecha Reserva","Fecha Caducidad")));
+		
+			//metodo para saber que pelicula esta seleccionada
+		ListSelectionModel listSelecionPelicula=  tablaPeliculas.getSelectionModel();
+		listSelecionPelicula.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// Evitar duplicados
+				if (e.getValueIsAdjusting()) {
+					return;
+				}
+				//Verificar si hay alguna fila seleccionada
+				int filaSelecionada = tablaPeliculas.getSelectedRow();
+				if(filaSelecionada != -1) { //fila existe
+					//Obtner titulo de la tabla
+					Object titulo = tablaPeliculas.getModel().getValueAt(filaSelecionada,0 );
+					//Encuentra la pelicula de ese titulo y muestra sus datos
+					for (Reserva r : usuario.getPeliculasAlquiladas()) {
+						Pelicula p = r.getPelicula();
+						if(p.getTitulo().equals(titulo)) {
+							mostrarDatosPelicula(p);
+						}else {
+							ocultarDatosPelicula();
+						}
+					}
+				}
+			}
+
+			private void ocultarDatosPelicula() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			private void mostrarDatosPelicula(Pelicula pelicula) {
+				
+				
+			}
+		});
 		
 		//JTables central
 		tablaPeliculas = new JTable(modeloTablaPeliculas);
@@ -81,7 +122,7 @@ public class UsuarioFrame extends JFrame{
 		
 		ArrayList<Reserva> listaReservas = usuario.getPeliculasAlquiladas();
 		for(Reserva r : listaReservas) {
-			modeloDatosPeliculas.addRow(new Object[] {r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
+			modeloTablaPeliculas.addRow(new Object[] {r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
 		}
 
 	}
@@ -97,11 +138,11 @@ public class UsuarioFrame extends JFrame{
 		
 		//Labels datos usuario
 		JLabel holaUsuario = new JLabel("Hola! "+this.usuario.getNombre());
-		holaUsuario.setBounds(300,20,250,40);
+		holaUsuario.setBounds(300,10,250,40);
 		holaUsuario.setForeground(colorTexto);
 		holaUsuario.setFont(fuenteTexto);
 		JLabel saldoUsuario = new JLabel("Saldo: "+this.usuario.getSaldo());
-		saldoUsuario.setBounds(300,80,250,40);
+		saldoUsuario.setBounds(300,60,250,40);
 		saldoUsuario.setForeground(colorTexto);
 		saldoUsuario.setBackground(new Color(128,128,128));
 		saldoUsuario.setOpaque(true);

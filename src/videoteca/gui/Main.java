@@ -85,15 +85,15 @@ public class Main {
 		//VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
 		//Prueba UsuarioFrame
-		/*for (Pelicula p : peliculas) {
+		for (Pelicula p : peliculas) {
 			Reserva reserva = new Reserva(p,LocalDate.of(1, 1, 1));
 			usuario.addrReserva(reserva);
 		}
 		UsuarioFrame frame = new UsuarioFrame(usuario);
-		frame.setVisible(true);*/
+		frame.setVisible(true);
 		
 		//Para ir probando Ventana Catalogo
-		new VentanaCatalogo(usuario, peliculas);
+		//new VentanaCatalogo(usuario, peliculas);
 	}
 	
 }
