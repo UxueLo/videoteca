@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,14 +37,11 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel centro= new JPanel();
 		centro.setLayout(new BorderLayout());
 		centro.setBackground(new Color(32,32,32));
-		// CREAR Y AÑADIR EL SCROLLPANE
-        JScrollPane scrollPeliculas = new JScrollPane(centro);
-        scrollPeliculas.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPeliculas.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPeliculas.getViewport().setBackground(new Color(32,32,32));
-        scrollPeliculas.setBorder(BorderFactory.createEmptyBorder());
+		//Insertar el centro en un ScrollPane
+		JScrollPane scrollCentro= new JScrollPane(centro);
+		add(scrollCentro, BorderLayout.CENTER);
+		
         
-        add(scrollPeliculas, BorderLayout.CENTER); // Añadir el scrollPane en lugar del panel directamente
 			//titulo
 		JLabel textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(new Color(255,0,0));
@@ -52,8 +50,7 @@ public class VentanaInicioFrame extends JFrame{
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
 		JPanel peliculasPanel= new JPanel();
-		centro.add(peliculasPanel, BorderLayout.CENTER);
-		peliculasPanel.setLayout(new FlowLayout());
+		peliculasPanel.setLayout(new GridLayout(5,2, 0, 100));
 		peliculasPanel.setBackground(new Color(32,32,32));
 		ArrayList<Pelicula> Top10= getTopPeliculas(peliculas);
 		setTop10(Top10, peliculasPanel);
@@ -115,14 +112,15 @@ public class VentanaInicioFrame extends JFrame{
 			JLabel peliculaActual= new JLabel();
 			//poner la foto del poster
 			ImageIcon posterPelicula= top10.get(i).getPoster();
-			peliculaActual.setIcon(posterPelicula);
-			peliculaActual.setPreferredSize(new Dimension(600,400));
-			
+			Image posterEscalado=posterPelicula.getImage();
+			posterEscalado=posterEscalado.getScaledInstance(200, 300, Image.SCALE_SMOOTH);
+			peliculaActual.setIcon(new ImageIcon(posterEscalado));
+			peliculaActual.setHorizontalAlignment(JLabel.CENTER);
 			//poner el numero en el podio alado
 			peliculaActual.setText(Integer.toString(i+1));
 			peliculaActual.setFont(new Font("Arial", Font.BOLD, 40));
 			peliculaActual.setForeground(Color.white);
-			peliculaActual.setVerticalTextPosition(JLabel.CENTER);
+			peliculaActual.setVerticalTextPosition(JLabel.BOTTOM);
 			peliculaActual.setHorizontalTextPosition(JLabel.LEFT);
 			
 			panelPeliculas.add(peliculaActual);
