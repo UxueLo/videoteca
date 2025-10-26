@@ -155,7 +155,7 @@ public class UsuarioFrame extends JFrame{
 	    Color colorValor = colorTexto;        // rojo oscuro para los datos
 
 	    // labelTitulo
-	    JLabel labelTitulo= new JLabel("Título:");
+	    labelTitulo= new JLabel("Título:");
 	    labelTitulo.setForeground(colorDescripcion);
 	    labelTitulo.setFont(fuenteTituloDato);
 	    labelTitulo.setBounds(20, 5, 200, 20);
@@ -167,7 +167,7 @@ public class UsuarioFrame extends JFrame{
 	    labelTituloPelicula.setBounds(20, 25, 200, 30);
 
 	    // labelDirector
-	    JLabel labelDirector = new JLabel("Director:");
+	    labelDirector = new JLabel("Director:");
 	    labelDirector.setForeground(colorDescripcion);
 	    labelDirector.setFont(fuenteTituloDato);
 	    labelDirector.setBounds(250, 5, 200, 20);
