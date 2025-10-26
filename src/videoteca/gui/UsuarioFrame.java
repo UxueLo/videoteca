@@ -104,7 +104,6 @@ public class UsuarioFrame extends JFrame{
 					return;
 				}
 				
-				//encontrar indice fila
 				int filaSeleccionada = tablaPeliculas.getSelectedRow();
 				
 				//Verificar que la fila existe
@@ -148,11 +147,11 @@ public class UsuarioFrame extends JFrame{
 		panelPelicula.removeAll();
 		Font fuenteDatos = new Font("Times New Roman",Font.BOLD,20);
 		
-		Font fuenteTituloDato = new Font("Times New Roman", Font.BOLD, 14); // fuente descriptiva
-	    Font fuenteValorDato = new Font("Times New Roman", Font.PLAIN, 16); // fuente de valor
+		Font fuenteTituloDato = new Font("Times New Roman", Font.BOLD, 14); 
+	    Font fuenteValorDato = new Font("Times New Roman", Font.PLAIN, 16); 
 
-	    Color colorDescripcion = Color.BLACK; // para diferenciar los títulos
-	    Color colorValor = colorTexto;        // rojo oscuro para los datos
+	    Color colorDescripcion = Color.BLACK; 
+	    Color colorValor = colorTexto;        
 
 	    // labelTitulo
 	    labelTitulo= new JLabel("Título:");
