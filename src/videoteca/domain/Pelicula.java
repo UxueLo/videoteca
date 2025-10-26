@@ -23,7 +23,7 @@ public class Pelicula {
 			int añoLanzamiento, int duracion, EdadRecomendada edadRecomendada, double puntuacionMedia, double precio) {
 		
 		super();
-		this.poster=new ImageIcon("Images/Chicago.jpg");
+		this.poster=new ImageIcon("Images/Your Name.jpg");
 		this.titulo = titulo;
 		this.director = director;
 		this.reparto = reparto;

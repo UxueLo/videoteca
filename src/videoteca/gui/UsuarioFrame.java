@@ -53,7 +53,6 @@ public class UsuarioFrame extends JFrame{
 		//Datos del JFrame
 		this.setLayout(new BorderLayout());
 		setTitle("Usuario");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(800,500);
 		setLocationRelativeTo(null);
 		

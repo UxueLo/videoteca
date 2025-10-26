@@ -25,7 +25,6 @@ public class LoginFrame extends JFrame{
 	//constructor
 	public LoginFrame() {
 		setTitle("Iniciar Sesión");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(800,500);
 		setLocationRelativeTo(null);
 		

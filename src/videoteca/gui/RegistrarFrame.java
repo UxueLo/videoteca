@@ -30,7 +30,6 @@ public class RegistrarFrame extends JFrame{
 		//constructor
 		public RegistrarFrame() {
 			setTitle("Registrarse");
-			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setSize(800,500);
 			setLocationRelativeTo(null);
 			

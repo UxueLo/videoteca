@@ -3,10 +3,12 @@ package videoteca.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,7 +47,7 @@ public class VentanaInicioFrame extends JFrame{
 			//titulo
 		JLabel textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(new Color(255,0,0));
-		textoCabeza.setFont(new Font("Gabriola", Font.BOLD, 45));
+		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
 		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //crear borde para que no este pegado arriba, ayuda de DeepSeek
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
@@ -61,19 +63,71 @@ public class VentanaInicioFrame extends JFrame{
 		menu.setBackground(new Color(153,0,0));
 		menu.setPreferredSize(new Dimension(300, 0));
 		menu.setLayout(new GridLayout(7,1));
-			//parte del usuario
-		JLabel perfil= new JLabel();
-		perfil.setText("Hola " + usuario.getNombre()+ "!");
-		perfil.setFont(new Font("Arial", Font.BOLD, 40));
-		perfil.setIcon(new ImageIcon("Images/iconoUsuario.png"));
-		perfil.setHorizontalTextPosition(JLabel.RIGHT); 
-		perfil.setVerticalTextPosition(JLabel.CENTER);
-		menu.add(perfil);
-		String [] opciones = {"Iniciar Sesion", "Registrarse", "Catalogo", "Mis reservas", "Prueba Suerte", "Cerrar sesion"};
+		
+		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catalogo", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
-			JLabel campo= new JLabel(opcion);
-			campo.setHorizontalAlignment(JLabel.CENTER);
-			campo.setFont(new Font("Arial",Font.BOLD, 18));
+			JLabel campo= new JLabel();
+			//si es el usuario: foto y nombew
+			if (opcion=="Usuario") {
+				campo.setText("Hola " + usuario.getNombre()+ "!");
+				campo.setFont(new Font("Arial", Font.BOLD, 40));
+				campo.setIcon(new ImageIcon("Images/iconoUsuario.png"));
+				campo.setHorizontalTextPosition(JLabel.RIGHT); 
+				campo.setVerticalTextPosition(JLabel.CENTER);
+			}else { //sino, solo el texto
+				campo.setText(opcion);
+				campo.setHorizontalAlignment(JLabel.CENTER);
+				campo.setFont(new Font("Arial",Font.PLAIN, 18));
+			}
+			
+			campo.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// nada
+					
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					if (opcion=="Iniciar Sesion") {
+						LoginFrame logIn= new LoginFrame();
+						logIn.setVisible(true);
+					}else if(opcion=="Registrarse") {
+						RegistrarFrame reg= new RegistrarFrame();
+						reg.setVisible(true);
+					}else if (opcion=="Catalogo") {
+						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
+						venCat.setVisible(true);
+					}else if (opcion=="Usuario") {
+						UsuarioFrame us= new UsuarioFrame(usuario);
+						us.setVisible(true);
+						
+					}
+					//TODO implementar el cerrar sesion y el Prueba Suerte
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					if (opcion!="Usuario") {
+						campo.setFont(new Font("Arial",Font.PLAIN, 18));
+					}
+					
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					if (opcion!="Usuario") {
+						campo.setFont(new Font("Arial",Font.BOLD, 18));
+					}
+				}
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// nada
+					
+				}
+			});
 			menu.add(campo);
 		}
 		add(menu, BorderLayout.EAST);
