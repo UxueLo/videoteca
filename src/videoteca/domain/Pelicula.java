@@ -15,11 +15,12 @@ public class Pelicula {
 	private ImageIcon poster;
 	private EdadRecomendada edadRecomendada;
 	private double puntuacionMedia;
+	private double precio;
 	// Faltan comentarios
 	
 	
 	public Pelicula(String titulo, String director, ArrayList<String> reparto, ArrayList<Genero> generos,
-			int añoLanzamiento, int duracion, EdadRecomendada edadRecomendada, double puntuacionMedia) {
+			int añoLanzamiento, int duracion, EdadRecomendada edadRecomendada, double puntuacionMedia, double precio) {
 		
 		super();
 		this.poster=new ImageIcon("Images/iconoUsuario.png");
@@ -31,6 +32,7 @@ public class Pelicula {
 		this.duracion = duracion;
 		this.edadRecomendada = edadRecomendada;
 		this.puntuacionMedia = puntuacionMedia;
+		this.precio = precio;
 		
 	}
 	
@@ -81,7 +83,13 @@ public class Pelicula {
 		return edadRecomendada;
 	}
 
+	public double getPrecio() {
+        return precio;
+    }
 
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
 	@Override
 	public String toString() {
 		return "Pelicula [titulo=" + titulo + ", director=" + director + ", reparto=" + reparto + ", generos=" + generos

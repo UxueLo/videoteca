@@ -136,6 +136,14 @@ public class VentanaCatalogo extends JFrame {
             card.add(lblImg);
             card.add(Box.createVerticalStrut(5));
             card.add(lblTitulo);
+            
+         // Precio 
+            JLabel lblPrecio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()), SwingConstants.CENTER);
+            lblPrecio.setFont(new Font("SansSerif", Font.BOLD, 13));
+            lblPrecio.setForeground(Color.WHITE);
+            lblPrecio.setAlignmentX(CENTER_ALIGNMENT);
+            card.add(lblPrecio);
+            
             // Edad solo si es PLUS18
             if (p.getEdadRecomendada() == EdadRecomendada.PLUS18) {
                 JLabel lbl18 = new JLabel("🔞");
