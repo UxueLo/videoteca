@@ -27,12 +27,12 @@ public class Main {
         peliculas.add(new Pelicula("Chicago", "Rob Marshall", new ArrayList<>(Arrays.asList("Renée Zellweger", "Catherine Zeta-Jones", "Richard Gere")), new ArrayList<>(Arrays.asList(Genero.MUSICAL, Genero.DRAMA)), 2002, 113, EdadRecomendada.PLUS13, 7.2, 8.99));
         peliculas.add(new Pelicula("Star Wars A New Hope", "George Lucas", new ArrayList<>(Arrays.asList("Mark Hamill", "Harrison Ford", "Carrie Fisher")), new ArrayList<>(Arrays.asList(Genero.CIENCIA_FICCION, Genero.AVENTURA)), 1977, 121, EdadRecomendada.TP, 8.6, 9.99));
         peliculas.add(new Pelicula("Your Name", "Makoto Shinkai", new ArrayList<>(Arrays.asList("Ryunosuke Kamiki", "Mone Kamishiraishi")), new ArrayList<>(Arrays.asList(Genero.ANIMACION, Genero.ROMACE, Genero.FANTASIA)), 2016, 112, EdadRecomendada.PLUS7, 8.9, 9.99));
-        peliculas.add(new Pelicula("Arrival", "Denis Villeneuve", new ArrayList<>(Arrays.asList("Amy Adams", "Jeremy Renner", "Forest Whitaker")), new ArrayList<>(Arrays.asList(Genero.CIENCIA_FICCION, Genero.DRAMA)), 2016, 116, EdadRecomendada.PLUS13, 8.0, 10.49));
-        peliculas.add(new Pelicula("Stand by Me Doraemon", "Ryuichi Yagi", new ArrayList<>(Arrays.asList("Wasabi Mizuta", "Megumi Oohara")), new ArrayList<>(Arrays.asList(Genero.ANIMACION, Genero.AVENTURA)), 2014, 95, EdadRecomendada.TP, 7.9, 8.49));
-        peliculas.add(new Pelicula("Pulp Fiction", "Quentin Tarantino", new ArrayList<>(Arrays.asList("John Travolta", "Uma Thurman", "Samuel L. Jackson")), new ArrayList<>(Arrays.asList(Genero.CRIMEN, Genero.DRAMA)), 1994, 154, EdadRecomendada.PLUS18, 8.9, 10.99));
-        
-		// Películas 11-20
+        peliculas.add(new Pelicula("The Phantom of the Opera", "Joel Schumacher", new ArrayList<>(Arrays.asList("Emmy Rossum", "Gerard Butler", "Patrick Wilson")), new ArrayList<>(Arrays.asList(Genero.MUSICAL, Genero.ROMACE, Genero.DRAMA)), 2004, 143, EdadRecomendada.PLUS13, 7.2, 8.99));
         peliculas.add(new Pelicula("Inglourious Basterds", "Quentin Tarantino", new ArrayList<>(Arrays.asList("Brad Pitt", "Christoph Waltz", "Diane Kruger")), new ArrayList<>(Arrays.asList(Genero.ACCION, Genero.DRAMA, Genero.GUERRA)), 2009, 153, EdadRecomendada.PLUS18, 8.3, 10.49));
+        peliculas.add(new Pelicula("Arrival", "Denis Villeneuve", new ArrayList<>(Arrays.asList("Amy Adams", "Jeremy Renner", "Forest Whitaker")), new ArrayList<>(Arrays.asList(Genero.CIENCIA_FICCION, Genero.DRAMA)), 2016, 116, EdadRecomendada.PLUS13, 8.0, 10.49));
+          
+		// Películas 11-20
+        peliculas.add(new Pelicula("Stand by Me Doraemon", "Ryuichi Yagi", new ArrayList<>(Arrays.asList("Wasabi Mizuta", "Megumi Oohara")), new ArrayList<>(Arrays.asList(Genero.ANIMACION, Genero.AVENTURA)), 2014, 95, EdadRecomendada.TP, 7.9, 8.49));
         peliculas.add(new Pelicula("Avatar", "James Cameron", new ArrayList<>(Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver")), new ArrayList<>(Arrays.asList(Genero.CIENCIA_FICCION, Genero.AVENTURA)), 2009, 162, EdadRecomendada.PLUS13, 7.8, 10.99));
         peliculas.add(new Pelicula("Gladiador", "Ridley Scott", new ArrayList<>(Arrays.asList("Russell Crowe", "Joaquin Phoenix", "Connie Nielsen")), new ArrayList<>(Arrays.asList(Genero.ACCION, Genero.DRAMA)), 2000, 155, EdadRecomendada.PLUS16, 8.5, 9.99));
         peliculas.add(new Pelicula("Cadena Perpetua", "Frank Darabont", new ArrayList<>(Arrays.asList("Tim Robbins", "Morgan Freeman", "Bob Gunton")), new ArrayList<>(Arrays.asList(Genero.DRAMA)), 1994, 142, EdadRecomendada.PLUS16, 9.3, 10.99));
