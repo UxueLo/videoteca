@@ -28,10 +28,13 @@ import videoteca.domain.Usuario;
 public class UsuarioFrame extends JFrame{
 	private Usuario usuario;
 	private JPanel panelUsuario;
+	private JPanel panelCentral;
+	private JPanel panelPelicula;
 	private JTable tablaPeliculas;
 	private Color colorTexto = new Color(204,0,0);
 	private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,30);
 	private DefaultTableModel modeloTablaPeliculas;
+
 
 	public UsuarioFrame(Usuario usuario) {
 		
@@ -51,9 +54,23 @@ public class UsuarioFrame extends JFrame{
 		panelUsuario.setBackground(new Color(96, 96, 96));
 		panelUsuario.setOpaque(true);
 		panelUsuario.setPreferredSize(new Dimension(800, 115));
-
 		
 		inicializarPanelUsuario();
+		
+		//Panel central
+		panelCentral = new JPanel();
+		panelCentral.setLayout(null);
+		panelCentral.setBackground(new Color(96, 96, 96));
+		panelCentral.setOpaque(true);
+		panelCentral.setPreferredSize(new Dimension(500, 500));
+		
+		//panel Pelicula
+		panelPelicula = new JPanel();
+		panelPelicula.setLayout(null);
+		panelPelicula.setBackground(new Color(96, 96, 96));
+		panelPelicula.setOpaque(true);
+		panelPelicula.setVisible(false);
+
 		
 		//crear table model
 		this.modeloTablaPeliculas = new DefaultTableModel() {
@@ -62,48 +79,43 @@ public class UsuarioFrame extends JFrame{
 			        return false;
 			    }
 		};
-		modeloTablaPeliculas.setColumnIdentifiers(new Vector<String>(Arrays.asList("Título","Fecha Reserva","Fecha Caducidad")));
 		
-			//metodo para saber que pelicula esta seleccionada
-		ListSelectionModel listSelecionPelicula=  tablaPeliculas.getSelectionModel();
-		listSelecionPelicula.addListSelectionListener(new ListSelectionListener() {
+		
+		//JTables central
+		tablaPeliculas = new JTable(modeloTablaPeliculas);
+		
+		//Accion para añadir los datos de la pelicula
+		tablaPeliculas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+				
 				// Evitar duplicados
 				if (e.getValueIsAdjusting()) {
 					return;
 				}
-				//Verificar si hay alguna fila seleccionada
-				int filaSelecionada = tablaPeliculas.getSelectedRow();
-				if(filaSelecionada != -1) { //fila existe
-					//Obtner titulo de la tabla
-					Object titulo = tablaPeliculas.getModel().getValueAt(filaSelecionada,0 );
-					//Encuentra la pelicula de ese titulo y muestra sus datos
-					for (Reserva r : usuario.getPeliculasAlquiladas()) {
+				
+				//encontrar indice fila
+				int filaSeleccionada = tablaPeliculas.getSelectedRow();
+				
+				//Verificar que la fila existe
+				if(filaSeleccionada != -1) {
+					//obtener titulo
+					String titulo= (String) tablaPeliculas.getValueAt(filaSeleccionada, 0);
+					
+					//obtener pelicula de ese titulo
+					for(Reserva r : usuario.getPeliculasAlquiladas()) {
 						Pelicula p = r.getPelicula();
 						if(p.getTitulo().equals(titulo)) {
-							mostrarDatosPelicula(p);
-						}else {
-							ocultarDatosPelicula();
+							pintarDatosPelicula(p);
 						}
 					}
+				}else {
+					ocultarDatosPelicula();
+					
 				}
 			}
-
-			private void ocultarDatosPelicula() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			private void mostrarDatosPelicula(Pelicula pelicula) {
-				
-				
-			}
 		});
-		
-		//JTables central
-		tablaPeliculas = new JTable(modeloTablaPeliculas);
 		
 		//Insertar tabla Peliculas en un scrollPane
 		JScrollPane scrollPanePeliculas = new JScrollPane(this.tablaPeliculas);
@@ -113,9 +125,26 @@ public class UsuarioFrame extends JFrame{
 		cargarPeliculas();
 		
 		//adds
+		panelCentral.add(scrollPanePeliculas,JPanel.TOP_ALIGNMENT);
+		panelCentral.add(panelPelicula,JPanel.BOTTOM_ALIGNMENT);
         this.add(panelUsuario, BorderLayout.NORTH);
-        this.add(scrollPanePeliculas, BorderLayout.CENTER);
+        this.add(panelCentral, BorderLayout.CENTER);
 
+	}
+	
+	private void pintarDatosPelicula(Pelicula p) {
+		
+		//Label titulo
+		//label director
+		//label fecha estreno
+		//boton reseñar
+		//adds
+		
+	}
+
+	private void ocultarDatosPelicula() {
+		panelPelicula.setSize(new Dimension(0,0));
+		panelPelicula.setVisible(false);
 	}
 
 	private void cargarPeliculas() {
@@ -126,7 +155,6 @@ public class UsuarioFrame extends JFrame{
 		}
 
 	}
-
 
 	private void inicializarPanelUsuario() {
 		
