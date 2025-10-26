@@ -33,7 +33,7 @@ public class VentanaCatalogo extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.BLACK);
 
-        // --- PANEL SUPERIOR ---
+        // PANEL SUPERIOR 
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelFiltros.setBackground(Color.BLACK);
         
