@@ -52,7 +52,7 @@ public class VentanaInicioFrame extends JFrame{
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
 		JPanel peliculasPanel= new JPanel();
-		peliculasPanel.setLayout(new GridLayout(5,2, 0, 100));
+		peliculasPanel.setLayout(new GridLayout(5,2, 100, 100));
 		peliculasPanel.setBackground(new Color(32,32,32));
 		ArrayList<Pelicula> Top10= getTopPeliculas(peliculas);
 		setTop10(Top10, peliculasPanel);
@@ -162,59 +162,59 @@ public class VentanaInicioFrame extends JFrame{
 	
 	//mostrar las Top 10 peliculas
 	public void setTop10(ArrayList<Pelicula> top10, JPanel panelPeliculas) {
-		for (int i=0; i<top10.size();i++) { //por si la lista de peliculas fuera de menos de 10
-			JLabel peliculaActual= new JLabel();
-			//poner la foto del poster
-			Pelicula pel= top10.get(i);
-			ImageIcon posterPelicula= pel.getPoster();
-			Image posterEscalado=posterPelicula.getImage();
-			posterEscalado=posterEscalado.getScaledInstance(200, 300, Image.SCALE_SMOOTH);
-			peliculaActual.setIcon(new ImageIcon(posterEscalado));
-			peliculaActual.setHorizontalAlignment(JLabel.CENTER);
-			peliculaActual.addMouseListener(new MouseListener() {
-				
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// nada
-					
-				}
-				
-				@Override
-				public void mousePressed(MouseEvent e) {
-					VentanaPelicula vp= new VentanaPelicula(pel);
-					vp.setVisible(true);
-				}
-				
-				@Override
-				public void mouseExited(MouseEvent e) {
-					Image posterEscalado=posterPelicula.getImage();
-					posterEscalado=posterEscalado.getScaledInstance(200, 300, Image.SCALE_SMOOTH);
-					peliculaActual.setIcon(new ImageIcon(posterEscalado));
-				}
-				
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					Image posterEscalado=posterPelicula.getImage();
-					posterEscalado=posterEscalado.getScaledInstance(250, 350, Image.SCALE_SMOOTH);
-					peliculaActual.setIcon(new ImageIcon(posterEscalado));
-					
-				}
-				
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					// nada
-					
-				}
-			});
-			//poner el numero en el podio alado
-			peliculaActual.setText(Integer.toString(i+1));
-			peliculaActual.setFont(new Font("Arial", Font.BOLD, 60));
-			peliculaActual.setForeground(Color.white);
-			peliculaActual.setVerticalTextPosition(JLabel.BOTTOM);
-			peliculaActual.setHorizontalTextPosition(JLabel.LEFT);
-			
-			panelPeliculas.add(peliculaActual);
-		}
+	    for (int i=0; i<top10.size();i++) {
+	        JLabel peliculaActual= new JLabel();
+	        //poner la foto del poster
+	        Pelicula pel= top10.get(i);
+	        ImageIcon posterPelicula= pel.getPoster();
+	        
+	        // Crear el poster escalado original una sola vez
+	        Image posterEscalado = posterPelicula.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH);
+	        ImageIcon iconOriginal = new ImageIcon(posterEscalado);
+	        
+	        peliculaActual.setIcon(iconOriginal);
+	        peliculaActual.setHorizontalAlignment(JLabel.CENTER);
+	        
+	        peliculaActual.addMouseListener(new MouseListener() {
+
+	            @Override
+	            public void mouseReleased(MouseEvent e) {
+	                // nada
+	            }
+
+	            @Override
+	            public void mousePressed(MouseEvent e) {
+	                VentanaPelicula vp= new VentanaPelicula(pel);
+	                vp.setVisible(true);
+	            }
+
+	            @Override
+	            public void mouseExited(MouseEvent e) {
+	                // Simplemente reutilizar el icon original
+	                peliculaActual.setIcon(iconOriginal);
+	            }
+
+	            @Override
+	            public void mouseEntered(MouseEvent e) {
+	                Image posterAgrandado = posterPelicula.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
+	                peliculaActual.setIcon(new ImageIcon(posterAgrandado));
+	            }
+
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                // nada
+	            }
+	        });
+	        
+	        //poner el numero en el podio alado
+	        peliculaActual.setText(Integer.toString(i+1));
+	        peliculaActual.setFont(new Font("Arial", Font.BOLD, 60));
+	        peliculaActual.setForeground(Color.white);
+	        peliculaActual.setVerticalTextPosition(JLabel.BOTTOM);
+	        peliculaActual.setHorizontalTextPosition(JLabel.LEFT);
+
+	        panelPeliculas.add(peliculaActual);
+	    }
 	}
 	
 }
