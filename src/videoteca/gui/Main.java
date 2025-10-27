@@ -82,13 +82,18 @@ public class Main {
 		
 		//Prueba del Frame Principal
 		Usuario usuario= new Usuario("Nerea", "nerea.f.m@opendeusto.es", 19, LocalDate.of(1, 1, 1), "1234");
+		//Cargar peliculas al Usuario
+		for (Pelicula p : peliculas) {
+			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
+			usuario.addrReserva(reserva);
+		}
 		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
 		//Prueba UsuarioFrame
-//		for (Pelicula p : peliculas) {
-//			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
-//			usuario.addrReserva(reserva);
-//		}
+		for (Pelicula p : peliculas) {
+			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
+			usuario.addrReserva(reserva);
+		}
 //		UsuarioFrame frame = new UsuarioFrame(usuario);
 //		frame.setVisible(true);
 		
