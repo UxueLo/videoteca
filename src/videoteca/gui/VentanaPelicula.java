@@ -32,6 +32,9 @@ public class VentanaPelicula extends JFrame {
 	public void CrearVentana () {
 		JPanel panelPrincipal = new JPanel();
 		setTitle("Película");
+		setSize(800,500);
+		setLocationRelativeTo(null);
+		
 		panelPrincipal.setBackground(new Color(32,32,32));
 		setResizable(false);
 		
