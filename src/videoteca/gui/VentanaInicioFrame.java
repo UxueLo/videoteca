@@ -41,6 +41,7 @@ public class VentanaInicioFrame extends JFrame{
 		centro.setBackground(new Color(32,32,32));
 		//Insertar el centro en un ScrollPane
 		JScrollPane scrollCentro= new JScrollPane(centro);
+		scrollCentro.getVerticalScrollBar().setUnitIncrement(16);
 		add(scrollCentro, BorderLayout.CENTER);
 		
         
@@ -53,6 +54,7 @@ public class VentanaInicioFrame extends JFrame{
 			//peliculas
 		JPanel peliculasPanel= new JPanel();
 		peliculasPanel.setLayout(new GridLayout(5,2, 100, 100));
+		peliculasPanel.setBorder(BorderFactory.createEmptyBorder(0,0, 50, 0));
 		peliculasPanel.setBackground(new Color(32,32,32));
 		ArrayList<Pelicula> Top10= getTopPeliculas(peliculas);
 		setTop10(Top10, peliculasPanel);
@@ -62,16 +64,16 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel menu = new JPanel();
 		menu.setBackground(new Color(153,0,0));
 		menu.setPreferredSize(new Dimension(300, 0));
-		menu.setLayout(new GridLayout(7,1));
+		menu.setLayout(new GridLayout(8,1));
 		
-		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catalogo", "Prueba Suerte", "Cerrar sesion"};
+		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catalogo", "Carrito", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
 			JLabel campo= new JLabel();
 			//si es el usuario: foto y nombew
 			if (opcion=="Usuario") {
 				campo.setText("Hola " + usuario.getNombre()+ "!");
 				campo.setFont(new Font("Arial", Font.BOLD, 40));
-				campo.setIcon(new ImageIcon("Images/iconoUsuario.png"));
+				campo.setIcon(new ImageIcon("Images/iconoUsuario.png")); //TODO la foto del perfil
 				campo.setHorizontalTextPosition(JLabel.RIGHT); 
 				campo.setVerticalTextPosition(JLabel.CENTER);
 			}else { //sino, solo el texto
@@ -103,6 +105,8 @@ public class VentanaInicioFrame extends JFrame{
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
 						
+					}else if (opcion=="Carrito") {
+						//TODO hacer que se habra la ventana de Carrito
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
 				}
@@ -190,14 +194,12 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mouseExited(MouseEvent e) {
-	                // Simplemente reutilizar el icon original
-	                peliculaActual.setIcon(iconOriginal);
+	                // nada
 	            }
 
 	            @Override
 	            public void mouseEntered(MouseEvent e) {
-	                Image posterAgrandado = posterPelicula.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
-	                peliculaActual.setIcon(new ImageIcon(posterAgrandado));
+	                // nada
 	            }
 
 	            @Override
