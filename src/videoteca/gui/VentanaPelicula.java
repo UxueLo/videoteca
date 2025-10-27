@@ -30,19 +30,22 @@ public class VentanaPelicula extends JFrame {
 	}
 	
 	public void CrearVentana () {
-		JPanel panelPrincipal = new JPanel();
+		
 		setTitle("Película");
 		setSize(800,500);
 		setLocationRelativeTo(null);
 		
+		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setBackground(new Color(32,32,32));
+		panelPrincipal.setLayout(null);
+		panelPrincipal.setOpaque(true);
 		setResizable(false);
 		
-		labelDirector = new JLabel("Director: " + p.getDirector());
-		labelReparto = new JLabel("Reparto: " + p.getReparto());
-		labelDuracion = new JLabel("Duración: " + p.getDuracion());
-		labelGenero = new JLabel("Géneros: " + p.getGeneros());
-		año = new JLabel(String.valueOf(p.getAñoLanzamiento()));
+//		labelDirector = new JLabel("Director: " + p.getDirector());
+//		labelReparto = new JLabel("Reparto: " + p.getReparto());
+//		labelDuracion = new JLabel("Duración: " + p.getDuracion());
+//		labelGenero = new JLabel("Géneros: " + p.getGeneros());
+//		año = new JLabel(String.valueOf(p.getAñoLanzamiento()));
 		
 		
 	}
