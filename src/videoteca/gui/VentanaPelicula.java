@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
@@ -54,10 +55,35 @@ public class VentanaPelicula extends JFrame {
 		// Crear el PanelOeste, donde estara el poster y la puntuacion media
 		this.panelOeste = new JPanel();
 		panelOeste.setLayout(new BorderLayout());
+		panelOeste.setBackground(new Color(32,32,32));
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
-		this.poster = new JLabel();												// Crear poster
-		poster.setIcon(new ImageIcon("Images/Chicago.png"));					// Seleccionar la imagen
+		this.poster = new JLabel();												
+		poster.setOpaque(true);
+		poster.setBackground(new Color(32,32,32));
+		
+		// Colocar el poster
+		Image imagenEscalada = p.getPoster().getImage();
+		imagenEscalada = imagenEscalada.getScaledInstance(250, 325, Image.SCALE_SMOOTH);
+		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
+		poster.setIcon(posterEscalado);
+		
+		// Puntuacion media
+		poster.setText(Double.toString(p.getPuntuacionMedia()));
+		poster.setFont(new Font("Arial", Font.BOLD, 30));
+		
+		// Condicional que pinta el numero de la puntuacion media segun esta
+		if (p.getPuntuacionMedia() >= 8) {
+			poster.setForeground(Color.green);			// Si la puntuacion mayor o igual a 8, pinta de verde
+		} else if(p.getPuntuacionMedia() >= 5) {
+			poster.setForeground(Color.yellow);			// Si la puntuacion mayor o igual a 5, pinta de amarillo
+		} else {
+			poster.setForeground(Color.red);			// Si la puntuacion menor a 5, pinta de rojo
+		}
+
+		poster.setHorizontalTextPosition(JLabel.CENTER);
+		poster.setVerticalTextPosition(JLabel.BOTTOM);
+		
 		poster.setOpaque(true);
 		panelOeste.add(poster, BorderLayout.CENTER);
 		
@@ -68,7 +94,7 @@ public class VentanaPelicula extends JFrame {
 		panelSur.setLayout(new BorderLayout());
 		panelSur.setBackground(new Color(32,32,32));
 		add(panelSur, BorderLayout.SOUTH);
-		panelSur.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 //		panelSur.setSize(500, 500);
 		
 		// Comentarios
@@ -91,11 +117,11 @@ public class VentanaPelicula extends JFrame {
 		// Crear ambos botones y ajustar color
 		this.alquilar = new JButton("alquilar");
 		this.alquilar.setBackground(new Color(153,0,0));
-		this.alquilar.setFont(new Font("Arial", Font.BOLD, 25));
+		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		this.reseñar = new JButton("reseñar");
 		this.reseñar.setBackground(new Color(153,0,0));
-		this.reseñar.setFont(new Font("Arial", Font.BOLD, 25));
+		this.reseñar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		
 		panelSurSur.add(alquilar);
@@ -109,7 +135,7 @@ public class VentanaPelicula extends JFrame {
 	public void CrearVentana () {
 		
 		setTitle("Película");
-		setSize(800,500);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
 		
 		
