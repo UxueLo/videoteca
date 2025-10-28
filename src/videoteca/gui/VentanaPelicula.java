@@ -13,6 +13,7 @@ import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,17 +27,19 @@ import videoteca.domain.Pelicula;
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
-	private JPanel panelPrincipal;
+	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelSur;		// Panel de comentarios
 	private JPanel panelSurSur;		// Panel de botones "alquiler" y "peliculas"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
 	private JButton alquilar;
 	private JButton reseñar;
+	private JLabel comentarios;
 	private JLabel labelDirector;
 	private JLabel labelReparto;
 	private JLabel labelDuracion;
 	private JLabel labelGenero;
 	private JLabel año;
+	private JLabel poster;
 
 	
 	public VentanaPelicula (Pelicula p) {
@@ -45,25 +48,47 @@ public class VentanaPelicula extends JFrame {
 		panelPrincipal.setBackground(new Color(32,32,32));
 		panelPrincipal.setLayout(new BorderLayout());
 		setResizable(false);
+		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+		
+		
+		// Crear el PanelOeste, donde estara el poster y la puntuacion media
+		this.panelOeste = new JPanel();
+		panelOeste.setLayout(new BorderLayout());
+		add(panelOeste, BorderLayout.WEST);
+		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
+		this.poster = new JLabel();												// Crear poster
+		poster.setIcon(new ImageIcon("Images/Chicago.png"));					// Seleccionar la imagen
+		poster.setOpaque(true);
+		panelOeste.add(poster, BorderLayout.CENTER);
+		
+		
 		
 		// Crear el PanelSur, donde estaran los comentarios
 		this.panelSur = new JPanel();
 		panelSur.setLayout(new BorderLayout());
 		panelSur.setBackground(new Color(32,32,32));
 		add(panelSur, BorderLayout.SOUTH);
+		panelSur.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+//		panelSur.setSize(500, 500);
 		
-		JLabel label = new JLabel("hola mundo");
-		panelSur.add(label, BorderLayout.CENTER);
+		// Comentarios
+		this.comentarios = new JLabel("comentarios");
+		comentarios.setFont(new Font("Arial", Font.ITALIC, 20));
+//		comentarios.setSize(100, 50);;
+		comentarios.setBackground(new Color(212,212,212));
+		comentarios.setOpaque(true);
+		comentarios.setForeground(new Color(32,32,32));
+		panelSur.add(comentarios, BorderLayout.CENTER);
 		
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
 		this.panelSurSur = new JPanel();
 		panelSurSur.setLayout(new GridLayout(1,2,20,20));
 		panelSurSur.setBackground(new Color(32,32,32));
 		panelSur.add(panelSurSur, BorderLayout.SOUTH);
-		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
 		
-		// Crear ambos botoes y ajustar color
+		// Crear ambos botones y ajustar color
 		this.alquilar = new JButton("alquilar");
 		this.alquilar.setBackground(new Color(153,0,0));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 25));
