@@ -129,7 +129,6 @@ public class VentanaPelicula extends JFrame {
 		panelSur.setBackground(panelPrincipal.getBackground());
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-//		panelSur.setSize(500, 500);
 		
 		
 		
@@ -194,7 +193,7 @@ public class VentanaPelicula extends JFrame {
 
 	}
 	
-	public void CrearVentana () {
+
 		
 		
 		
@@ -207,7 +206,7 @@ public class VentanaPelicula extends JFrame {
 //		año = new JLabel(String.valueOf(p.getAñoLanzamiento()));
 		
 		
-	}
+	
 	
 	
 	

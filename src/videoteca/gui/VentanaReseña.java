@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -12,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import videoteca.domain.Pelicula;
 
@@ -24,6 +27,7 @@ public class VentanaReseña extends JFrame {
 	private JPanel panelNorte;		// Panel del titulo
 	private JButton reseñar;
 	private JLabel poster;
+	private JTextField comentario;		//TODO
 	
 	public VentanaReseña (Pelicula p) {
 		
@@ -56,17 +60,9 @@ public class VentanaReseña extends JFrame {
 		
 		
 		
-		// Crear el panelSur
-		panelSur = new JPanel();
-		panelSur.setBackground(Color.red);
-		add(panelSur, BorderLayout.SOUTH);
-		
-		this.reseñar = new JButton("Reseñar");		// Crear el boton de "reseñar"
-		
-		
 		// Crear el PanelOeste, donde estara el poster
 		this.panelOeste = new JPanel();
-		panelOeste.setBackground(new Color(32,32,32));
+		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
 		this.poster = new JLabel();												
@@ -75,9 +71,34 @@ public class VentanaReseña extends JFrame {
 		
 		// Colocar el poster
 		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(250, 325, Image.SCALE_SMOOTH);
+		imagenEscalada = imagenEscalada.getScaledInstance(150, 200, Image.SCALE_SMOOTH);
 		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
 		poster.setIcon(posterEscalado);
+		poster.setOpaque(true);
+		panelOeste.add(poster, BorderLayout.CENTER);
+		
+		
+		
+		// Crear el panelSur
+		panelSur = new JPanel();
+		panelSur.setLayout(new BorderLayout());
+		panelSur.setBackground(Color.red);
+		add(panelSur, BorderLayout.SOUTH);
+		
+		this.reseñar = new JButton("Reseñar");			// Crear el boton de "reseñar"
+		reseñar.setBackground(new Color(153,0,0));
+		reseñar.setSize(500,30);
+		reseñar.setFont(new Font("Arial", Font.BOLD, 25));
+		panelSur.add(reseñar, BorderLayout.CENTER);
+		
+		this.reseñar.addActionListener(new ActionListener() {
+					
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO falta añadir el comentario a comentarios
+				VentanaReseña.this.dispose();
+			}
+		});
 		
 		
 		
