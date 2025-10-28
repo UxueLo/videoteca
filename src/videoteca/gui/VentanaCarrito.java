@@ -1,5 +1,9 @@
 package videoteca.gui;
 
-public class VentanaCarrito {
+import javax.swing.JFrame;
+
+public class VentanaCarrito extends JFrame {
 
 }
+
+
