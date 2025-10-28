@@ -92,7 +92,7 @@ public class VentanaPelicula extends JFrame {
 		// Crear el PanelSur, donde estaran los comentarios
 		this.panelSur = new JPanel();
 		panelSur.setLayout(new BorderLayout());
-		panelSur.setBackground(new Color(32,32,32));
+		panelSur.setBackground(new Color(62,32,32));
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 //		panelSur.setSize(500, 500);
