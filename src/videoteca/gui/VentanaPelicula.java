@@ -12,6 +12,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,6 +21,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.Border;
 
 import videoteca.domain.EdadRecomendada;
@@ -29,12 +33,14 @@ public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
+	private JPanel panelCentral;
 	private JPanel panelSur;		// Panel de comentarios
 	private JPanel panelSurSur;		// Panel de botones "alquiler" y "peliculas"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
+	private JPanel panelNorte;		// Panel del titulo
 	private JButton alquilar;
 	private JButton reseñar;
-	private JLabel comentarios;
+	private JTable comentarios;
 	private JLabel labelDirector;
 	private JLabel labelReparto;
 	private JLabel labelDuracion;
@@ -44,12 +50,32 @@ public class VentanaPelicula extends JFrame {
 
 	
 	public VentanaPelicula (Pelicula p) {
+		
 		this.p = p;
-		JPanel panelPrincipal= (JPanel) this.getContentPane();
+		this.panelPrincipal= (JPanel) this.getContentPane();
 		panelPrincipal.setBackground(new Color(32,32,32));
 		panelPrincipal.setLayout(new BorderLayout());
 		setResizable(false);
 		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+		
+		
+		this.panelCentral = new JPanel();
+		add(panelCentral, BorderLayout.CENTER);
+		panelCentral.setBackground(Color.white);
+		
+		
+		
+		// Crear el PanelNorte desde el central, donde estara el titulo
+		this.panelNorte = new JPanel();
+		panelNorte.setLayout(new BorderLayout());
+		panelCentral.add(panelNorte, BorderLayout.NORTH);
+		JLabel titulo = new JLabel();
+		titulo.setText(p.getTitulo());
+		titulo.setFont(new Font("Arial", Font.BOLD, 40));
+		titulo.setBackground(panelPrincipal.getBackground());
+		
+		panelNorte.add(titulo);
+		
 		
 		
 		// Crear el PanelOeste, donde estara el poster y la puntuacion media
@@ -92,19 +118,39 @@ public class VentanaPelicula extends JFrame {
 		// Crear el PanelSur, donde estaran los comentarios
 		this.panelSur = new JPanel();
 		panelSur.setLayout(new BorderLayout());
-		panelSur.setBackground(new Color(62,32,32));
+		panelSur.setBackground(new Color(32,32,32));
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 //		panelSur.setSize(500, 500);
 		
-		// Comentarios
-		this.comentarios = new JLabel("comentarios");
-		comentarios.setFont(new Font("Arial", Font.ITALIC, 20));
-//		comentarios.setSize(100, 50);;
+		
+		
+		
+		
+		// TODO Comentarios
+		this.comentarios = new JTable();
+		comentarios.setLayout(new BorderLayout());
+		Vector<String> cabezeraComentarios = new Vector<String>(Arrays.asList("VALORACIÓN", "COMENTARIO"));
+		
+		// Scroll
+		JScrollPane scrollComentarios = new JScrollPane(this.comentarios);
+		scrollComentarios.getVerticalScrollBar().setUnitIncrement(16);
+		panelSur.add(scrollComentarios, BorderLayout.CENTER);
+		
+		
 		comentarios.setBackground(new Color(212,212,212));
-		comentarios.setOpaque(true);
 		comentarios.setForeground(new Color(32,32,32));
-		panelSur.add(comentarios, BorderLayout.CENTER);
+		
+		
+		for (int i=0; i<p.getComentarios().keySet().size(); i++) {
+			JLabel comentario = new JLabel();
+			
+			
+		}
+		
+		
+		
+		
 		
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
 		this.panelSurSur = new JPanel();
@@ -113,6 +159,7 @@ public class VentanaPelicula extends JFrame {
 		panelSur.add(panelSurSur, BorderLayout.SOUTH);
 		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
+		
 		
 		// Crear ambos botones y ajustar color
 		this.alquilar = new JButton("alquilar");

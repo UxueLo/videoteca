@@ -1,6 +1,7 @@
 package videoteca.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
@@ -16,7 +17,7 @@ public class Pelicula {
 	private EdadRecomendada edadRecomendada;
 	private double puntuacionMedia;
 	private double precio;
-	// Faltan comentarios
+	private HashMap<Double, String> comentarios;
 	
 	
 	public Pelicula(String titulo, String director, ArrayList<String> reparto, ArrayList<Genero> generos,
@@ -33,6 +34,11 @@ public class Pelicula {
 		this.edadRecomendada = edadRecomendada;
 		this.puntuacionMedia = puntuacionMedia;
 		this.precio = precio;
+		// TODO incluir comentarios
+		this.comentarios = new HashMap<>();
+		comentarios.put(3.5, "normal");
+		comentarios.put(4.0, "buena");
+		comentarios.put(2.0, "horrible");
 		
 	}
 	
@@ -90,6 +96,19 @@ public class Pelicula {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
+    
+    
+	public HashMap<Double, String> getComentarios() {
+		return comentarios;
+	}
+
+
+	public void setComentarios(HashMap<Double, String> comentarios) {
+		this.comentarios = comentarios;
+	}
+	
+
+
 	@Override
 	public String toString() {
 		return "Pelicula [titulo=" + titulo + ", director=" + director + ", reparto=" + reparto + ", generos=" + generos
