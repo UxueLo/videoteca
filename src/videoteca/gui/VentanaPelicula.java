@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,14 +54,22 @@ public class VentanaPelicula extends JFrame {
 	public VentanaPelicula (Pelicula p) {
 		
 		this.p = p;
-		this.panelPrincipal= (JPanel) this.getContentPane();
+		
+		setTitle("Película");
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setLocationRelativeTo(null);
+		
+		
+		this.panelPrincipal = (JPanel) this.getContentPane();
 		panelPrincipal.setBackground(new Color(32,32,32));
 		panelPrincipal.setLayout(new BorderLayout());
 		setResizable(false);
 		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 		
 		
+		// Crear el PanelCentral
 		this.panelCentral = new JPanel();
+		panelCentral.setLayout(new BorderLayout());
 		add(panelCentral, BorderLayout.CENTER);
 		panelCentral.setBackground(Color.white);
 		
@@ -67,7 +77,6 @@ public class VentanaPelicula extends JFrame {
 		
 		// Crear el PanelNorte desde el central, donde estara el titulo
 		this.panelNorte = new JPanel();
-		panelNorte.setLayout(new BorderLayout());
 		panelCentral.add(panelNorte, BorderLayout.NORTH);
 		JLabel titulo = new JLabel();
 		titulo.setText(p.getTitulo());
@@ -80,13 +89,12 @@ public class VentanaPelicula extends JFrame {
 		
 		// Crear el PanelOeste, donde estara el poster y la puntuacion media
 		this.panelOeste = new JPanel();
-		panelOeste.setLayout(new BorderLayout());
-		panelOeste.setBackground(new Color(32,32,32));
+		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
 		this.poster = new JLabel();												
 		poster.setOpaque(true);
-		poster.setBackground(new Color(32,32,32));
+		poster.setBackground(panelPrincipal.getBackground());
 		
 		// Colocar el poster
 		Image imagenEscalada = p.getPoster().getImage();
@@ -118,7 +126,7 @@ public class VentanaPelicula extends JFrame {
 		// Crear el PanelSur, donde estaran los comentarios
 		this.panelSur = new JPanel();
 		panelSur.setLayout(new BorderLayout());
-		panelSur.setBackground(new Color(32,32,32));
+		panelSur.setBackground(panelPrincipal.getBackground());
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 //		panelSur.setSize(500, 500);
@@ -129,8 +137,8 @@ public class VentanaPelicula extends JFrame {
 		
 		// TODO Comentarios
 		this.comentarios = new JTable();
-		comentarios.setLayout(new BorderLayout());
 		Vector<String> cabezeraComentarios = new Vector<String>(Arrays.asList("VALORACIÓN", "COMENTARIO"));
+		comentarios.setSize(10, 10);
 		
 		// Scroll
 		JScrollPane scrollComentarios = new JScrollPane(this.comentarios);
@@ -139,7 +147,7 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		comentarios.setBackground(new Color(212,212,212));
-		comentarios.setForeground(new Color(32,32,32));
+		comentarios.setForeground(panelPrincipal.getBackground());
 		
 		
 		for (int i=0; i<p.getComentarios().keySet().size(); i++) {
@@ -155,35 +163,39 @@ public class VentanaPelicula extends JFrame {
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
 		this.panelSurSur = new JPanel();
 		panelSurSur.setLayout(new GridLayout(1,2,20,20));
-		panelSurSur.setBackground(new Color(32,32,32));
+		panelSurSur.setBackground(panelPrincipal.getBackground());
 		panelSur.add(panelSurSur, BorderLayout.SOUTH);
 		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
 		
 		
 		// Crear ambos botones y ajustar color
-		this.alquilar = new JButton("alquilar");
+		this.alquilar = new JButton("Alquilar");
 		this.alquilar.setBackground(new Color(153,0,0));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		
-		this.reseñar = new JButton("reseñar");
+		this.reseñar = new JButton("Reseñar");
 		this.reseñar.setBackground(new Color(153,0,0));
 		this.reseñar.setFont(new Font("Arial", Font.BOLD, 35));
-		
+		this.reseñar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Abrir VentanaReseña
+				VentanaReseña ventanaReseña = new VentanaReseña(p);
+				ventanaReseña.setVisible(true);
+			}
+		});
 		
 		panelSurSur.add(alquilar);
 		panelSurSur.add(reseñar);
 		
-		CrearVentana();
 		
 
 	}
 	
 	public void CrearVentana () {
 		
-		setTitle("Película");
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setLocationRelativeTo(null);
 		
 		
 		
