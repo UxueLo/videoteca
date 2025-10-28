@@ -56,7 +56,6 @@ public class VentanaCatalogo extends JFrame {
 
         JButton btnCarrito = new JButton("🛒 Ir al carrito");
         estiloBotonRojo(btnCarrito);
-        btnCarrito.addActionListener(e -> abrirCarrito());
 
         JLabel lblGenero = new JLabel("Género:");
         lblGenero.setForeground(Color.WHITE);
@@ -115,23 +114,7 @@ public class VentanaCatalogo extends JFrame {
             estiloBotonRojo(btnCarrito);
             btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
             btnCarrito.addActionListener(e -> agregarAlCarrito(p));
-
-
-
-         // Click en la película → abrir ventana de detalles 
-            card.addMouseListener(new MouseAdapter() { 
-            	@Override 
-            	public void mouseClicked(MouseEvent e) { 
-            		//new VentanaPelicula(p); 
-            	}
-            	@Override 
-            	public void mouseEntered(MouseEvent e) { 
-            		card.setBackground(new Color(60, 0, 0)); 
-            	} 
-            	@Override public void mouseExited(MouseEvent e) { 
-            		card.setBackground(Color.DARK_GRAY); 
-            	} 
-            });
+            
 
             card.add(lblImg);
             card.add(Box.createVerticalStrut(5));
@@ -171,9 +154,7 @@ public class VentanaCatalogo extends JFrame {
         }
     }
 
-    private void abrirCarrito() {
-        //new VentanaCarrito(usuario, carrito);
-    }
+
 
     private void aplicarFiltros() {
         Genero generoSel = (Genero) comboGenero.getSelectedItem();
