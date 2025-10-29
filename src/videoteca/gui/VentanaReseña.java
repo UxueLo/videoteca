@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -13,21 +14,24 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import videoteca.domain.Pelicula;
 
 public class VentanaReseña extends JFrame {
 	
-	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
-	private JPanel panelCentral;
-	private JPanel panelSur;		// Panel de comentarios y boton de "reseñar"
+	private JPanel panelPrincipal;	
+	private JPanel panelCentral;	// Panel en donde estaran las estrellas para puntuar
+	private JPanel panelSur;		// Panel de comentario
+	private JPanel panelSurSur;		// Panel del boton "reseñar"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
 	private JPanel panelNorte;		// Panel del titulo
 	private JButton reseñar;
 	private JLabel poster;
-	private JTextField comentarioEscrito;		//TODO
+	private JTextArea comentarioEscrito;	
 	
 	public VentanaReseña (Pelicula p) {
 		
@@ -45,8 +49,41 @@ public class VentanaReseña extends JFrame {
 		// Crear el panelCentral donde estaran las estrellas para poder puntuar
 		panelCentral = new JPanel();
 		panelCentral.setLayout(new BorderLayout());
-		panelCentral.setBackground(Color.blue);
+		panelCentral.setBackground(panelPrincipal.getBackground());
 		add(panelCentral, BorderLayout.CENTER);
+		
+		JPanel panelEstrellas = new JPanel();
+		panelEstrellas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));		// Creo un nuevo panel FlowLayout para agrupar las estrellas en orden y de izq a drch
+		panelEstrellas.setBackground(panelPrincipal.getBackground());
+		
+		// TODO listener de estrellas
+		Image estrellaVaciaEscalada = new ImageIcon("Images/Estrella vacia.png").getImage();
+		estrellaVaciaEscalada = estrellaVaciaEscalada.getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+		ImageIcon estrellaVacia = new ImageIcon(estrellaVaciaEscalada);
+		
+		JLabel estrella1 = new JLabel();		// Crear estrella 1
+		estrella1.setIcon(estrellaVacia);
+		
+		JLabel estrella2 = new JLabel();		// Crear estrella 2
+		estrella2.setIcon(estrellaVacia);
+		
+		JLabel estrella3 = new JLabel();		// Crear estrella 3
+		estrella3.setIcon(estrellaVacia);
+		
+		JLabel estrella4 = new JLabel();		// Crear estrella 4
+		estrella4.setIcon(estrellaVacia);
+		
+		JLabel estrella5 = new JLabel();		// Crear estrella 5
+		estrella5.setIcon(estrellaVacia);
+		
+		panelEstrellas.add(estrella1);
+		panelEstrellas.add(estrella2);
+		panelEstrellas.add(estrella3);
+		panelEstrellas.add(estrella4);
+		panelEstrellas.add(estrella5);
+		
+		panelCentral.add(panelEstrellas, BorderLayout.CENTER);
+		
 		
 		// Crear el panelNorte donde estara el titulo
 		this.panelNorte = new JPanel();
@@ -55,6 +92,9 @@ public class VentanaReseña extends JFrame {
 		titulo.setText(p.getTitulo());
 		titulo.setFont(new Font("Arial", Font.BOLD, 40));
 		titulo.setBackground(panelPrincipal.getBackground());
+		titulo.setForeground(Color.white);
+		panelNorte.setBackground(panelPrincipal.getBackground());
+		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 		
 		panelNorte.add(titulo);
 		
@@ -71,7 +111,7 @@ public class VentanaReseña extends JFrame {
 		
 		// Colocar el poster
 		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+		imagenEscalada = imagenEscalada.getScaledInstance(150, 175, Image.SCALE_SMOOTH);
 		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
 		poster.setIcon(posterEscalado);
 		poster.setOpaque(true);
@@ -82,24 +122,38 @@ public class VentanaReseña extends JFrame {
 		// Crear el panelSur
 		panelSur = new JPanel();
 		panelSur.setLayout(new BorderLayout());
-		panelSur.setBackground(Color.red);
+		panelSur.setBackground(panelPrincipal.getBackground());
 		add(panelSur, BorderLayout.SOUTH);
+		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+		
+		this.comentarioEscrito = new JTextArea(5,1);						// Crear el JTextArea para escribir los comentarios
+		comentarioEscrito.setLineWrap(true);								// Hacer que salte a la proxima linea automaticamente
+		comentarioEscrito.setFont(new Font("Arial", Font.PLAIN, 20));
+		JScrollPane scrollPane = new JScrollPane(comentarioEscrito);		// Crear un scrollPane para el comentario
+		panelSur.add(scrollPane);
+		
+		
+		
+		// Crear el panelSurSur
+		panelSurSur = new JPanel();
+		panelSurSur.setLayout(new BorderLayout());
+		panelSurSur.setBackground(panelPrincipal.getBackground());
+		panelSur.add(panelSurSur, BorderLayout.SOUTH);
+		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 		
 		this.reseñar = new JButton("Reseñar");			// Crear el boton de "reseñar"
 		reseñar.setBackground(new Color(153,0,0));
 		reseñar.setSize(500,30);
 		reseñar.setFont(new Font("Arial", Font.BOLD, 25));
 		
-		this.comentarioEscrito = new JTextField();
-		
-		panelSur.add(comentarioEscrito, BorderLayout.CENTER);
-		panelSur.add(reseñar, BorderLayout.CENTER);
+		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
 		this.reseñar.addActionListener(new ActionListener() {
 					
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO falta añadir el comentario a comentarios
+				
 				VentanaReseña.this.dispose();
 			}
 		});

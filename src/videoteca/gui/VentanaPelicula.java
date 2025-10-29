@@ -22,20 +22,28 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import videoteca.domain.Comentario;
 import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
+import videoteca.domain.Reserva;
 
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
-	private JPanel panelCentral;
+	private JPanel panelCentral;		// Informacion de la pelicula
+	private JPanel panelCentralCentral;	// Informacion de la pelicula
+	private JPanel panelCentralOeste;	// Informacion de la pelicula
 	private JPanel panelSur;		// Panel de comentarios
 	private JPanel panelSurSur;		// Panel de botones "alquiler" y "peliculas"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
@@ -43,11 +51,7 @@ public class VentanaPelicula extends JFrame {
 	private JButton alquilar;
 	private JButton reseñar;
 	private JTable comentarios;
-	private JLabel labelDirector;
-	private JLabel labelReparto;
-	private JLabel labelDuracion;
-	private JLabel labelGenero;
-	private JLabel año;
+	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
 
 	
@@ -73,6 +77,94 @@ public class VentanaPelicula extends JFrame {
 		add(panelCentral, BorderLayout.CENTER);
 		panelCentral.setBackground(Color.white);
 		
+		// Colocar la informacion
+		// Director
+		JLabel director = new JLabel("Director:");
+		director.setFont(new Font("Arial", Font.BOLD, 25));
+		director.setForeground(Color.white);
+		
+		JLabel directorEsp = new JLabel(p.getDirector());
+		directorEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		directorEsp.setForeground(Color.white);
+		
+		
+		// Año
+		JLabel año = new JLabel(Integer.toString(p.getAñoLanzamiento()));
+		año.setFont(new Font("Arial", Font.ITALIC, 20));
+		año.setForeground(Color.white);
+		
+		
+		// Reparto
+		JLabel reparto = new JLabel("Reparto:");
+		reparto.setFont(new Font("Arial", Font.BOLD, 25));
+		reparto.setForeground(Color.white);
+		
+		String listaReparto = "";
+		for (String r : p.getReparto()) {								// Añadir cada actor a la lista de repartos siendo este un String
+			if (r != p.getReparto().get(p.getReparto().size()-1)) {
+				listaReparto = listaReparto + r + ", ";
+			} else {
+				listaReparto = listaReparto + r;
+			}
+			
+		}
+		
+		JLabel repartoEsp = new JLabel(listaReparto);
+		repartoEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		repartoEsp.setForeground(Color.white);
+		
+		
+		// Generos
+		JLabel generos = new JLabel("Géneros:");
+		generos.setFont(new Font("Arial", Font.BOLD, 25));
+		generos.setForeground(Color.white);
+		
+		String listaGeneros = "";
+		for (Genero g : p.getGeneros()) {								// Añadir cada genero a la lista de generos siendo este un String
+			String genero = g.toString();
+			if (g != p.getGeneros().get(p.getGeneros().size()-1)) {
+				listaReparto = listaReparto + genero + ", ";
+			} else {
+				listaReparto = listaReparto + genero;
+			}
+			
+		}
+		
+		JLabel generosEsp = new JLabel(listaGeneros);
+		generosEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		generosEsp.setForeground(Color.white);
+		
+		
+		// Duracion
+		JLabel duracion = new JLabel(Integer.toString(p.getDuracion()) + "min");
+		duracion.setFont(new Font("Arial", Font.ITALIC, 20));
+		duracion.setForeground(Color.white);
+		
+		
+		// Añadir PanelCentralEste
+		this.panelCentralOeste = new JPanel();
+		panelCentralOeste.setLayout(new GridLayout(5, 1, 0, 5));
+		panelCentral.add(panelCentralOeste, BorderLayout.WEST);
+		panelCentralOeste.setBackground(panelPrincipal.getBackground());
+		
+		//adds
+		panelCentralOeste.add(director);
+		panelCentralOeste.add(reparto);
+		panelCentralOeste.add(generos);
+		panelCentralOeste.add(año);
+		panelCentralOeste.add(duracion);
+		
+		this.panelCentralCentral = new JPanel();
+		panelCentralCentral.setLayout(new GridLayout(5, 1, 0, 5));
+		panelCentralCentral.setBackground(panelPrincipal.getBackground());
+		panelCentral.add(panelCentralCentral, BorderLayout.CENTER);
+		
+		panelCentralCentral.add(directorEsp);
+		panelCentralCentral.add(repartoEsp);
+		panelCentralCentral.add(generosEsp);			// TODO arreglar
+		panelCentralCentral.add(new JLabel(""));
+		panelCentralCentral.add(new JLabel(""));
+		
 		
 		
 		// Crear el PanelNorte desde el central, donde estara el titulo
@@ -82,6 +174,8 @@ public class VentanaPelicula extends JFrame {
 		titulo.setText(p.getTitulo());
 		titulo.setFont(new Font("Arial", Font.BOLD, 40));
 		titulo.setBackground(panelPrincipal.getBackground());
+		titulo.setForeground(Color.white);
+		panelNorte.setBackground(panelPrincipal.getBackground());
 		
 		panelNorte.add(titulo);
 		
@@ -135,25 +229,42 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		// TODO Comentarios
-		this.comentarios = new JTable();
-		Vector<String> cabezeraComentarios = new Vector<String>(Arrays.asList("VALORACIÓN", "COMENTARIO"));
+		this.modeloTablaComentarios = new DefaultTableModel() {
+			  @Override
+			    public boolean isCellEditable(int row, int column) {
+			        return false;
+			    }
+		};
+		
+		
+		this.comentarios = new JTable(modeloTablaComentarios);
 		comentarios.setSize(10, 10);
 		
 		// Scroll
-		JScrollPane scrollComentarios = new JScrollPane(this.comentarios);
+		JScrollPane scrollComentarios = new JScrollPane(comentarios);
 		scrollComentarios.getVerticalScrollBar().setUnitIncrement(16);
+		scrollComentarios.setBorder(new TitledBorder("Reseñas: "));
+		
 		panelSur.add(scrollComentarios, BorderLayout.CENTER);
 		
 		
 		comentarios.setBackground(new Color(212,212,212));
 		comentarios.setForeground(panelPrincipal.getBackground());
 		
+		// Cargar comentarios
+		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
+	            "VALORACIÓN", "COMENTARIO"
+	        });
 		
-		for (int i=0; i<p.getComentarios().keySet().size(); i++) {
-			JLabel comentario = new JLabel();
-			
-			
+		ArrayList<Comentario> listaComentarios = p.getComentarios();
+		for(Comentario c : listaComentarios) {
+			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
 		}
+		
+		comentarios.setRowHeight(30);				// Agrandar la altura de cada fila de la tabla
+		comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de "valoraciones" sea mas pequeña
+		comentarios.getColumnModel().getColumn(0).setMinWidth(300);
+		comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
 		
 		
 		
@@ -192,26 +303,5 @@ public class VentanaPelicula extends JFrame {
 		
 
 	}
-	
-
-		
-		
-		
-		
-		
-//		labelDirector = new JLabel("Director: " + p.getDirector());
-//		labelReparto = new JLabel("Reparto: " + p.getReparto());
-//		labelDuracion = new JLabel("Duración: " + p.getDuracion());
-//		labelGenero = new JLabel("Géneros: " + p.getGeneros());
-//		año = new JLabel(String.valueOf(p.getAñoLanzamiento()));
-		
-		
-	
-	
-	
-	
-	
-	
-	
 	
 }

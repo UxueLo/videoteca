@@ -17,7 +17,7 @@ public class Pelicula {
 	private EdadRecomendada edadRecomendada;
 	private double puntuacionMedia;
 	private double precio;
-	private HashMap<Double, String> comentarios;
+	private ArrayList<Comentario> comentarios;
 	
 	
 	public Pelicula(String titulo, String director, ArrayList<String> reparto, ArrayList<Genero> generos,
@@ -35,10 +35,10 @@ public class Pelicula {
 		this.puntuacionMedia = puntuacionMedia;
 		this.precio = precio;
 		// TODO incluir comentarios
-		this.comentarios = new HashMap<>();
-		comentarios.put(3.5, "normal");
-		comentarios.put(4.0, "buena");
-		comentarios.put(2.0, "horrible");
+		this.comentarios = new ArrayList<>();
+		comentarios.add(new Comentario(3.5, "normal"));
+		comentarios.add(new Comentario(4.0, "buena"));
+		comentarios.add(new Comentario(2.0, "horrible"));
 		
 	}
 	
@@ -96,18 +96,16 @@ public class Pelicula {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-    
-    
-	public HashMap<Double, String> getComentarios() {
+
+	public ArrayList<Comentario> getComentarios() {
 		return comentarios;
 	}
 
-
-	public void setComentarios(HashMap<Double, String> comentarios) {
+	public void setComentarios(ArrayList<Comentario> comentarios) {
 		this.comentarios = comentarios;
 	}
-	
 
+	
 
 	@Override
 	public String toString() {
