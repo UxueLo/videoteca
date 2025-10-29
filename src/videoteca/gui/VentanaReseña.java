@@ -27,7 +27,7 @@ public class VentanaReseña extends JFrame {
 	private JPanel panelNorte;		// Panel del titulo
 	private JButton reseñar;
 	private JLabel poster;
-	private JTextField comentario;		//TODO
+	private JTextField comentarioEscrito;		//TODO
 	
 	public VentanaReseña (Pelicula p) {
 		
@@ -89,6 +89,10 @@ public class VentanaReseña extends JFrame {
 		reseñar.setBackground(new Color(153,0,0));
 		reseñar.setSize(500,30);
 		reseñar.setFont(new Font("Arial", Font.BOLD, 25));
+		
+		this.comentarioEscrito = new JTextField();
+		
+		panelSur.add(comentarioEscrito, BorderLayout.CENTER);
 		panelSur.add(reseñar, BorderLayout.CENTER);
 		
 		this.reseñar.addActionListener(new ActionListener() {
