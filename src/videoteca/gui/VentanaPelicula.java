@@ -51,6 +51,7 @@ public class VentanaPelicula extends JFrame {
 	private JButton alquilar;
 	private JButton reseñar;
 	private JTable comentarios;
+	private int numCom = 0;			// Contador del numero de comentarios de la pelicula
 	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
 
@@ -199,7 +200,7 @@ public class VentanaPelicula extends JFrame {
 		
 		// Puntuacion media
 		poster.setText(Double.toString(p.getPuntuacionMedia()));
-		poster.setFont(new Font("Arial", Font.BOLD, 30));
+		poster.setFont(new Font("Arial", Font.BOLD, 50));
 		
 		// Condicional que pinta el numero de la puntuacion media segun esta
 		if (p.getPuntuacionMedia() >= 8) {
@@ -227,8 +228,6 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
-		
-		
 		// TODO Comentarios
 		this.modeloTablaComentarios = new DefaultTableModel() {
 			  @Override
@@ -245,6 +244,7 @@ public class VentanaPelicula extends JFrame {
 		JScrollPane scrollComentarios = new JScrollPane(comentarios);
 		scrollComentarios.getVerticalScrollBar().setUnitIncrement(16);
 		scrollComentarios.setBorder(new TitledBorder("Reseñas: "));
+		scrollComentarios.setPreferredSize(new Dimension(0, 350));
 		
 		panelSur.add(scrollComentarios, BorderLayout.CENTER);
 		
@@ -259,6 +259,7 @@ public class VentanaPelicula extends JFrame {
 		
 		ArrayList<Comentario> listaComentarios = p.getComentarios();
 		for(Comentario c : listaComentarios) {
+			this.numCom = numCom + 1;
 			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
 		}
 		
@@ -298,11 +299,21 @@ public class VentanaPelicula extends JFrame {
 			}
 		});
 		
+		
+		repaint();
+		
+		
+		
 		panelSurSur.add(alquilar);
 		panelSurSur.add(reseñar);
 		
 		
 
+	}
+	
+	
+	public void pintarTablaReseñas () {
+		
 	}
 	
 }

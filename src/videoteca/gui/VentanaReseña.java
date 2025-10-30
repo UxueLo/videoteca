@@ -131,6 +131,8 @@ public class VentanaReseña extends JFrame {
 		this.comentarioEscrito = new JTextArea(5,1);						// Crear el JTextArea para escribir los comentarios
 		comentarioEscrito.setLineWrap(true);								// Hacer que salte a la proxima linea automaticamente
 		comentarioEscrito.setFont(new Font("Arial", Font.PLAIN, 20));
+		comentarioEscrito.setBackground(panelPrincipal.getBackground());
+		comentarioEscrito.setForeground(Color.white);
 		JScrollPane scrollPane = new JScrollPane(comentarioEscrito);		// Crear un scrollPane para el comentario
 		panelSur.add(scrollPane);
 		
@@ -160,6 +162,8 @@ public class VentanaReseña extends JFrame {
 				p.setComentarios(comentarios);
 				
 				VentanaReseña.this.dispose();
+				
+				
 			}
 		});
 		
