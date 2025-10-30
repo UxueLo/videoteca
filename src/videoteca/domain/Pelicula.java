@@ -36,9 +36,9 @@ public class Pelicula {
 		this.precio = precio;
 		// TODO incluir comentarios
 		this.comentarios = new ArrayList<>();
-		comentarios.add(new Comentario(3.5, "normal"));
-		comentarios.add(new Comentario(4.0, "buena"));
-		comentarios.add(new Comentario(2.0, "horrible"));
+		comentarios.add(new Comentario(3, "normal"));
+		comentarios.add(new Comentario(4, "buena"));
+		comentarios.add(new Comentario(2, "horrible"));
 		
 	}
 	

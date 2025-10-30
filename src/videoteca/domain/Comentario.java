@@ -3,10 +3,10 @@ package videoteca.domain;
 public class Comentario {
 	
 	private String texto;
-	private double valoracion;
+	private int valoracion;
 	
 	
-	public Comentario(double valoracion, String texto) {
+	public Comentario(int valoracion, String texto) {
 		super();
 		this.texto = texto;
 		this.valoracion = valoracion;
@@ -28,7 +28,7 @@ public class Comentario {
 	}
 
 
-	public void setValoracion(double valoracion) {
+	public void setValoracion(int valoracion) {
 		this.valoracion = valoracion;
 	}
 

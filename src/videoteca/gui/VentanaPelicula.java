@@ -123,9 +123,9 @@ public class VentanaPelicula extends JFrame {
 		for (Genero g : p.getGeneros()) {								// Añadir cada genero a la lista de generos siendo este un String
 			String genero = g.toString();
 			if (g != p.getGeneros().get(p.getGeneros().size()-1)) {
-				listaReparto = listaReparto + genero + ", ";
+				listaGeneros = listaGeneros + genero + ", ";
 			} else {
-				listaReparto = listaReparto + genero;
+				listaGeneros = listaGeneros + genero;
 			}
 			
 		}
