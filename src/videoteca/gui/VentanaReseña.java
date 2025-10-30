@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import videoteca.domain.Comentario;
 import videoteca.domain.Pelicula;
 
 public class VentanaReseña extends JFrame {
@@ -152,7 +154,10 @@ public class VentanaReseña extends JFrame {
 					
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO falta añadir el comentario a comentarios
+				// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
+				ArrayList<Comentario> comentarios = p.getComentarios();
+				comentarios.add(new Comentario(1, comentarioEscrito.getText()));
+				p.setComentarios(comentarios);
 				
 				VentanaReseña.this.dispose();
 			}
