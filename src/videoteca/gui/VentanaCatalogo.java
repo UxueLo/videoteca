@@ -27,7 +27,8 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void inicializarVentana() {
-        setTitle("Catálogo de Películas");
+    	setIconImage(new ImageIcon("Images/logo.png").getImage());
+    	setTitle("Catálogo de Películas");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());

@@ -60,6 +60,7 @@ public class VentanaPelicula extends JFrame {
 		
 		this.p = p;
 		
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Película");
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);

@@ -55,6 +55,7 @@ public class UsuarioFrame extends JFrame{
 		setTitle("Usuario");
 		setSize(800,500);
 		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//panel usuario
 		panelUsuario = new JPanel();

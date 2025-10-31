@@ -31,6 +31,7 @@ public class VentanaInicioFrame extends JFrame{
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //abrirlo en pantalla completa
 		setResizable(false); //siempre estara en pantalla completa
 		getContentPane().setBackground(new Color(32,32,32)); //cambiar el fondo
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout

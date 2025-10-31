@@ -37,6 +37,7 @@ public class VentanaReseña extends JFrame {
 	
 	public VentanaReseña (Pelicula p) {
 		
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
 		setSize(800,500);
 		setResizable(false);
