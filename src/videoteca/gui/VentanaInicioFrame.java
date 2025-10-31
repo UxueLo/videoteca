@@ -104,9 +104,9 @@ public class VentanaInicioFrame extends JFrame{
 					}else if (opcion=="Usuario") {
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
-						
 					}else if (opcion=="Carrito") {
-						//TODO hacer que se habra la ventana de Carrito
+						VentanaCarrito vcr=new VentanaCarrito();
+						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
 				}
