@@ -194,12 +194,12 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mouseExited(MouseEvent e) {
-	                // nada
+	            	peliculaActual.setForeground(Color.white);
 	            }
 
 	            @Override
 	            public void mouseEntered(MouseEvent e) {
-	                // nada
+	            	peliculaActual.setForeground(Color.gray);
 	            }
 
 	            @Override
