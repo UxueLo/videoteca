@@ -125,12 +125,21 @@ public class VentanaPelicula extends JFrame {
 		for (Genero g : p.getGeneros()) {								// Añadir cada genero a la lista de generos siendo este un String
 			String genero = g.toString().toLowerCase().substring(0, 1).toUpperCase();
 			String generoMayMin = genero + g.toString().toLowerCase().substring(1);
-			if (g != p.getGeneros().get(p.getGeneros().size()-1)) {
-				listaGeneros = listaGeneros + " " + generoMayMin + ",";
-			} else {
-				listaGeneros = listaGeneros + " " + generoMayMin;
-			}
+			if (g == Genero.CIENCIA_FICCION) {
+				if (g != p.getGeneros().get(p.getGeneros().size()-1)) {
+					listaGeneros = listaGeneros + " Ciencia ficción,";
+				} else {
+					listaGeneros = listaGeneros + " Ciencia ficción";
+				}
+				
+			}else {
+				if (g != p.getGeneros().get(p.getGeneros().size()-1)) {
 			
+				listaGeneros = listaGeneros + " " + generoMayMin + ",";
+				} else {
+					listaGeneros = listaGeneros + " " + generoMayMin;
+				}
+			}
 		}
 		
 		JLabel generosEsp = new JLabel(listaGeneros);
