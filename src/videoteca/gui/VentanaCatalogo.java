@@ -127,11 +127,13 @@ public class VentanaCatalogo extends JFrame {
             btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
             btnCarrito.addActionListener(e -> agregarAlCarrito(p));
 
-            // Click en la película → ventana de detalles
+            // Click en la película → abrir ventana de detalles
             card.addMouseListener(new MouseAdapter() { 
                 @Override 
                 public void mouseClicked(MouseEvent e) { 
-                    //new VentanaPelicula(p); 
+                    // Abrir la ventana de película
+                    VentanaPelicula ventanaPelicula = new VentanaPelicula(p);
+                    ventanaPelicula.setVisible(true);
                 }
                 @Override 
                 public void mouseEntered(MouseEvent e) { 
@@ -156,6 +158,7 @@ public class VentanaCatalogo extends JFrame {
         panelCatalogo.revalidate();
         panelCatalogo.repaint();
     }
+
 
     private void agregarAlCarrito(Pelicula p) {
         if (carrito.contains(p))
