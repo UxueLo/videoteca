@@ -103,10 +103,20 @@ public class VentanaCatalogo extends JFrame {
             JLabel lblImg = new JLabel();
             lblImg.setAlignmentX(CENTER_ALIGNMENT);
             lblImg.setPreferredSize(new Dimension(200, 280));
+
             String ruta = "images/" + p.getTitulo() + ".jpg";
             File archivo = new File(ruta);
-            ImageIcon icon = archivo.exists() ? new ImageIcon(ruta) : new ImageIcon("images/default.jpg");
-            lblImg.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH)));
+            ImageIcon icon;
+
+            if (archivo.exists()) {
+                icon = new ImageIcon(ruta);
+            } else {
+                icon = new ImageIcon("images/default.jpg");
+            }
+
+            // Escalar la imagen y asignarla al JLabel
+            Image imagenEscalada = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
+            lblImg.setIcon(new ImageIcon(imagenEscalada));
 
             // Título 
             JLabel lblTitulo = new JLabel(p.getTitulo(), SwingConstants.CENTER);
