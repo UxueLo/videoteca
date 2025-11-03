@@ -50,7 +50,7 @@ public class VentanaInicioFrame extends JFrame{
 		JLabel textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(new Color(255,0,0));
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
-		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //crear borde para que no este pegado arriba, ayuda de DeepSeek
+		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //IAG
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
 		JPanel peliculasPanel= new JPanel();
@@ -65,7 +65,7 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel menu = new JPanel();
 		menu.setBackground(new Color(153,0,0));
 		menu.setPreferredSize(new Dimension(300, 0));
-		menu.setLayout(new GridLayout(8,1));
+		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
 		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catalogo", "Carrito", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
@@ -123,7 +123,7 @@ public class VentanaInicioFrame extends JFrame{
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					if (opcion!="Usuario") {
-						campo.setFont(new Font("Arial",Font.BOLD, 18));
+						campo.setFont(new Font("Arial",Font.BOLD, 23));
 					}
 				}
 				

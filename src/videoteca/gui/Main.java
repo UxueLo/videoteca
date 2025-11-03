@@ -16,7 +16,7 @@ public class Main {
 	public static void main(String[] args) {
 		//Lista creada por DeepSeek
 		// Crear lista de 50 películas
-		// Crear lista de 50 películas
+		//IAG
 		ArrayList<Pelicula> peliculas = new ArrayList<>();
 
 		// Películas 1-10
