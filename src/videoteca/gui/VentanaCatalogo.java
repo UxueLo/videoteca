@@ -1,11 +1,13 @@
 package videoteca.gui;
 
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+
 import videoteca.domain.*;
 
 public class VentanaCatalogo extends JFrame {
@@ -27,17 +29,19 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void inicializarVentana() {
-    	setIconImage(new ImageIcon("Images/logo.png").getImage());
-    	setTitle("Catálogo de Películas");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setTitle("Catálogo de Películas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Ocupa toda la pantalla y no se puede redimensionar
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false);
+
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.BLACK);
 
-        // PANEL SUPERIOR 
+        // PANEL SUPERIOR - FILTROS
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelFiltros.setBackground(Color.BLACK);
-        
 
         comboGenero = new JComboBox<>(Genero.values());
         comboGenero.insertItemAt(null, 0);
@@ -57,6 +61,7 @@ public class VentanaCatalogo extends JFrame {
 
         JButton btnCarrito = new JButton("🛒 Ir al carrito");
         estiloBotonRojo(btnCarrito);
+        btnCarrito.addActionListener(e -> abrirCarrito());
 
         JLabel lblGenero = new JLabel("Género:");
         lblGenero.setForeground(Color.WHITE);
@@ -74,7 +79,7 @@ public class VentanaCatalogo extends JFrame {
 
         add(panelFiltros, BorderLayout.NORTH);
 
-        // --- PANEL CATÁLOGO ---
+        // PANEL CENTRAL - CATALOGO
         panelCatalogo = new JPanel(new GridLayout(0, 4, 20, 20));
         panelCatalogo.setBackground(Color.BLACK);
         JScrollPane scroll = new JScrollPane(panelCatalogo);
@@ -110,32 +115,38 @@ public class VentanaCatalogo extends JFrame {
             lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
             lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
 
-        
-            JButton btnCarrito = new JButton("🛒 Añadir al carrito");
-            estiloBotonRojo(btnCarrito);
-            btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
-            btnCarrito.addActionListener(e -> agregarAlCarrito(p));
-            
-
-            card.add(lblImg);
-            card.add(Box.createVerticalStrut(5));
-            card.add(lblTitulo);
-            
-         // Precio 
+            // Precio
             JLabel lblPrecio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
             lblPrecio.setFont(new Font("SansSerif", Font.BOLD, 13));
             lblPrecio.setForeground(Color.WHITE);
             lblPrecio.setAlignmentX(CENTER_ALIGNMENT);
+
+            // Botón agregar al carrito
+            JButton btnCarrito = new JButton("🛒 Añadir al carrito");
+            estiloBotonRojo(btnCarrito);
+            btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
+            btnCarrito.addActionListener(e -> agregarAlCarrito(p));
+
+            // Click en la película → ventana de detalles
+            card.addMouseListener(new MouseAdapter() { 
+                @Override 
+                public void mouseClicked(MouseEvent e) { 
+                    //new VentanaPelicula(p); 
+                }
+                @Override 
+                public void mouseEntered(MouseEvent e) { 
+                    card.setBackground(new Color(60, 0, 0)); 
+                } 
+                @Override 
+                public void mouseExited(MouseEvent e) { 
+                    card.setBackground(Color.DARK_GRAY); 
+                } 
+            });
+
+            card.add(lblImg);
+            card.add(Box.createVerticalStrut(5));
+            card.add(lblTitulo);
             card.add(lblPrecio);
-            
-            // Edad solo si es PLUS18
-            if (p.getEdadRecomendada() == EdadRecomendada.PLUS18) {
-                JLabel lbl18 = new JLabel("🔞");
-                lbl18.setFont(new Font("SansSerif", Font.BOLD, 20));
-                lbl18.setForeground(Color.RED);
-                lbl18.setAlignmentX(CENTER_ALIGNMENT);
-                card.add(lbl18);
-            }
             card.add(Box.createVerticalStrut(10));
             card.add(btnCarrito);
 
@@ -155,7 +166,9 @@ public class VentanaCatalogo extends JFrame {
         }
     }
 
-
+    private void abrirCarrito() {
+        new VentanaCarrito(usuario, carrito);
+    }
 
     private void aplicarFiltros() {
         Genero generoSel = (Genero) comboGenero.getSelectedItem();
@@ -199,3 +212,4 @@ public class VentanaCatalogo extends JFrame {
         });
     }
 }
+
