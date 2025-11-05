@@ -3,6 +3,7 @@ package videoteca.gui;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +40,7 @@ public class RegistrarFrame extends JFrame{
 			panelPrincipal.setBackground(new Color(96, 96, 96));
 			panelPrincipal.setOpaque(true);
 			setContentPane(panelPrincipal);
+			setIconImage(new ImageIcon("Images/logo.png").getImage());
 			
 			//Llama a constructor de objetos
 			inicializarPanel();

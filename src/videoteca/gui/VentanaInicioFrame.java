@@ -31,6 +31,7 @@ public class VentanaInicioFrame extends JFrame{
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //abrirlo en pantalla completa
 		setResizable(false); //siempre estara en pantalla completa
 		getContentPane().setBackground(new Color(32,32,32)); //cambiar el fondo
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout
@@ -49,7 +50,7 @@ public class VentanaInicioFrame extends JFrame{
 		JLabel textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(new Color(255,0,0));
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
-		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //crear borde para que no este pegado arriba, ayuda de DeepSeek
+		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //IAG
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
 		JPanel peliculasPanel= new JPanel();
@@ -64,7 +65,7 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel menu = new JPanel();
 		menu.setBackground(new Color(153,0,0));
 		menu.setPreferredSize(new Dimension(300, 0));
-		menu.setLayout(new GridLayout(8,1));
+		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
 		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catalogo", "Carrito", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
@@ -104,9 +105,9 @@ public class VentanaInicioFrame extends JFrame{
 					}else if (opcion=="Usuario") {
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
-						
 					}else if (opcion=="Carrito") {
-						//TODO hacer que se habra la ventana de Carrito
+						VentanaCarrito vcr= new VentanaCarrito(usuario, new ArrayList<>());
+						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
 				}
@@ -122,7 +123,7 @@ public class VentanaInicioFrame extends JFrame{
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					if (opcion!="Usuario") {
-						campo.setFont(new Font("Arial",Font.BOLD, 18));
+						campo.setFont(new Font("Arial",Font.BOLD, 23));
 					}
 				}
 				
@@ -194,12 +195,12 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mouseExited(MouseEvent e) {
-	                // nada
+	            	peliculaActual.setForeground(Color.white);
 	            }
 
 	            @Override
 	            public void mouseEntered(MouseEvent e) {
-	                // nada
+	            	peliculaActual.setForeground(Color.gray);
 	            }
 
 	            @Override

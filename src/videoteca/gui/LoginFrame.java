@@ -3,6 +3,7 @@ package videoteca.gui;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ public class LoginFrame extends JFrame{
 		setTitle("Iniciar Sesión");
 		setSize(800,500);
 		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//panel principal
 		JPanel panelPrincipal = new JPanel();
