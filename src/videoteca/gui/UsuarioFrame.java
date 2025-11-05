@@ -47,7 +47,7 @@ public class UsuarioFrame extends JFrame{
 
 	public UsuarioFrame(Usuario usuario) {
 		
-		//Asignamos el usuario
+		//Asignamos el usuario al Frame
 		this.usuario = usuario;
 		
 		//Datos del JFrame
@@ -55,6 +55,7 @@ public class UsuarioFrame extends JFrame{
 		setTitle("Usuario");
 		setSize(800,500);
 		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//panel usuario
 		panelUsuario = new JPanel();
