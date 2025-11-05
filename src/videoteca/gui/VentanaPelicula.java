@@ -211,11 +211,11 @@ public class VentanaPelicula extends JFrame {
 		lblPuntuacion.setHorizontalAlignment(JLabel.CENTER);
 
 		// Color según puntuación
-		if (p.getPuntuacionMedia() >= 8) {
-		    lblPuntuacion.setForeground(Color.GREEN);
-		} else if (p.getPuntuacionMedia() >= 5) {
+		if (p.getPuntuacionMedia() >= 8) { // Si la puntuación es mayor o igual a 8, pinta de verde
+		    lblPuntuacion.setForeground(Color.GREEN); 
+		} else if (p.getPuntuacionMedia() >= 5) { // Si la puntuación es mayor o igual a 5, pinta de amarillo
 		    lblPuntuacion.setForeground(Color.YELLOW);
-		} else {
+		} else { // Si la puntuación es menor a 5, pinta de rojo
 		    lblPuntuacion.setForeground(Color.RED);
 		}
 
