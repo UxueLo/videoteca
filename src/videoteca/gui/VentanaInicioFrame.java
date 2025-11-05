@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 
 public class VentanaInicioFrame extends JFrame{
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
@@ -167,21 +168,22 @@ public class VentanaInicioFrame extends JFrame{
 	
 	//mostrar las Top 10 peliculas
 	public void setTop10(ArrayList<Pelicula> top10, JPanel panelPeliculas) {
-	    for (int i=0; i<top10.size();i++) {
-	        JLabel peliculaActual= new JLabel();
-	        //poner la foto del poster
-	        Pelicula pel= top10.get(i);
-	        ImageIcon posterPelicula= pel.getPoster();
-	        
-	        // Crear el poster escalado original una sola vez
-	        Image posterEscalado = posterPelicula.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH);
-	        ImageIcon iconOriginal = new ImageIcon(posterEscalado);
-	        
-	        peliculaActual.setIcon(iconOriginal);
-	        peliculaActual.setHorizontalAlignment(JLabel.CENTER);
-	        
-	        peliculaActual.addMouseListener(new MouseListener() {
+		for (int i = 0; i < top10.size(); i++) {
+	        Pelicula pel = top10.get(i);
 
+	        // Crear el JLabel del póster usando GestionImagenes
+	        JLabel peliculaActual = GestionImagenes.cargarImagen(pel.getTitulo(), 200, 300);
+	        peliculaActual.setHorizontalAlignment(JLabel.CENTER);
+
+	        // Poner el número de posición en el podio al lado
+	        peliculaActual.setText(Integer.toString(i + 1));
+	        peliculaActual.setFont(new Font("Arial", Font.BOLD, 60));
+	        peliculaActual.setForeground(Color.WHITE);
+	        peliculaActual.setVerticalTextPosition(JLabel.BOTTOM);
+	        peliculaActual.setHorizontalTextPosition(JLabel.LEFT);
+
+	        // Añadir eventos de ratón
+	        peliculaActual.addMouseListener(new MouseListener() {
 	            @Override
 	            public void mouseReleased(MouseEvent e) {
 	                // nada
@@ -189,18 +191,18 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mousePressed(MouseEvent e) {
-	                VentanaPelicula vp= new VentanaPelicula(pel);
+	                VentanaPelicula vp = new VentanaPelicula(pel);
 	                vp.setVisible(true);
 	            }
 
 	            @Override
 	            public void mouseExited(MouseEvent e) {
-	            	peliculaActual.setForeground(Color.white);
+	                peliculaActual.setForeground(Color.WHITE);
 	            }
 
 	            @Override
 	            public void mouseEntered(MouseEvent e) {
-	            	peliculaActual.setForeground(Color.gray);
+	                peliculaActual.setForeground(Color.GRAY);
 	            }
 
 	            @Override
@@ -208,13 +210,6 @@ public class VentanaInicioFrame extends JFrame{
 	                // nada
 	            }
 	        });
-	        
-	        //poner el numero en el podio alado
-	        peliculaActual.setText(Integer.toString(i+1));
-	        peliculaActual.setFont(new Font("Arial", Font.BOLD, 60));
-	        peliculaActual.setForeground(Color.white);
-	        peliculaActual.setVerticalTextPosition(JLabel.BOTTOM);
-	        peliculaActual.setHorizontalTextPosition(JLabel.LEFT);
 
 	        panelPeliculas.add(peliculaActual);
 	    }
