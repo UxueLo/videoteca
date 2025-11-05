@@ -36,6 +36,7 @@ import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
+import videoteca.io.GestionImagenes;
 
 public class VentanaPelicula extends JFrame {
 
@@ -198,35 +199,30 @@ public class VentanaPelicula extends JFrame {
 		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
-		this.poster = new JLabel();												
-		poster.setOpaque(true);
+
+		// Cargar poster
+		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 250, 375);
 		poster.setBackground(panelPrincipal.getBackground());
+		poster.setOpaque(true);
 		
-		// Colocar el poster
-		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(250, 325, Image.SCALE_SMOOTH);
-		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
-		poster.setIcon(posterEscalado);
-		
-		// Puntuacion media
-		poster.setText(Double.toString(p.getPuntuacionMedia()));
-		poster.setFont(new Font("Arial", Font.BOLD, 50));
-		
-		// Condicional que pinta el numero de la puntuacion media segun esta
-		if (p.getPuntuacionMedia() >= 8) {
-			poster.setForeground(Color.green);			// Si la puntuacion mayor o igual a 8, pinta de verde
-		} else if(p.getPuntuacionMedia() >= 5) {
-			poster.setForeground(Color.yellow);			// Si la puntuacion mayor o igual a 5, pinta de amarillo
-		} else {
-			poster.setForeground(Color.red);			// Si la puntuacion menor a 5, pinta de rojo
+		// Puntuación Media
+		JLabel lblPuntuacion = new JLabel(String.format("%.1f", p.getPuntuacionMedia()));
+		lblPuntuacion.setFont(new Font("Arial", Font.BOLD, 40));
+		lblPuntuacion.setHorizontalAlignment(JLabel.CENTER);
+
+		// Color según puntuación
+		if (p.getPuntuacionMedia() >= 8) { // Si la puntuación es mayor o igual a 8, pinta de verde
+		    lblPuntuacion.setForeground(Color.GREEN); 
+		} else if (p.getPuntuacionMedia() >= 5) { // Si la puntuación es mayor o igual a 5, pinta de amarillo
+		    lblPuntuacion.setForeground(Color.YELLOW);
+		} else { // Si la puntuación es menor a 5, pinta de rojo
+		    lblPuntuacion.setForeground(Color.RED);
 		}
 
-		poster.setHorizontalTextPosition(JLabel.CENTER);
-		poster.setVerticalTextPosition(JLabel.BOTTOM);
-		
-		poster.setOpaque(true);
+		// Añadir poster y puntuación al panel oeste, uno encima del otro
+		panelOeste.setLayout(new BorderLayout(0, 10));
 		panelOeste.add(poster, BorderLayout.CENTER);
-		
+		panelOeste.add(lblPuntuacion, BorderLayout.SOUTH);
 		
 		
 		// Crear el PanelSur, donde estaran los comentarios
