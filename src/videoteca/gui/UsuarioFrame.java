@@ -197,9 +197,6 @@ public class UsuarioFrame extends JFrame{
 		botonReseñar.setBackground(colorTexto);
 		botonReseñar.setText("Reseñar");
 		botonReseñar.setFont(fuenteDatos);
-		botonReseñar.addActionListener(e ->{
-			System.out.println("Reseña hecha");
-		});
 		botonReseñar.setBounds(600, 25, 120, 30);
 		botonReseñar.addMouseListener(new MouseListener() {
 			
@@ -218,18 +215,16 @@ public class UsuarioFrame extends JFrame{
 			@Override
 			public void mouseExited(MouseEvent e) {
 				botonReseñar.setBackground(colorTexto);
-				botonReseñar.setFont(fuenteDatos);
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				botonReseñar.setFont(new Font("Times New Roman",Font.BOLD,30));
 				botonReseñar.setBackground(new Color(158,0,0));
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
+				// nada
 				
 			}
 		});
