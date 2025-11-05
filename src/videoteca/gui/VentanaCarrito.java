@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 
 public class VentanaCarrito extends JFrame {
 
@@ -88,13 +89,8 @@ public class VentanaCarrito extends JFrame {
             panelPeli.setBackground(Color.DARK_GRAY);
             panelPeli.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Imagen
-            JLabel lblImg = new JLabel();
-            lblImg.setPreferredSize(new Dimension(150, 210));
-            String ruta = "images/" + p.getTitulo() + ".jpg";
-            File archivo = new File(ruta);
-            ImageIcon icon = archivo.exists() ? new ImageIcon(ruta) : new ImageIcon("images/default.jpg");
-            lblImg.setIcon(new ImageIcon(icon.getImage().getScaledInstance(150, 210, Image.SCALE_SMOOTH)));
+            // Imagen cargada mediante GestionImagenes
+            JLabel lblImg = GestionImagenes.cargarImagen(p.getTitulo(), 150, 210);
             panelPeli.add(lblImg, BorderLayout.WEST);
 
             // Info de la película
