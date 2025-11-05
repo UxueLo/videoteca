@@ -70,7 +70,7 @@ public class VentanaReseña extends JFrame {
 		add(panelCentral, BorderLayout.CENTER);
 		
 		this.panelEstrellas = new JPanel();
-		panelEstrellas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));		// Creo un nuevo panel FlowLayout para agrupar las estrellas en orden y de izq a drch
+		panelEstrellas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));		// Creo un nuevo panel FlowLayout para agrupar las estrellas en orden de izq a drch
 		panelEstrellas.setBackground(panelPrincipal.getBackground());
 		
 		// Creacion estrellas
@@ -104,7 +104,7 @@ public class VentanaReseña extends JFrame {
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
-					actualizarEstrellas();
+					actualizarEstrellas();		// aunque el raton no este sobre ninguna estrella, mirara si hemos elegido una valoracion y pintara las estrellas menores
 				}
 				
 				@Override
@@ -117,11 +117,6 @@ public class VentanaReseña extends JFrame {
 		}
 		
 		panelCentral.add(panelEstrellas, BorderLayout.CENTER);
-		
-		
-		
-		
-		
 		
 		
 		
@@ -185,8 +180,7 @@ public class VentanaReseña extends JFrame {
 		
 		this.reseñar = new JButton("Reseñar");			// Crear el boton de "reseñar"
 		reseñar.setBackground(new Color(153,0,0));
-		reseñar.setSize(500,30);
-		reseñar.setFont(new Font("Arial", Font.BOLD, 25));
+		reseñar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
@@ -207,7 +201,7 @@ public class VentanaReseña extends JFrame {
 					
 					VentanaReseña.this.dispose();
 				} else {
-					System.err.println("Valora la película con las estrellas");
+					System.err.println("Valora la película");
 				}
 				
 			}
