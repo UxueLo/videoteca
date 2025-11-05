@@ -34,8 +34,11 @@ public class VentanaReseña extends JFrame {
 	private JButton reseñar;
 	private JLabel poster;
 	private JTextArea comentarioEscrito;	
+	private VentanaPelicula ventanaPelicula;
 	
-	public VentanaReseña (Pelicula p) {
+	public VentanaReseña (Pelicula p, VentanaPelicula ventanaPelicula) {
+		
+		this.ventanaPelicula = ventanaPelicula;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
@@ -162,8 +165,11 @@ public class VentanaReseña extends JFrame {
 				comentarios.add(new Comentario(1, comentarioEscrito.getText()));
 				p.setComentarios(comentarios);
 				
-				VentanaReseña.this.dispose();
+				if (ventanaPelicula != null) {
+					ventanaPelicula.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+				}
 				
+				VentanaReseña.this.dispose();
 				
 			}
 		});
@@ -172,6 +178,7 @@ public class VentanaReseña extends JFrame {
 		
 		
 	}	
+	
 	
 }
 	

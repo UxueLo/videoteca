@@ -262,23 +262,7 @@ public class VentanaPelicula extends JFrame {
 		comentarios.setBackground(new Color(212,212,212));
 		comentarios.setForeground(panelPrincipal.getBackground());
 		
-		// Cargar comentarios
-		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
-	            "VALORACIÓN", "COMENTARIO"
-	        });
-		
-		ArrayList<Comentario> listaComentarios = p.getComentarios();
-		for(Comentario c : listaComentarios) {
-			this.numCom = numCom + 1;
-			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
-		}
-		
-		comentarios.setRowHeight(30);				// Agrandar la altura de cada fila de la tabla
-		comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de "valoraciones" sea mas pequeña
-		comentarios.getColumnModel().getColumn(0).setMinWidth(300);
-		comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
-		
-		
+		actualizarComentarios();
 		
 		
 		
@@ -304,13 +288,12 @@ public class VentanaPelicula extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Abrir VentanaReseña
-				VentanaReseña ventanaReseña = new VentanaReseña(p);
+				VentanaReseña ventanaReseña = new VentanaReseña(p, VentanaPelicula.this);
 				ventanaReseña.setVisible(true);
 			}
 		});
 		
 		
-		repaint();
 		
 		
 		
@@ -322,8 +305,36 @@ public class VentanaPelicula extends JFrame {
 	}
 	
 	
-	public void pintarTablaReseñas () {
+	public void actualizarComentarios() {
+		
+		// Cargar comentarios
+		
+		if (modeloTablaComentarios.getRowCount() == 0) {					// si la tabla esta vacia
+			modeloTablaComentarios.setColumnIdentifiers(new Object[] {
+		            "VALORACIÓN", "COMENTARIO"
+		        });
+			
+			ArrayList<Comentario> listaComentarios = p.getComentarios();
+			for(Comentario c : listaComentarios) {
+				this.numCom = numCom + 1;
+				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
+			}
+			
+			comentarios.setRowHeight(30);									// Agrandar la altura de cada fila de la tabla
+			comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
+			comentarios.getColumnModel().getColumn(0).setMinWidth(300);
+			comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
+
+		} else {
+			Comentario comAñadido = p.getComentarios().get(p.getComentarios().size()-1);
+			modeloTablaComentarios.addRow(new Object[] {Double.toString(comAñadido.getValoracion()),comAñadido.getTexto()} );	// Añadir la ultima reseña a la tabla
+		}
+			
+		comentarios.repaint();		// actualizar la tabla
+				
+				
 		
 	}
+	
 	
 }
