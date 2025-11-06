@@ -5,10 +5,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
 
 import videoteca.domain.*;
+import videoteca.io.GestionImagenes;
 
 public class VentanaCatalogo extends JFrame {
 
@@ -22,24 +22,35 @@ public class VentanaCatalogo extends JFrame {
     private JComboBox<Genero> comboGenero;
     private JComboBox<EdadRecomendada> comboEdad;
 
-    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
+    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas, ArrayList<Pelicula> carrito) {
         this.usuario = usuario;
         this.peliculas = peliculas;
+        this.carrito = carrito;
         inicializarVentana();
     }
 
     private void inicializarVentana() {
         setTitle("Catálogo de Películas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        // Ocupa toda la pantalla y no se puede redimensionar
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
 
         setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.BLACK);
+        setBackground(Color.BLACK);
+        
+        // PANEL SUPERIOR
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new BorderLayout());
+        panelSuperior.setBackground(new Color(32,32,32));
 
-        // PANEL SUPERIOR - FILTROS
+        // TÍTULO
+        JLabel titulo = new JLabel("Catálogo de Películas", SwingConstants.CENTER);
+        titulo.setFont(new Font("Garamond", Font.BOLD, 45));
+        titulo.setForeground(new Color(255,0,0));
+        titulo.setBorder(new EmptyBorder(20, 0, 10, 0));
+        panelSuperior.add(titulo, BorderLayout.NORTH);
+
+        // PANEL FILTRAR
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelFiltros.setBackground(Color.BLACK);
 
@@ -55,31 +66,32 @@ public class VentanaCatalogo extends JFrame {
         estiloBotonRojo(btnFiltrar);
         btnFiltrar.addActionListener(e -> aplicarFiltros());
 
-        JButton btnReset = new JButton("Reiniciar");
-        estiloBotonNegro(btnReset);
-        btnReset.addActionListener(e -> resetFiltros());
+        JButton btnReinicio = new JButton("Reiniciar");
+        estiloBotonNegro(btnReinicio);
+        btnReinicio.addActionListener(e -> reiniciarFiltros());
 
-        JButton btnCarrito = new JButton("🛒 Ir al carrito");
+        JButton btnCarrito = new JButton("Ir al Carrito");
         estiloBotonRojo(btnCarrito);
         btnCarrito.addActionListener(e -> abrirCarrito());
 
-        JLabel lblGenero = new JLabel("Género:");
-        lblGenero.setForeground(Color.WHITE);
-        panelFiltros.add(lblGenero);
+        JLabel Genero = new JLabel("Género:");
+        Genero.setForeground(Color.WHITE);
+        panelFiltros.add(Genero);
         panelFiltros.add(comboGenero);
 
-        JLabel lblEdad = new JLabel("Edad Recomendada:");
-        lblEdad.setForeground(Color.WHITE);
-        panelFiltros.add(lblEdad);
+        JLabel Edad = new JLabel("Edad Recomendada:");
+        Edad.setForeground(Color.WHITE);
+        panelFiltros.add(Edad);
         panelFiltros.add(comboEdad);
 
         panelFiltros.add(btnFiltrar);
-        panelFiltros.add(btnReset);
+        panelFiltros.add(btnReinicio);
         panelFiltros.add(btnCarrito);
 
-        add(panelFiltros, BorderLayout.NORTH);
+        panelSuperior.add(panelFiltros, BorderLayout.SOUTH);
+        add(panelSuperior, BorderLayout.NORTH);
 
-        // PANEL CENTRAL - CATALOGO
+        // PANEL CATALOGO
         panelCatalogo = new JPanel(new GridLayout(0, 4, 20, 20));
         panelCatalogo.setBackground(Color.BLACK);
         JScrollPane scroll = new JScrollPane(panelCatalogo);
@@ -90,79 +102,61 @@ public class VentanaCatalogo extends JFrame {
         cargarPeliculas(peliculas);
         setVisible(true);
     }
+    
+    // MÉTODOS
 
     private void cargarPeliculas(ArrayList<Pelicula> lista) {
         panelCatalogo.removeAll();
 
         for (Pelicula p : lista) {
-            JPanel card = new JPanel();
-            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-            card.setBackground(Color.DARK_GRAY);
+            JPanel pelicula = new JPanel();
+            pelicula.setLayout(new BoxLayout(pelicula, BoxLayout.Y_AXIS));
+            pelicula.setBackground(new Color(32,32,32));
 
-            // Imagen
-            JLabel lblImg = new JLabel();
-            lblImg.setAlignmentX(CENTER_ALIGNMENT);
-            lblImg.setPreferredSize(new Dimension(200, 280));
+            // Cargar imagen desde GestionImagenes
+            JLabel imagen = GestionImagenes.cargarImagen(p.getTitulo(), 200, 280);
+            imagen.setAlignmentX(CENTER_ALIGNMENT);
 
-            String ruta = "images/" + p.getTitulo() + ".jpg";
-            File archivo = new File(ruta);
-            ImageIcon icon;
+            JLabel titulo = new JLabel(p.getTitulo());
+            titulo.setFont(new Font("Arial", Font.BOLD, 16));
+            titulo.setForeground(Color.WHITE);
+            titulo.setAlignmentX(CENTER_ALIGNMENT);
+            titulo.setBorder(new EmptyBorder(5, 0, 5, 0));
 
-            if (archivo.exists()) {
-                icon = new ImageIcon(ruta);
-            } else {
-                icon = new ImageIcon("images/default.jpg");
-            }
+            JLabel precio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
+            precio.setFont(new Font("Arial", Font.BOLD, 13));
+            precio.setForeground(Color.WHITE);
+            precio.setAlignmentX(CENTER_ALIGNMENT);
 
-            // Escalar la imagen y asignarla al JLabel
-            Image imagenEscalada = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
-            lblImg.setIcon(new ImageIcon(imagenEscalada));
-
-            // Título 
-            JLabel lblTitulo = new JLabel(p.getTitulo(), SwingConstants.CENTER);
-            lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
-            lblTitulo.setForeground(Color.WHITE);
-            lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
-            lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
-
-            // Precio
-            JLabel lblPrecio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
-            lblPrecio.setFont(new Font("SansSerif", Font.BOLD, 13));
-            lblPrecio.setForeground(Color.WHITE);
-            lblPrecio.setAlignmentX(CENTER_ALIGNMENT);
-
-            // Botón agregar al carrito
-            JButton btnCarrito = new JButton("🛒 Añadir al carrito");
+            JButton btnCarrito = new JButton("Añadir al carrito");
             estiloBotonRojo(btnCarrito);
             btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
             btnCarrito.addActionListener(e -> agregarAlCarrito(p));
 
-            // Click en la película → abrir ventana de detalles
-            card.addMouseListener(new MouseAdapter() { 
-                @Override 
-                public void mouseClicked(MouseEvent e) { 
-                    // Abrir la ventana de película
-                    VentanaPelicula ventanaPelicula = new VentanaPelicula(p);
-                    ventanaPelicula.setVisible(true);
+            pelicula.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    new VentanaPelicula(p).setVisible(true);
                 }
-                @Override 
+
+                @Override
                 public void mouseEntered(MouseEvent e) { 
-                    card.setBackground(new Color(60, 0, 0)); 
-                } 
-                @Override 
+                	pelicula.setBackground(new Color(60, 0, 0)); 
+                }
+                @Override
                 public void mouseExited(MouseEvent e) { 
-                    card.setBackground(Color.DARK_GRAY); 
-                } 
+                	pelicula.setBackground(new Color(32,32,32)); 
+                	}
             });
 
-            card.add(lblImg);
-            card.add(Box.createVerticalStrut(5));
-            card.add(lblTitulo);
-            card.add(lblPrecio);
-            card.add(Box.createVerticalStrut(10));
-            card.add(btnCarrito);
+            pelicula.add(imagen);
+            pelicula.add(Box.createVerticalStrut(5));
+            pelicula.add(titulo);
+            pelicula.add(precio);
+            pelicula.add(Box.createVerticalStrut(10));
+            pelicula.add(btnCarrito);
 
-            panelCatalogo.add(card);
+            panelCatalogo.add(pelicula);
         }
 
         panelCatalogo.revalidate();
@@ -175,7 +169,7 @@ public class VentanaCatalogo extends JFrame {
             JOptionPane.showMessageDialog(this, "Esta película ya está en el carrito.", "Aviso", JOptionPane.WARNING_MESSAGE);
         else {
             carrito.add(p);
-            JOptionPane.showMessageDialog(this, p.getTitulo() + " añadida al carrito 🎬", "Carrito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, p.getTitulo() + " añadida al carrito", "Carrito", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -184,44 +178,51 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void aplicarFiltros() {
-        Genero generoSel = (Genero) comboGenero.getSelectedItem();
-        EdadRecomendada edadSel = (EdadRecomendada) comboEdad.getSelectedItem();
+        Genero valorGenero = (Genero) comboGenero.getSelectedItem();
+        EdadRecomendada valorEdad = (EdadRecomendada) comboEdad.getSelectedItem();
 
         ArrayList<Pelicula> filtradas = new ArrayList<>();
         for (Pelicula p : peliculas)
-            if ((generoSel == null || p.getGeneros().contains(generoSel)) &&
-                (edadSel == null || p.getEdadRecomendada() == edadSel))
+            if ((valorGenero == null || p.getGeneros().contains(valorGenero)) &&
+                (valorEdad == null || p.getEdadRecomendada() == valorEdad))
                 filtradas.add(p);
 
         cargarPeliculas(filtradas);
     }
 
-    private void resetFiltros() {
+    private void reiniciarFiltros() {
         comboGenero.setSelectedIndex(0);
         comboEdad.setSelectedIndex(0);
+        
         cargarPeliculas(peliculas);
     }
 
     private void estiloBotonRojo(JButton b) {
         b.setBackground(new Color(180, 0, 0));
         b.setForeground(Color.WHITE);
-        b.setFocusPainted(false);
-        b.setFont(new Font("SansSerif", Font.BOLD, 13));
+        b.setFont(new Font("Arial", Font.BOLD, 13));
         b.setBorder(new LineBorder(Color.BLACK, 1));
         b.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) { b.setBackground(new Color(220, 0, 0)); }
-            public void mouseExited(MouseEvent e) { b.setBackground(new Color(180, 0, 0)); }
+            public void mouseEntered(MouseEvent e) { 
+            	b.setBackground(new Color(220, 0, 0)); 
+            }
+            public void mouseExited(MouseEvent e) { 
+            	b.setBackground(new Color(180, 0, 0)); 
+            }
         });
     }
 
     private void estiloBotonNegro(JButton b) {
         b.setBackground(Color.BLACK);
         b.setForeground(Color.WHITE);
-        b.setFocusPainted(false);
-        b.setFont(new Font("SansSerif", Font.BOLD, 13));
+        b.setFont(new Font("Arial", Font.BOLD, 13));
         b.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) { b.setBackground(new Color(50, 0, 0)); }
-            public void mouseExited(MouseEvent e) { b.setBackground(Color.BLACK); }
+            public void mouseEntered(MouseEvent e) { 
+            	b.setBackground(new Color(50, 0, 0)); 
+            }
+            public void mouseExited(MouseEvent e) { 
+            	b.setBackground(Color.BLACK); 
+            }
         });
     }
 }

@@ -6,6 +6,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -194,10 +197,38 @@ public class UsuarioFrame extends JFrame{
 		botonReseñar.setBackground(colorTexto);
 		botonReseñar.setText("Reseñar");
 		botonReseñar.setFont(fuenteDatos);
-		botonReseñar.addActionListener(e ->{
-			System.out.println("Reseña hecha");
-		});
 		botonReseñar.setBounds(600, 25, 120, 30);
+		botonReseñar.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//nada
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				VentanaPelicula vp = new VentanaPelicula(p);
+				VentanaReseña reseña= new VentanaReseña(p, vp);
+				reseña.setVisible(true);
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				botonReseñar.setBackground(colorTexto);
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				botonReseñar.setBackground(new Color(158,0,0));
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// nada
+				
+			}
+		});
 		
 		//adds
 	    panelPelicula.add(labelTitulo);

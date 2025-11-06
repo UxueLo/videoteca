@@ -7,9 +7,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,20 +27,30 @@ import javax.swing.JTextField;
 
 import videoteca.domain.Comentario;
 import videoteca.domain.Pelicula;
+import videoteca.io.GestionImagenes;
 
 public class VentanaReseña extends JFrame {
 	
+	private int mouseRowEstrellas;
+	
 	private JPanel panelPrincipal;	
 	private JPanel panelCentral;	// Panel en donde estaran las estrellas para puntuar
+	private JPanel panelEstrellas;
 	private JPanel panelSur;		// Panel de comentario
 	private JPanel panelSurSur;		// Panel del boton "reseñar"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
 	private JPanel panelNorte;		// Panel del titulo
 	private JButton reseñar;
 	private JLabel poster;
-	private JTextArea comentarioEscrito;	
+	private JTextArea comentarioEscrito;
 	
-	public VentanaReseña (Pelicula p) {
+	private int valoracion = -1;
+	private ArrayList<JLabel> estrellas = new ArrayList<>();
+	private ImageIcon estrellaVacia;
+	private ImageIcon estrellaRellena;
+	
+	
+	public VentanaReseña (Pelicula p, VentanaPelicula ventanaPelicula) {
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
@@ -55,37 +70,55 @@ public class VentanaReseña extends JFrame {
 		panelCentral.setBackground(panelPrincipal.getBackground());
 		add(panelCentral, BorderLayout.CENTER);
 		
-		JPanel panelEstrellas = new JPanel();
-		panelEstrellas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));		// Creo un nuevo panel FlowLayout para agrupar las estrellas en orden y de izq a drch
+		this.panelEstrellas = new JPanel();
+		panelEstrellas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));		// Creo un nuevo panel FlowLayout para agrupar las estrellas en orden de izq a drch
 		panelEstrellas.setBackground(panelPrincipal.getBackground());
 		
-		// TODO listener de estrellas
-		Image estrellaVaciaEscalada = new ImageIcon("Images/Estrella vacia.png").getImage();
+		// Creacion estrellas
+		// Estrella vacia
+		Image estrellaVaciaEscalada = new ImageIcon("Images/Estrella Vacia.png").getImage();
 		estrellaVaciaEscalada = estrellaVaciaEscalada.getScaledInstance(75, 75, Image.SCALE_SMOOTH);
-		ImageIcon estrellaVacia = new ImageIcon(estrellaVaciaEscalada);
+		this.estrellaVacia = new ImageIcon(estrellaVaciaEscalada);
 		
-		JLabel estrella1 = new JLabel();		// Crear estrella 1
-		estrella1.setIcon(estrellaVacia);
+		// Estrella rellena
+		Image estrellaRellenaEscalada = new ImageIcon("Images/Estrella Rellena.png").getImage();
+		estrellaRellenaEscalada = estrellaRellenaEscalada.getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+		this.estrellaRellena= new ImageIcon(estrellaRellenaEscalada);
 		
-		JLabel estrella2 = new JLabel();		// Crear estrella 2
-		estrella2.setIcon(estrellaVacia);
 		
-		JLabel estrella3 = new JLabel();		// Crear estrella 3
-		estrella3.setIcon(estrellaVacia);
-		
-		JLabel estrella4 = new JLabel();		// Crear estrella 4
-		estrella4.setIcon(estrellaVacia);
-		
-		JLabel estrella5 = new JLabel();		// Crear estrella 5
-		estrella5.setIcon(estrellaVacia);
-		
-		panelEstrellas.add(estrella1);
-		panelEstrellas.add(estrella2);
-		panelEstrellas.add(estrella3);
-		panelEstrellas.add(estrella4);
-		panelEstrellas.add(estrella5);
+		// Crear las estrellas y el mouse listener
+		for (int e = 0; e < 5; e++) {
+			final int indice = e;
+			JLabel estrella = new JLabel();
+			estrella.setIcon(estrellaVacia);
+			estrellas.add(estrella);
+			panelEstrellas.add(estrella);
+			
+			estrella.addMouseListener(new MouseAdapter() {
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					for (int i = 0; i <= indice; i++) {
+						estrellas.get(i).setIcon(estrellaRellena);		// pintar todas las estrellas que sean anteriores a esta, inclyendola
+					}
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					actualizarEstrellas();		// aunque el raton no este sobre ninguna estrella, mirara si hemos elegido una valoracion y pintara las estrellas menores
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					valoracion = indice + 1;
+					actualizarEstrellas();		// entrar a esta funcion de nuevo con la valoracion actualizada, para que las estrellas menores que la valoracion se queden rellenas, las demas siguen con el mismo funcionamiento
+				}
+				
+			});
+		}
 		
 		panelCentral.add(panelEstrellas, BorderLayout.CENTER);
+		
 		
 		
 		// Crear el panelNorte donde estara el titulo
@@ -108,15 +141,11 @@ public class VentanaReseña extends JFrame {
 		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
-		this.poster = new JLabel();												
-		poster.setOpaque(true);
-		poster.setBackground(new Color(32,32,32));
+		this.poster = new JLabel();	
 		
-		// Colocar el poster
-		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(150, 175, Image.SCALE_SMOOTH);
-		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
-		poster.setIcon(posterEscalado);
+		// Cargar y olocar el poster		
+		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 150, 215);
+		poster.setBackground(panelPrincipal.getBackground());
 		poster.setOpaque(true);
 		panelOeste.add(poster, BorderLayout.CENTER);
 		
@@ -129,7 +158,7 @@ public class VentanaReseña extends JFrame {
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 		
-		this.comentarioEscrito = new JTextArea(5,1);						// Crear el JTextArea para escribir los comentarios
+		this.comentarioEscrito = new JTextArea(3,1);						// Crear el JTextArea para escribir los comentarios
 		comentarioEscrito.setLineWrap(true);								// Hacer que salte a la proxima linea automaticamente
 		comentarioEscrito.setFont(new Font("Arial", Font.PLAIN, 20));
 		comentarioEscrito.setBackground(panelPrincipal.getBackground());
@@ -148,8 +177,7 @@ public class VentanaReseña extends JFrame {
 		
 		this.reseñar = new JButton("Reseñar");			// Crear el boton de "reseñar"
 		reseñar.setBackground(new Color(153,0,0));
-		reseñar.setSize(500,30);
-		reseñar.setFont(new Font("Arial", Font.BOLD, 25));
+		reseñar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
@@ -158,12 +186,20 @@ public class VentanaReseña extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
-				ArrayList<Comentario> comentarios = p.getComentarios();
-				comentarios.add(new Comentario(1, comentarioEscrito.getText()));
-				p.setComentarios(comentarios);
 				
-				VentanaReseña.this.dispose();
-				
+				if (valoracion != -1) {
+					ArrayList<Comentario> comentarios = p.getComentarios();
+					comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
+					p.setComentarios(comentarios);
+					
+					if (ventanaPelicula != null) {
+						ventanaPelicula.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+					}
+					
+					VentanaReseña.this.dispose();
+				} else {
+					System.err.println("Valora la película");
+				}
 				
 			}
 		});
@@ -172,6 +208,19 @@ public class VentanaReseña extends JFrame {
 		
 		
 	}	
+	
+	
+	public void actualizarEstrellas() {
+		for (int e = 0; e <5; e++) {
+			JLabel estrella = estrellas.get(e);
+			if (e < valoracion) {						// si la valoracion es mayor o igual a la estrella, se pinta de blanco
+				estrella.setIcon(estrellaRellena);
+			} else {									// si la valoracion es menor a la estrella, se coloca la vacia
+				estrella.setIcon(estrellaVacia);
+			}
+		}
+	}
+	
 	
 }
 	

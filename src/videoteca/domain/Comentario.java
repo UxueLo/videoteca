@@ -23,7 +23,7 @@ public class Comentario {
 	}
 
 
-	public double getValoracion() {
+	public int getValoracion() {
 		return valoracion;
 	}
 
