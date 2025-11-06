@@ -143,7 +143,7 @@ public class VentanaReseña extends JFrame {
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
 		this.poster = new JLabel();	
 		
-		// Colocar el poster		
+		// Cargar y olocar el poster		
 		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 150, 215);
 		poster.setBackground(panelPrincipal.getBackground());
 		poster.setOpaque(true);
