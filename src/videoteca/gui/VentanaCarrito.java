@@ -34,13 +34,13 @@ public class VentanaCarrito extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
 
-        getContentPane().setBackground(Color.BLACK);
+        getContentPane().setBackground(new Color(32,32,32));
         setLayout(new BorderLayout());
 
         // TEXTO SUPERIOR
         JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas.", SwingConstants.CENTER);
         info.setFont(new Font("Garamond", Font.BOLD, 45));
-        info.setForeground(Color.WHITE);
+        info.setForeground(new Color(255,0,0));
         info.setBorder(new EmptyBorder(15, 0, 15, 0));
         add(info, BorderLayout.NORTH);
 
