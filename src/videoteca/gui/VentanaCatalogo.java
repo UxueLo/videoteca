@@ -22,9 +22,10 @@ public class VentanaCatalogo extends JFrame {
     private JComboBox<Genero> comboGenero;
     private JComboBox<EdadRecomendada> comboEdad;
 
-    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
+    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas, ArrayList<Pelicula> carrito) {
         this.usuario = usuario;
         this.peliculas = peliculas;
+        this.carrito = carrito;
         inicializarVentana();
     }
 

@@ -25,6 +25,7 @@ import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
 
 public class VentanaInicioFrame extends JFrame{
+	private ArrayList<Pelicula> carrito = new ArrayList<>();
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
 		//Ventana
 		setTitle("Ventana de Inicio"); //titulo
@@ -101,13 +102,13 @@ public class VentanaInicioFrame extends JFrame{
 						RegistrarFrame reg= new RegistrarFrame();
 						reg.setVisible(true);
 					}else if (opcion=="Catalogo") {
-						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
+						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas, carrito);
 						venCat.setVisible(true);
 					}else if (opcion=="Usuario") {
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
 					}else if (opcion=="Carrito") {
-						VentanaCarrito vcr= new VentanaCarrito(usuario, new ArrayList<>());
+						VentanaCarrito vcr= new VentanaCarrito(usuario, carrito);
 						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
