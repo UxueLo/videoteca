@@ -38,7 +38,7 @@ public class VentanaCarrito extends JFrame {
         setLayout(new BorderLayout());
 
         // TEXTO SUPERIOR
-        JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas.", SwingConstants.CENTER);
+        JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas", SwingConstants.CENTER);
         info.setFont(new Font("Garamond", Font.BOLD, 45));
         info.setForeground(new Color(255,0,0));
         info.setBorder(new EmptyBorder(15, 0, 15, 0));
