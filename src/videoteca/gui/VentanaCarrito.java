@@ -18,7 +18,7 @@ public class VentanaCarrito extends JFrame {
     private ArrayList<Pelicula> carrito;
 
     private JPanel panelCarrito;
-    private JLabel lblTotal;
+    private JLabel precioTotal;
 
     public VentanaCarrito(Usuario usuario, ArrayList<Pelicula> carrito) {
         this.usuario = usuario;
@@ -38,16 +38,16 @@ public class VentanaCarrito extends JFrame {
         setLayout(new BorderLayout());
 
         // TEXTO SUPERIOR
-        JLabel lblInfo = new JLabel("Aquí puede alquilar sus películas seleccionadas.", SwingConstants.CENTER);
-        lblInfo.setFont(new Font("SansSerif", Font.BOLD, 20));
-        lblInfo.setForeground(Color.WHITE);
-        lblInfo.setBorder(new EmptyBorder(15, 0, 15, 0));
-        add(lblInfo, BorderLayout.NORTH);
+        JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas.", SwingConstants.CENTER);
+        info.setFont(new Font("Garamond", Font.BOLD, 45));
+        info.setForeground(Color.WHITE);
+        info.setBorder(new EmptyBorder(15, 0, 15, 0));
+        add(info, BorderLayout.NORTH);
 
         // PANEL CENTRAL DEL CARRITO
         panelCarrito = new JPanel();
         panelCarrito.setLayout(new BoxLayout(panelCarrito, BoxLayout.Y_AXIS));
-        panelCarrito.setBackground(Color.BLACK);
+        panelCarrito.setBackground(new Color(32,32,32));
         JScrollPane scroll = new JScrollPane(panelCarrito);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -57,9 +57,9 @@ public class VentanaCarrito extends JFrame {
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         panelInferior.setBackground(Color.BLACK);
 
-        lblTotal = new JLabel();
-        lblTotal.setFont(new Font("SansSerif", Font.BOLD, 18));
-        lblTotal.setForeground(Color.WHITE);
+        precioTotal = new JLabel();
+        precioTotal.setFont(new Font("SansSerif", Font.BOLD, 18));
+        precioTotal.setForeground(Color.WHITE);
 
         JButton btnLimpiar = new JButton("Limpiar carrito");
         estiloBotonRojo(btnLimpiar);
@@ -69,7 +69,7 @@ public class VentanaCarrito extends JFrame {
         estiloBotonRojo(btnAlquilar);
         btnAlquilar.addActionListener(e -> alquilarPeliculas());
 
-        panelInferior.add(lblTotal);
+        panelInferior.add(precioTotal);
         panelInferior.add(btnLimpiar);
         panelInferior.add(btnAlquilar);
 
@@ -133,7 +133,7 @@ public class VentanaCarrito extends JFrame {
             total += p.getPrecio();
         }
 
-        lblTotal.setText("Total: " + String.format("%.2f €", total));
+        precioTotal.setText("Total: " + String.format("%.2f €", total));
 
         panelCarrito.revalidate();
         panelCarrito.repaint();

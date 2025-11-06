@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 public class GestionImagenes {
 	
 	public static JLabel cargarImagen(String titulo, int ancho, int alto) {
-        JLabel lblImg = new JLabel();
-        lblImg.setPreferredSize(new Dimension(ancho, alto));
+        JLabel imagen = new JLabel();
+        imagen.setPreferredSize(new Dimension(ancho, alto));
 
         String ruta = "images/" + titulo + ".jpg";
         File archivo = new File(ruta);
@@ -24,9 +24,9 @@ public class GestionImagenes {
         }
 
         Image imagenEscalada = icon.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        lblImg.setIcon(new ImageIcon(imagenEscalada));
+        imagen.setIcon(new ImageIcon(imagenEscalada));
 
-        return lblImg;
+        return imagen;
     }
 
 }
