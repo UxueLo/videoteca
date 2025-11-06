@@ -174,7 +174,7 @@ public class VentanaPelicula extends JFrame {
 		
 		panelCentralCentral.add(directorEsp);
 		panelCentralCentral.add(repartoEsp);
-		panelCentralCentral.add(generosEsp);			// TODO arreglar
+		panelCentralCentral.add(generosEsp);
 		panelCentralCentral.add(new JLabel(""));
 		panelCentralCentral.add(new JLabel(""));
 		
@@ -234,7 +234,6 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
-		// TODO Comentarios
 		this.modeloTablaComentarios = new DefaultTableModel() {
 			  @Override
 			    public boolean isCellEditable(int row, int column) {
