@@ -264,7 +264,7 @@ public class VentanaPelicula extends JFrame {
 		
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
 		this.panelSurSur = new JPanel();
-		panelSurSur.setLayout(new GridLayout(1,2,20,20));
+		panelSurSur.setLayout(new GridLayout(1,1,20,20));
 		panelSurSur.setBackground(panelPrincipal.getBackground());
 		panelSur.add(panelSurSur, BorderLayout.SOUTH);
 		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -272,9 +272,9 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		// Crear ambos botones y ajustar color
-		this.alquilar = new JButton("Alquilar");
-		this.alquilar.setBackground(new Color(153,0,0));
-		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
+//		this.alquilar = new JButton("Alquilar");
+//		this.alquilar.setBackground(new Color(153,0,0));
+//		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		this.reseñar = new JButton("Reseñar");
 		this.reseñar.setBackground(new Color(153,0,0));
@@ -293,7 +293,7 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
-		panelSurSur.add(alquilar);
+//		panelSurSur.add(alquilar);
 		panelSurSur.add(reseñar);
 		
 		
