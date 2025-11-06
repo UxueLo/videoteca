@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 
 import videoteca.domain.Comentario;
 import videoteca.domain.Pelicula;
+import videoteca.io.GestionImagenes;
 
 public class VentanaReseña extends JFrame {
 	
@@ -140,15 +141,11 @@ public class VentanaReseña extends JFrame {
 		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
-		this.poster = new JLabel();												
-		poster.setOpaque(true);
-		poster.setBackground(new Color(32,32,32));
+		this.poster = new JLabel();	
 		
-		// Colocar el poster
-		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(150, 175, Image.SCALE_SMOOTH);
-		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
-		poster.setIcon(posterEscalado);
+		// Colocar el poster		
+		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 150, 215);
+		poster.setBackground(panelPrincipal.getBackground());
 		poster.setOpaque(true);
 		panelOeste.add(poster, BorderLayout.CENTER);
 		
@@ -161,7 +158,7 @@ public class VentanaReseña extends JFrame {
 		add(panelSur, BorderLayout.SOUTH);
 		panelSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 		
-		this.comentarioEscrito = new JTextArea(5,1);						// Crear el JTextArea para escribir los comentarios
+		this.comentarioEscrito = new JTextArea(3,1);						// Crear el JTextArea para escribir los comentarios
 		comentarioEscrito.setLineWrap(true);								// Hacer que salte a la proxima linea automaticamente
 		comentarioEscrito.setFont(new Font("Arial", Font.PLAIN, 20));
 		comentarioEscrito.setBackground(panelPrincipal.getBackground());
