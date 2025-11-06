@@ -43,7 +43,7 @@ import videoteca.io.GestionImagenes;
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
-//	private Usuario user;
+//	private Usuario user
 	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
