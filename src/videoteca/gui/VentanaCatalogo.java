@@ -22,9 +22,10 @@ public class VentanaCatalogo extends JFrame {
     private JComboBox<Genero> comboGenero;
     private JComboBox<EdadRecomendada> comboEdad;
 
-    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
+    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas, ArrayList<Pelicula> carrito) {
         this.usuario = usuario;
         this.peliculas = peliculas;
+        this.carrito = carrito;
         inicializarVentana();
     }
 
@@ -36,6 +37,18 @@ public class VentanaCatalogo extends JFrame {
 
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
+        
+        // PANEL SUPERIOR
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new BorderLayout());
+        panelSuperior.setBackground(new Color(32,32,32));
+
+        // TÍTULO
+        JLabel titulo = new JLabel("Catálogo de Películas", SwingConstants.CENTER);
+        titulo.setFont(new Font("Garamond", Font.BOLD, 45));
+        titulo.setForeground(new Color(255,0,0));
+        titulo.setBorder(new EmptyBorder(20, 0, 10, 0));
+        panelSuperior.add(titulo, BorderLayout.NORTH);
 
         // PANEL FILTRAR
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -75,7 +88,8 @@ public class VentanaCatalogo extends JFrame {
         panelFiltros.add(btnReinicio);
         panelFiltros.add(btnCarrito);
 
-        add(panelFiltros, BorderLayout.NORTH);
+        panelSuperior.add(panelFiltros, BorderLayout.SOUTH);
+        add(panelSuperior, BorderLayout.NORTH);
 
         // PANEL CATALOGO
         panelCatalogo = new JPanel(new GridLayout(0, 4, 20, 20));

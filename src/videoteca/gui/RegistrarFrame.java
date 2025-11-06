@@ -26,7 +26,7 @@ public class RegistrarFrame extends JFrame{
 		private JTextField fechaNacimiento; //Cambiar por calendario 
 		private JButton botonIniciarSesion;
 		private Color colorTexto = new Color(204,0,0);
-		private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,20);
+		private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
 		
 		//constructor
 		public RegistrarFrame() {

@@ -25,6 +25,7 @@ import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
 
 public class VentanaInicioFrame extends JFrame{
+	private ArrayList<Pelicula> carrito = new ArrayList<>();
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
 		//Ventana
 		setTitle("Ventana de Inicio"); //titulo
@@ -74,10 +75,12 @@ public class VentanaInicioFrame extends JFrame{
 			//si es el usuario: foto y nombew
 			if (opcion=="Usuario") {
 				campo.setText("Hola " + usuario.getNombre()+ "!");
-				campo.setFont(new Font("Arial", Font.BOLD, 40));
+				campo.setFont(new Font("Garamond", Font.BOLD, 30));
 				campo.setIcon(new ImageIcon("Images/iconoUsuario.png")); //TODO la foto del perfil
 				campo.setHorizontalTextPosition(JLabel.RIGHT); 
 				campo.setVerticalTextPosition(JLabel.CENTER);
+				campo.setHorizontalAlignment(JLabel.CENTER); 
+				
 			}else { //sino, solo el texto
 				campo.setText(opcion);
 				campo.setHorizontalAlignment(JLabel.CENTER);
@@ -101,13 +104,13 @@ public class VentanaInicioFrame extends JFrame{
 						RegistrarFrame reg= new RegistrarFrame();
 						reg.setVisible(true);
 					}else if (opcion=="Catalogo") {
-						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
+						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas, carrito);
 						venCat.setVisible(true);
 					}else if (opcion=="Usuario") {
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
 					}else if (opcion=="Carrito") {
-						VentanaCarrito vcr= new VentanaCarrito(usuario, new ArrayList<>());
+						VentanaCarrito vcr= new VentanaCarrito(usuario, carrito);
 						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
