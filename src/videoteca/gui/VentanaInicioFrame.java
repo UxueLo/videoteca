@@ -75,10 +75,12 @@ public class VentanaInicioFrame extends JFrame{
 			//si es el usuario: foto y nombew
 			if (opcion=="Usuario") {
 				campo.setText("Hola " + usuario.getNombre()+ "!");
-				campo.setFont(new Font("Arial", Font.BOLD, 40));
+				campo.setFont(new Font("Garamond", Font.BOLD, 30));
 				campo.setIcon(new ImageIcon("Images/iconoUsuario.png")); //TODO la foto del perfil
 				campo.setHorizontalTextPosition(JLabel.RIGHT); 
 				campo.setVerticalTextPosition(JLabel.CENTER);
+				campo.setHorizontalAlignment(JLabel.CENTER); 
+				
 			}else { //sino, solo el texto
 				campo.setText(opcion);
 				campo.setHorizontalAlignment(JLabel.CENTER);

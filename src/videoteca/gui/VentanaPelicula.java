@@ -187,7 +187,7 @@ public class VentanaPelicula extends JFrame {
 		titulo.setText(p.getTitulo());
 		titulo.setFont(new Font("Garamond", Font.BOLD, 45));
 		titulo.setBackground(panelPrincipal.getBackground());
-		titulo.setForeground(Color.white);
+		titulo.setForeground(new Color(255,0,0));
 		panelNorte.setBackground(panelPrincipal.getBackground());
 		
 		panelNorte.add(titulo);
