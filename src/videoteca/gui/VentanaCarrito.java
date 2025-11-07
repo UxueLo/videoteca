@@ -20,9 +20,9 @@ public class VentanaCarrito extends JFrame {
     private JPanel panelCarrito;
     private JLabel precioTotal;
 
-    public VentanaCarrito(Usuario usuario, ArrayList<Pelicula> carrito) {
+    public VentanaCarrito(Usuario usuario) {
         this.usuario = usuario;
-        this.carrito = carrito;
+        this.carrito = usuario.getCarritoUsuario();
         inicializarVentana();
     }
 
@@ -172,6 +172,7 @@ public class VentanaCarrito extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "¡Alquiler realizado con éxito! 🎬", "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
+                
                 carrito.clear();
                 actualizarCarrito();
             }

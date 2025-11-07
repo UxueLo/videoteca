@@ -13,6 +13,7 @@ public class Usuario {
 	private String contraseña;
 	private int saldo = 0;
 	private ArrayList<Reserva> peliculasAlquiladas = new ArrayList<Reserva>();
+	private ArrayList<Pelicula> carritoUsuario= new ArrayList<Pelicula>();
 	
 	//constructor
 	public Usuario(String nombre, String email, int edad, LocalDate fechaNacimineto, String contraseña) {
@@ -58,6 +59,14 @@ public class Usuario {
 		return peliculasAlquiladas;
 	}
 	
+	public ArrayList<Pelicula> getCarritoUsuario() {
+		return carritoUsuario;
+	}
+
+	public void setCarritoUsuario(ArrayList<Pelicula> carritoUsuario) {
+		this.carritoUsuario = carritoUsuario;
+	}
+
 	//metodos
 	public void addrReserva(Reserva reserva) {
 		this.peliculasAlquiladas.add(reserva);

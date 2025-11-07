@@ -27,12 +27,13 @@ import javax.swing.JTextField;
 
 import videoteca.domain.Comentario;
 import videoteca.domain.Pelicula;
+import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
 
 public class VentanaReseña extends JFrame {
 	
 	private int mouseRowEstrellas;
-	
+	private Usuario usuario;
 	private JPanel panelPrincipal;	
 	private JPanel panelCentral;	// Panel en donde estaran las estrellas para puntuar
 	private JPanel panelEstrellas;
@@ -50,7 +51,8 @@ public class VentanaReseña extends JFrame {
 	private ImageIcon estrellaRellena;
 	
 	
-	public VentanaReseña (Pelicula p, VentanaPelicula ventanaPelicula) {
+	public VentanaReseña (Pelicula p, VentanaPelicula ventanaPelicula, Usuario usuario) {
+		this.usuario=usuario;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
@@ -143,7 +145,7 @@ public class VentanaReseña extends JFrame {
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
 		this.poster = new JLabel();	
 		
-		// Cargar y olocar el poster		
+		// Cargar y colocar el poster		
 		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 150, 215);
 		poster.setBackground(panelPrincipal.getBackground());
 		poster.setOpaque(true);
@@ -192,8 +194,9 @@ public class VentanaReseña extends JFrame {
 					comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
 					p.setComentarios(comentarios);
 					
-					if (ventanaPelicula != null) {
-						ventanaPelicula.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+					if (p != null) {
+						VentanaPelicula vp= new VentanaPelicula(p, usuario);
+						vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
 					}
 					
 					VentanaReseña.this.dispose();

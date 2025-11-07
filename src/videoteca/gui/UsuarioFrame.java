@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -208,7 +207,7 @@ public class UsuarioFrame extends JFrame{
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				VentanaPelicula vp = new VentanaPelicula(p);
+				VentanaPelicula vp = new VentanaPelicula(p, usuario);
 				VentanaReseña reseña= new VentanaReseña(p, vp);
 				reseña.setVisible(true);
 			}
