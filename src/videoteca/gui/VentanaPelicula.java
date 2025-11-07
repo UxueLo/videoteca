@@ -291,6 +291,8 @@ public class VentanaPelicula extends JFrame {
 				// Meter la pelicula en el carrito
 				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
 				usuario.getCarritoUsuario().add(p);
+				//Mensaje de confirmacion
+				JOptionPane.showMessageDialog(null,"Pelicula añadida al carrito","Pelicula añadida",JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		
@@ -306,9 +308,6 @@ public class VentanaPelicula extends JFrame {
 				ventanaReseña.setVisible(true);
 			}
 		});
-		
-		
-		
 		
 		
 		panelSurSur.add(alquilar);
@@ -345,9 +344,7 @@ public class VentanaPelicula extends JFrame {
 		}
 			
 		comentarios.repaint();		// actualizar la tabla
-				
-				
-		
+
 	}
 	
 	
