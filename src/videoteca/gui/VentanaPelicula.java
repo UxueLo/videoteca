@@ -13,6 +13,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -23,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -38,10 +40,14 @@ import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
+import videoteca.io.GestionImagenes;
+
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
 	private Usuario usuario;
+//	private Usuario user
+	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
 	private JPanel panelCentralCentral;	// Informacion de la pelicula
@@ -56,10 +62,12 @@ public class VentanaPelicula extends JFrame {
 	private int numCom = 0;			// Contador del numero de comentarios de la pelicula
 	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
+	private ArrayList<Pelicula> carrito;
 
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
+//		this.user = user;
 		this.p = p;
 		this.usuario=usuario;
 		
@@ -176,7 +184,7 @@ public class VentanaPelicula extends JFrame {
 		
 		panelCentralCentral.add(directorEsp);
 		panelCentralCentral.add(repartoEsp);
-		panelCentralCentral.add(generosEsp);			// TODO arreglar
+		panelCentralCentral.add(generosEsp);
 		panelCentralCentral.add(new JLabel(""));
 		panelCentralCentral.add(new JLabel(""));
 		
@@ -187,9 +195,9 @@ public class VentanaPelicula extends JFrame {
 		panelCentral.add(panelNorte, BorderLayout.NORTH);
 		JLabel titulo = new JLabel();
 		titulo.setText(p.getTitulo());
-		titulo.setFont(new Font("Arial", Font.BOLD, 40));
+		titulo.setFont(new Font("Garamond", Font.BOLD, 45));
 		titulo.setBackground(panelPrincipal.getBackground());
-		titulo.setForeground(Color.white);
+		titulo.setForeground(new Color(255,0,0));
 		panelNorte.setBackground(panelPrincipal.getBackground());
 		
 		panelNorte.add(titulo);
@@ -201,35 +209,30 @@ public class VentanaPelicula extends JFrame {
 		panelOeste.setBackground(panelPrincipal.getBackground());
 		add(panelOeste, BorderLayout.WEST);
 		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 40));
-		this.poster = new JLabel();												
-		poster.setOpaque(true);
+
+		// Cargar poster
+		this.poster = GestionImagenes.cargarImagen(p.getTitulo(), 250, 375);
 		poster.setBackground(panelPrincipal.getBackground());
+		poster.setOpaque(true);
 		
-		// Colocar el poster
-		Image imagenEscalada = p.getPoster().getImage();
-		imagenEscalada = imagenEscalada.getScaledInstance(250, 325, Image.SCALE_SMOOTH);
-		ImageIcon posterEscalado = new ImageIcon(imagenEscalada);
-		poster.setIcon(posterEscalado);
-		
-		// Puntuacion media
-		poster.setText(Double.toString(p.getPuntuacionMedia()));
-		poster.setFont(new Font("Arial", Font.BOLD, 50));
-		
-		// Condicional que pinta el numero de la puntuacion media segun esta
-		if (p.getPuntuacionMedia() >= 8) {
-			poster.setForeground(Color.green);			// Si la puntuacion mayor o igual a 8, pinta de verde
-		} else if(p.getPuntuacionMedia() >= 5) {
-			poster.setForeground(Color.yellow);			// Si la puntuacion mayor o igual a 5, pinta de amarillo
-		} else {
-			poster.setForeground(Color.red);			// Si la puntuacion menor a 5, pinta de rojo
+		// Puntuación Media
+		JLabel lblPuntuacion = new JLabel(String.format("%.1f", p.getPuntuacionMedia()));
+		lblPuntuacion.setFont(new Font("Arial", Font.BOLD, 40));
+		lblPuntuacion.setHorizontalAlignment(JLabel.CENTER);
+
+		// Color según puntuación
+		if (p.getPuntuacionMedia() >= 8) { // Si la puntuación es mayor o igual a 8, pinta de verde
+		    lblPuntuacion.setForeground(Color.GREEN); 
+		} else if (p.getPuntuacionMedia() >= 5) { // Si la puntuación es mayor o igual a 5, pinta de amarillo
+		    lblPuntuacion.setForeground(Color.YELLOW);
+		} else { // Si la puntuación es menor a 5, pinta de rojo
+		    lblPuntuacion.setForeground(Color.RED);
 		}
 
-		poster.setHorizontalTextPosition(JLabel.CENTER);
-		poster.setVerticalTextPosition(JLabel.BOTTOM);
-		
-		poster.setOpaque(true);
+		// Añadir poster y puntuación al panel oeste, uno encima del otro
+		panelOeste.setLayout(new BorderLayout(0, 10));
 		panelOeste.add(poster, BorderLayout.CENTER);
-		
+		panelOeste.add(lblPuntuacion, BorderLayout.SOUTH);
 		
 		
 		// Crear el PanelSur, donde estaran los comentarios
@@ -241,7 +244,6 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
-		// TODO Comentarios
 		this.modeloTablaComentarios = new DefaultTableModel() {
 			  @Override
 			    public boolean isCellEditable(int row, int column) {
@@ -265,29 +267,13 @@ public class VentanaPelicula extends JFrame {
 		comentarios.setBackground(new Color(212,212,212));
 		comentarios.setForeground(panelPrincipal.getBackground());
 		
-		// Cargar comentarios
-		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
-	            "VALORACIÓN", "COMENTARIO"
-	        });
-		
-		ArrayList<Comentario> listaComentarios = p.getComentarios();
-		for(Comentario c : listaComentarios) {
-			this.numCom = numCom + 1;
-			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
-		}
-		
-		comentarios.setRowHeight(30);				// Agrandar la altura de cada fila de la tabla
-		comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de "valoraciones" sea mas pequeña
-		comentarios.getColumnModel().getColumn(0).setMinWidth(300);
-		comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
-		
-		
+		actualizarComentarios();
 		
 		
 		
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
 		this.panelSurSur = new JPanel();
-		panelSurSur.setLayout(new GridLayout(1,2,20,20));
+		panelSurSur.setLayout(new GridLayout(1,1,20,20));
 		panelSurSur.setBackground(panelPrincipal.getBackground());
 		panelSur.add(panelSurSur, BorderLayout.SOUTH);
 		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -298,8 +284,14 @@ public class VentanaPelicula extends JFrame {
 		this.alquilar = new JButton("Alquilar");
 		this.alquilar.setBackground(new Color(153,0,0));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
-		alquilar.addActionListener(e ->{
-			usuario.getCarritoUsuario().add(p);
+		this.alquilar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Meter la pelicula en el carrito
+				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+				usuario.getCarritoUsuario().add(p);
+			}
 		});
 		
 		this.reseñar = new JButton("Reseñar");
@@ -310,13 +302,12 @@ public class VentanaPelicula extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Abrir VentanaReseña
-				VentanaReseña ventanaReseña = new VentanaReseña(p);
+				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario);
 				ventanaReseña.setVisible(true);
 			}
 		});
 		
 		
-		repaint();
 		
 		
 		
@@ -328,8 +319,36 @@ public class VentanaPelicula extends JFrame {
 	}
 	
 	
-	public void pintarTablaReseñas () {
+	public void actualizarComentarios() {
+		
+		// Cargar comentarios
+		
+		if (modeloTablaComentarios.getRowCount() == 0) {					// si la tabla esta vacia
+			modeloTablaComentarios.setColumnIdentifiers(new Object[] {
+		            "VALORACIÓN", "COMENTARIO"
+		        });
+			
+			ArrayList<Comentario> listaComentarios = p.getComentarios();
+			for(Comentario c : listaComentarios) {
+				this.numCom = numCom + 1;
+				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
+			}
+			
+			comentarios.setRowHeight(30);									// Agrandar la altura de cada fila de la tabla
+			comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
+			comentarios.getColumnModel().getColumn(0).setMinWidth(300);
+			comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
+
+		} else {
+			Comentario comAñadido = p.getComentarios().get(p.getComentarios().size()-1);
+			modeloTablaComentarios.addRow(new Object[] {Double.toString(comAñadido.getValoracion()),comAñadido.getTexto()} );	// Añadir la ultima reseña a la tabla
+		}
+			
+		comentarios.repaint();		// actualizar la tabla
+				
+				
 		
 	}
+	
 	
 }

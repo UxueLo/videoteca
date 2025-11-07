@@ -51,7 +51,7 @@ public class VentanaReseña extends JFrame {
 	private ImageIcon estrellaRellena;
 	
 	
-	public VentanaReseña (Pelicula p, VentanaPelicula ventanaPelicula, Usuario usuario) {
+	public VentanaReseña (Pelicula p, Usuario usuario) {
 		this.usuario=usuario;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
