@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 
 public class VentanaCarrito extends JFrame {
 
@@ -17,7 +18,7 @@ public class VentanaCarrito extends JFrame {
     private ArrayList<Pelicula> carrito;
 
     private JPanel panelCarrito;
-    private JLabel lblTotal;
+    private JLabel precioTotal;
 
     public VentanaCarrito(Usuario usuario) {
         this.usuario = usuario;
@@ -33,20 +34,20 @@ public class VentanaCarrito extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
 
-        getContentPane().setBackground(Color.BLACK);
+        getContentPane().setBackground(new Color(32,32,32));
         setLayout(new BorderLayout());
 
         // TEXTO SUPERIOR
-        JLabel lblInfo = new JLabel("Aquí puede alquilar sus películas seleccionadas.", SwingConstants.CENTER);
-        lblInfo.setFont(new Font("SansSerif", Font.BOLD, 20));
-        lblInfo.setForeground(Color.WHITE);
-        lblInfo.setBorder(new EmptyBorder(15, 0, 15, 0));
-        add(lblInfo, BorderLayout.NORTH);
+        JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas", SwingConstants.CENTER);
+        info.setFont(new Font("Garamond", Font.BOLD, 45));
+        info.setForeground(new Color(255,0,0));
+        info.setBorder(new EmptyBorder(15, 0, 15, 0));
+        add(info, BorderLayout.NORTH);
 
         // PANEL CENTRAL DEL CARRITO
         panelCarrito = new JPanel();
         panelCarrito.setLayout(new BoxLayout(panelCarrito, BoxLayout.Y_AXIS));
-        panelCarrito.setBackground(Color.BLACK);
+        panelCarrito.setBackground(new Color(32,32,32));
         JScrollPane scroll = new JScrollPane(panelCarrito);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -56,9 +57,9 @@ public class VentanaCarrito extends JFrame {
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         panelInferior.setBackground(Color.BLACK);
 
-        lblTotal = new JLabel();
-        lblTotal.setFont(new Font("SansSerif", Font.BOLD, 18));
-        lblTotal.setForeground(Color.WHITE);
+        precioTotal = new JLabel();
+        precioTotal.setFont(new Font("SansSerif", Font.BOLD, 18));
+        precioTotal.setForeground(Color.WHITE);
 
         JButton btnLimpiar = new JButton("Limpiar carrito");
         estiloBotonRojo(btnLimpiar);
@@ -68,7 +69,7 @@ public class VentanaCarrito extends JFrame {
         estiloBotonRojo(btnAlquilar);
         btnAlquilar.addActionListener(e -> alquilarPeliculas());
 
-        panelInferior.add(lblTotal);
+        panelInferior.add(precioTotal);
         panelInferior.add(btnLimpiar);
         panelInferior.add(btnAlquilar);
 
@@ -88,13 +89,8 @@ public class VentanaCarrito extends JFrame {
             panelPeli.setBackground(Color.DARK_GRAY);
             panelPeli.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Imagen
-            JLabel lblImg = new JLabel();
-            lblImg.setPreferredSize(new Dimension(150, 210));
-            String ruta = "images/" + p.getTitulo() + ".jpg";
-            File archivo = new File(ruta);
-            ImageIcon icon = archivo.exists() ? new ImageIcon(ruta) : new ImageIcon("images/default.jpg");
-            lblImg.setIcon(new ImageIcon(icon.getImage().getScaledInstance(150, 210, Image.SCALE_SMOOTH)));
+            // Imagen cargada mediante GestionImagenes
+            JLabel lblImg = GestionImagenes.cargarImagen(p.getTitulo(), 150, 210);
             panelPeli.add(lblImg, BorderLayout.WEST);
 
             // Info de la película
@@ -102,23 +98,23 @@ public class VentanaCarrito extends JFrame {
             info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
             info.setBackground(Color.DARK_GRAY);
 
-            JLabel lblTitulo = new JLabel(p.getTitulo());
-            lblTitulo.setForeground(Color.WHITE);
-            lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
+            JLabel nombre = new JLabel(p.getTitulo());
+            nombre.setForeground(Color.WHITE);
+            nombre.setFont(new Font("SansSerif", Font.BOLD, 16));
 
-            JLabel lblAno = new JLabel("Año: " + p.getAñoLanzamiento());
-            lblAno.setForeground(Color.WHITE);
+            JLabel anyo = new JLabel("Año: " + p.getAñoLanzamiento());
+            anyo.setForeground(Color.WHITE);
 
-            JLabel lblDuracion = new JLabel("Duración: " + p.getDuracion() + " min");
-            lblDuracion.setForeground(Color.WHITE);
+            JLabel duracion = new JLabel("Duración: " + p.getDuracion() + " min");
+            duracion.setForeground(Color.WHITE);
 
-            JLabel lblPrecio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()));
-            lblPrecio.setForeground(Color.WHITE);
+            JLabel precio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()));
+            precio.setForeground(Color.WHITE);
 
-            info.add(lblTitulo);
-            info.add(lblAno);
-            info.add(lblDuracion);
-            info.add(lblPrecio);
+            info.add(nombre);
+            info.add(anyo);
+            info.add(duracion);
+            info.add(precio);
 
             panelPeli.add(info, BorderLayout.CENTER);
 
@@ -137,7 +133,7 @@ public class VentanaCarrito extends JFrame {
             total += p.getPrecio();
         }
 
-        lblTotal.setText("Total: " + String.format("%.2f €", total));
+        precioTotal.setText("Total: " + String.format("%.2f €", total));
 
         panelCarrito.revalidate();
         panelCarrito.repaint();
@@ -156,22 +152,22 @@ public class VentanaCarrito extends JFrame {
 
         JPanel panelPago = new JPanel(new GridLayout(3, 2, 10, 10));
         panelPago.add(new JLabel("Número de tarjeta:"));
-        JTextField tfNumTarjeta = new JTextField();
-        panelPago.add(tfNumTarjeta);
+        JTextField numTarjeta = new JTextField();
+        panelPago.add(numTarjeta);
 
         panelPago.add(new JLabel("Nombre en la tarjeta:"));
-        JTextField tfNombre = new JTextField();
-        panelPago.add(tfNombre);
+        JTextField nombreTarjeta = new JTextField();
+        panelPago.add(nombreTarjeta);
 
         panelPago.add(new JLabel("CVV:"));
-        JTextField tfCVV = new JTextField();
-        panelPago.add(tfCVV);
+        JTextField CVV = new JTextField();
+        panelPago.add(CVV);
 
         int opcion = JOptionPane.showConfirmDialog(this, panelPago, "Datos de pago",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            if (tfNumTarjeta.getText().isEmpty() || tfNombre.getText().isEmpty() || tfCVV.getText().isEmpty()) {
+            if (numTarjeta.getText().isEmpty() || nombreTarjeta.getText().isEmpty() || CVV.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "¡Alquiler realizado con éxito! 🎬", "Éxito",

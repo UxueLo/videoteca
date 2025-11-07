@@ -23,7 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -301,8 +300,6 @@ public class VentanaPelicula extends JFrame {
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		alquilar.addActionListener(e ->{
 			usuario.getCarritoUsuario().add(p);
-			 JOptionPane.showMessageDialog(this, "¡Alquiler realizado con éxito! 🎬", "Éxito",
-             JOptionPane.INFORMATION_MESSAGE);
 		});
 		
 		this.reseñar = new JButton("Reseñar");

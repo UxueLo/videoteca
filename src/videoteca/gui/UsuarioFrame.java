@@ -207,7 +207,8 @@ public class UsuarioFrame extends JFrame{
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				VentanaReseña reseña= new VentanaReseña(p);
+				VentanaPelicula vp = new VentanaPelicula(p, usuario);
+				VentanaReseña reseña= new VentanaReseña(p, vp);
 				reseña.setVisible(true);
 			}
 			
