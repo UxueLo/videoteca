@@ -142,7 +142,7 @@ public class VentanaCatalogo extends JFrame {
                 @Override 
                 public void mouseClicked(MouseEvent e) { 
                     // Abrir la ventana de película
-                    VentanaPelicula ventanaPelicula = new VentanaPelicula(p);
+                    VentanaPelicula ventanaPelicula = new VentanaPelicula(p, usuario);
                     ventanaPelicula.setVisible(true);
                 }
                 @Override 
@@ -174,13 +174,13 @@ public class VentanaCatalogo extends JFrame {
         if (carrito.contains(p))
             JOptionPane.showMessageDialog(this, "Esta película ya está en el carrito.", "Aviso", JOptionPane.WARNING_MESSAGE);
         else {
-            carrito.add(p);
+            usuario.getCarritoUsuario().add(p);
             JOptionPane.showMessageDialog(this, p.getTitulo() + " añadida al carrito 🎬", "Carrito", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     private void abrirCarrito() {
-        new VentanaCarrito(usuario, carrito);
+        new VentanaCarrito(usuario);
     }
 
     private void aplicarFiltros() {

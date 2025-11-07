@@ -24,7 +24,11 @@ import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
 
 public class VentanaInicioFrame extends JFrame{
+	private Usuario usuario;
+	private ArrayList<Pelicula> peliculas;
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
+		this.usuario=usuario;
+		this.peliculas=peliculas;
 		//Ventana
 		setTitle("Ventana de Inicio"); //titulo
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //parar al cerrar
@@ -106,7 +110,7 @@ public class VentanaInicioFrame extends JFrame{
 						UsuarioFrame us= new UsuarioFrame(usuario);
 						us.setVisible(true);
 					}else if (opcion=="Carrito") {
-						VentanaCarrito vcr= new VentanaCarrito(usuario, new ArrayList<>());
+						VentanaCarrito vcr= new VentanaCarrito(usuario);
 						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
@@ -189,7 +193,7 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mousePressed(MouseEvent e) {
-	                VentanaPelicula vp= new VentanaPelicula(pel);
+	                VentanaPelicula vp= new VentanaPelicula(pel, usuario);
 	                vp.setVisible(true);
 	            }
 

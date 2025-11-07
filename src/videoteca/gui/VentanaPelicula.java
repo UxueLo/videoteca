@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,10 +37,12 @@ import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
+import videoteca.domain.Usuario;
 
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
+	private Usuario usuario;
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
 	private JPanel panelCentralCentral;	// Informacion de la pelicula
@@ -56,9 +59,10 @@ public class VentanaPelicula extends JFrame {
 	private JLabel poster;
 
 	
-	public VentanaPelicula (Pelicula p) {
+	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
 		this.p = p;
+		this.usuario=usuario;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Película");
@@ -295,6 +299,11 @@ public class VentanaPelicula extends JFrame {
 		this.alquilar = new JButton("Alquilar");
 		this.alquilar.setBackground(new Color(153,0,0));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
+		alquilar.addActionListener(e ->{
+			usuario.getCarritoUsuario().add(p);
+			 JOptionPane.showMessageDialog(this, "¡Alquiler realizado con éxito! 🎬", "Éxito",
+             JOptionPane.INFORMATION_MESSAGE);
+		});
 		
 		this.reseñar = new JButton("Reseñar");
 		this.reseñar.setBackground(new Color(153,0,0));
