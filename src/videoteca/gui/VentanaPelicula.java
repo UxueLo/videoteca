@@ -304,8 +304,13 @@ public class VentanaPelicula extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Abrir VentanaReseña
-				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario);
+				abrirReseña();
+			}
+
+			private void abrirReseña() {
+				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
 				ventanaReseña.setVisible(true);
+				
 			}
 		});
 		

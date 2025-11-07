@@ -49,10 +49,12 @@ public class VentanaReseña extends JFrame {
 	private ArrayList<JLabel> estrellas = new ArrayList<>();
 	private ImageIcon estrellaVacia;
 	private ImageIcon estrellaRellena;
+	private VentanaPelicula vp;
 	
 	
-	public VentanaReseña (Pelicula p, Usuario usuario) {
+	public VentanaReseña (Pelicula p, Usuario usuario,VentanaPelicula vp) {
 		this.usuario=usuario;
+		this.vp = vp;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
@@ -194,8 +196,7 @@ public class VentanaReseña extends JFrame {
 					comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
 					p.setComentarios(comentarios);
 					
-					if (p != null) {
-						VentanaPelicula vp= new VentanaPelicula(p, usuario);
+					if (vp != null) {
 						vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
 					}
 					
