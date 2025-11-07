@@ -13,46 +13,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
-import videoteca.domain.Comentario;
-import videoteca.domain.EdadRecomendada;
-import videoteca.domain.Genero;
-import videoteca.domain.Pelicula;
-import videoteca.domain.Reserva;
-import videoteca.domain.Usuario;
-
-package videoteca.gui;
-
-import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.Dimension2D;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -78,11 +39,13 @@ import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
+
 import videoteca.io.GestionImagenes;
 
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
+	private Usuario usuario;
 //	private Usuario user
 	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
@@ -102,10 +65,11 @@ public class VentanaPelicula extends JFrame {
 	private ArrayList<Pelicula> carrito;
 
 	
-	public VentanaPelicula (Pelicula p) {
+	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
 //		this.user = user;
 		this.p = p;
+		this.usuario=usuario;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Película");
@@ -317,17 +281,18 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		// Crear ambos botones y ajustar color
-//		this.alquilar = new JButton("Alquilar");
-//		this.alquilar.setBackground(new Color(153,0,0));
-//		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
-//		this.alquilar.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// Meter la pelicula en el carrito
-//				user.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
-//			}
-//		});
+		this.alquilar = new JButton("Alquilar");
+		this.alquilar.setBackground(new Color(153,0,0));
+		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
+		this.alquilar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Meter la pelicula en el carrito
+				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+				usuario.getCarritoUsuario().add(p);
+			}
+		});
 		
 		this.reseñar = new JButton("Reseñar");
 		this.reseñar.setBackground(new Color(153,0,0));
@@ -337,7 +302,7 @@ public class VentanaPelicula extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Abrir VentanaReseña
-				VentanaReseña ventanaReseña = new VentanaReseña(p, VentanaPelicula.this);
+				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario);
 				ventanaReseña.setVisible(true);
 			}
 		});
@@ -346,7 +311,7 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
-//		panelSurSur.add(alquilar);
+		panelSurSur.add(alquilar);
 		panelSurSur.add(reseñar);
 		
 		
