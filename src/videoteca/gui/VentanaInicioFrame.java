@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 
 public class VentanaInicioFrame extends JFrame{
 	private Usuario usuario;
@@ -178,11 +179,9 @@ public class VentanaInicioFrame extends JFrame{
 	        ImageIcon posterPelicula= pel.getPoster();
 	        
 	        // Crear el poster escalado original una sola vez
-	        Image posterEscalado = posterPelicula.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH);
-	        ImageIcon iconOriginal = new ImageIcon(posterEscalado);
-	        
-	        peliculaActual.setIcon(iconOriginal);
-	        peliculaActual.setHorizontalAlignment(JLabel.CENTER);
+	        JLabel imagenPoster = GestionImagenes.cargarImagen(pel.getTitulo(), 200, 300);
+            peliculaActual.setIcon(imagenPoster.getIcon());
+            peliculaActual.setHorizontalAlignment(JLabel.CENTER);
 	        
 	        peliculaActual.addMouseListener(new MouseListener() {
 
