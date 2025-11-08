@@ -282,7 +282,7 @@ public class VentanaPelicula extends JFrame {
 		    }
 		};
 		MouseAdapter miMouseAdapter = new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
+		    public void mouseExited(MouseEvent e) {
 		        filaTablaComicentarios = -1;  // Resetea cuando el ratón entra
 		        comentarios.repaint(); // Repinta para quitar el color
 		    }
