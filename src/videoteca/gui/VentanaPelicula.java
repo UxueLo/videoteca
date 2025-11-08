@@ -59,7 +59,7 @@ public class VentanaPelicula extends JFrame {
 	private JLabel poster;
 	private ArrayList<Pelicula> carrito;
 	private JLabel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
-	private int filaTablaComicentarios=-1;
+	private int filaTablaComentarios=-1;
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
@@ -271,7 +271,7 @@ public class VentanaPelicula extends JFrame {
 		    public void mouseMoved(MouseEvent e) {
 		        Point puntoRaton = new Point(e.getX(), e.getY());
 		        // Detecta en qué fila está el ratón
-		        filaTablaComicentarios = comentarios.rowAtPoint(puntoRaton);
+		        filaTablaComentarios = comentarios.rowAtPoint(puntoRaton);
 		        // Fuerza el repintado para aplicar el color
 		        comentarios.repaint();
 		    } 
@@ -283,7 +283,7 @@ public class VentanaPelicula extends JFrame {
 		};
 		MouseAdapter miMouseAdapter = new MouseAdapter() {
 		    public void mouseExited(MouseEvent e) {
-		        filaTablaComicentarios = -1;  // Resetea cuando el ratón entra
+		        filaTablaComentarios = -1;  // Resetea cuando el ratón entra
 		        comentarios.repaint(); // Repinta para quitar el color
 		    }
 		};
@@ -411,34 +411,37 @@ public class VentanaPelicula extends JFrame {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if (filaTablaComicentarios!=-1 && row == filaTablaComicentarios && !isSelected) {
-				//IAG
-				setBackground(Color.gray);
-				setForeground(Color.white);
+			if(column==0) { //si es la columna de valoracion
+				setHorizontalAlignment(JLabel.CENTER);
+				setFont(new Font("Arial", Font.BOLD, 18));
+				double valoracion = Double.parseDouble(value.toString());
+	            if (valoracion <= 2.0) {
+	                setForeground(Color.red);
+	            } else if (valoracion == 3.0) {
+	                setForeground(Color.orange);
+	            } else if (valoracion >= 4.0) {
+	                setForeground(Color.green); 
+	            }	
+			}else { //si es la columna de texto
+				setHorizontalAlignment(JLabel.LEFT);
+				setForeground(Color.black);
+			}
+			
+			if (filaTablaComentarios!=-1 && row == filaTablaComentarios && !isSelected) { //si esta dentro de la tabla & si la fila es en la que esta el raton & si esta seleccionado (pata que no se quite el color de seleccionado)
+				setBackground(new Color(85, 85, 107));
+				if(column==1) {
+					setForeground(Color.white);
+				}
 			}else {
 	            if (isSelected) {
-	            	setOpaque(true);
-	                setBackground(new Color(62, 71, 82));
-	                setForeground(Color.black);
-	            } else {
-	                if (row % 2 == 0) {
-	                    setBackground(new Color(240, 240, 240));
-	                } else {
-	                    setBackground(Color.white);
+	                setBackground(new Color(111, 130, 179));
+	                if (column==1) {
+	                	 setForeground(Color.black);
 	                }
-	                setForeground(Color.black);
+	            } else {
+	            	setBackground(Color.white);
 	            }
 	        }
-			if (column == 0) {
-			            double valoracion = Double.parseDouble(value.toString());
-			            if (valoracion <= 2.0) {
-			                setForeground(Color.red);
-			            } else if (valoracion == 3.0) {
-			                setForeground(Color.orange);
-			            } else if (valoracion >= 4.0) {
-			                setForeground(Color.green); 
-			            }	
-	        } 
 			return this;
 		}
 	}
