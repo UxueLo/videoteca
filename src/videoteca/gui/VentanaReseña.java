@@ -130,11 +130,11 @@ public class VentanaReseña extends JFrame {
 		panelCentral.add(panelNorte, BorderLayout.NORTH);
 		JLabel titulo = new JLabel();
 		titulo.setText(p.getTitulo());
-		titulo.setFont(new Font("Arial", Font.BOLD, 40));
+		titulo.setFont(new Font("Garamond", Font.BOLD, 40));
 		titulo.setBackground(panelPrincipal.getBackground());
-		titulo.setForeground(Color.white);
+		titulo.setForeground(new Color(255,0,0));
 		panelNorte.setBackground(panelPrincipal.getBackground());
-		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
 		
 		panelNorte.add(titulo);
 		

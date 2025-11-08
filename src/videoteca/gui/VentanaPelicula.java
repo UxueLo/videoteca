@@ -46,12 +46,12 @@ public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
 	private Usuario usuario;
-//	private Usuario user
 	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
 	private JPanel panelCentralCentral;	// Informacion de la pelicula
 	private JPanel panelCentralOeste;	// Informacion de la pelicula
+	private JPanel panelCentralEste; 	// Pondra si la pelicula esta en el carrito o no
 	private JPanel panelSur;		// Panel de comentarios
 	private JPanel panelSurSur;		// Panel de botones "alquiler" y "peliculas"
 	private JPanel panelOeste;		// Panel de poster y puntuacion media
@@ -63,11 +63,12 @@ public class VentanaPelicula extends JFrame {
 	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
 	private ArrayList<Pelicula> carrito;
+	private JLabel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
 
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
-//		this.user = user;
+		this.usuario = usuario;
 		this.p = p;
 		this.usuario=usuario;
 		
@@ -93,23 +94,23 @@ public class VentanaPelicula extends JFrame {
 		// Colocar la informacion
 		// Director
 		JLabel director = new JLabel("Director:");
-		director.setFont(new Font("Arial", Font.BOLD, 25));
+		director.setFont(new Font("Arial", Font.BOLD, 30));
 		director.setForeground(Color.white);
 		
 		JLabel directorEsp = new JLabel(p.getDirector());
-		directorEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		directorEsp.setFont(new Font("Arial", Font.PLAIN, 30));
 		directorEsp.setForeground(Color.white);
 		
 		
 		// Año
 		JLabel año = new JLabel(Integer.toString(p.getAñoLanzamiento()));
-		año.setFont(new Font("Arial", Font.ITALIC, 20));
+		año.setFont(new Font("Arial", Font.ITALIC, 30));
 		año.setForeground(Color.white);
 		
 		
 		// Reparto
 		JLabel reparto = new JLabel("Reparto:");
-		reparto.setFont(new Font("Arial", Font.BOLD, 25));
+		reparto.setFont(new Font("Arial", Font.BOLD, 30));
 		reparto.setForeground(Color.white);
 		
 		String listaReparto = "";
@@ -123,13 +124,13 @@ public class VentanaPelicula extends JFrame {
 		}
 		
 		JLabel repartoEsp = new JLabel(listaReparto);
-		repartoEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		repartoEsp.setFont(new Font("Arial", Font.PLAIN, 30));
 		repartoEsp.setForeground(Color.white);
 		
 		
 		// Generos
 		JLabel generos = new JLabel("Géneros:");
-		generos.setFont(new Font("Arial", Font.BOLD, 25));
+		generos.setFont(new Font("Arial", Font.BOLD, 30));
 		generos.setForeground(Color.white);
 		
 		String listaGeneros = "";
@@ -154,17 +155,17 @@ public class VentanaPelicula extends JFrame {
 		}
 		
 		JLabel generosEsp = new JLabel(listaGeneros);
-		generosEsp.setFont(new Font("Arial", Font.PLAIN, 20));
+		generosEsp.setFont(new Font("Arial", Font.PLAIN, 30));
 		generosEsp.setForeground(Color.white);
 		
 		
 		// Duracion
 		JLabel duracion = new JLabel(Integer.toString(p.getDuracion()) + "min");
-		duracion.setFont(new Font("Arial", Font.ITALIC, 20));
+		duracion.setFont(new Font("Arial", Font.ITALIC, 30));
 		duracion.setForeground(Color.white);
 		
 		
-		// Añadir PanelCentralEste
+		// Añadir PanelCentralOeste
 		this.panelCentralOeste = new JPanel();
 		panelCentralOeste.setLayout(new GridLayout(5, 1, 0, 5));
 		panelCentral.add(panelCentralOeste, BorderLayout.WEST);
@@ -190,15 +191,30 @@ public class VentanaPelicula extends JFrame {
 		
 		
 		
+		// Añadir PanelCentralEste
+		this.panelCentralEste = new JPanel();
+		panelCentralEste.setBackground(panelPrincipal.getBackground());
+		this.mensaje = new JLabel();
+		mensaje.setFont(new Font("Arial", Font.BOLD, 40));
+		mensaje.setOpaque(true);
+		
+		actualizarAlquilado();
+		
+		panelCentral.add(panelCentralEste, BorderLayout.EAST);
+		panelCentralEste.add(mensaje);
+		
+		
+		
 		// Crear el PanelNorte desde el central, donde estara el titulo
 		this.panelNorte = new JPanel();
 		panelCentral.add(panelNorte, BorderLayout.NORTH);
 		JLabel titulo = new JLabel();
 		titulo.setText(p.getTitulo());
-		titulo.setFont(new Font("Garamond", Font.BOLD, 45));
+		titulo.setFont(new Font("Garamond", Font.BOLD, 55));
 		titulo.setBackground(panelPrincipal.getBackground());
 		titulo.setForeground(new Color(255,0,0));
 		panelNorte.setBackground(panelPrincipal.getBackground());
+		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 		
 		panelNorte.add(titulo);
 		
@@ -289,10 +305,16 @@ public class VentanaPelicula extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Meter la pelicula en el carrito
-				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
-				usuario.getCarritoUsuario().add(p);
-				//Mensaje de confirmacion
-				JOptionPane.showMessageDialog(null,"Pelicula añadida al carrito","Pelicula añadida",JOptionPane.PLAIN_MESSAGE);
+				if (!usuario.getCarritoUsuario().contains(p)) {
+					usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+					usuario.getCarritoUsuario().add(p);
+					//Mensaje de confirmacion
+					JOptionPane.showMessageDialog(null,"Pelicula añadida al carrito","Pelicula añadida",JOptionPane.PLAIN_MESSAGE);
+					actualizarAlquilado();
+				} else {
+					JOptionPane.showMessageDialog(null,"La pelicula ya esta añadida al carrito","Pelicula ya añadida",JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 			}
 		});
 		
@@ -350,6 +372,18 @@ public class VentanaPelicula extends JFrame {
 			
 		comentarios.repaint();		// actualizar la tabla
 
+	}
+	
+	
+	public void actualizarAlquilado() {
+		if (usuario.getCarritoUsuario().contains(p)) {
+			mensaje.setText(" En el carrito ");
+			mensaje.setBackground(Color.white);
+		} else {
+			mensaje.setText("");
+			mensaje.setBackground(panelPrincipal.getBackground());
+		}
+		mensaje.repaint();
 	}
 	
 	
