@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import videoteca.domain.Pelicula;
@@ -89,6 +91,7 @@ public class UsuarioFrame extends JFrame{
 		
 		//JTables central
 		tablaPeliculas = new JTable(modeloTablaPeliculas);
+		tablaPeliculas.setDefaultRenderer(Object.class, new MiRendererPeliculas());
 		
 		//Accion para añadir los datos de la pelicula
 		tablaPeliculas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -279,6 +282,33 @@ public class UsuarioFrame extends JFrame{
 		this.panelUsuario.add(holaUsuario);
 		this.panelUsuario.add(saldoUsuario);
 		
+	}
+	
+	private class MiRendererPeliculas extends DefaultTableCellRenderer{
+		
+		public MiRendererPeliculas() {
+			
+		}
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			if(isSelected) {
+				setBackground(new Color(62, 71, 82));
+				setForeground(Color.white);
+			}else {
+				if (row%2==0) {
+					setBackground(Color.gray);
+					setForeground(Color.black);
+				}else {
+					setBackground(Color.white);
+					setForeground(Color.black);
+				}
+			}
+			return this;
+			
+		}
 	}
 	
 }
