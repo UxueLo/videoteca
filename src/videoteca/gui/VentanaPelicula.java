@@ -2,11 +2,14 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -259,6 +262,7 @@ public class VentanaPelicula extends JFrame {
 		
 		this.comentarios = new JTable(modeloTablaComentarios);
 		comentarios.setSize(10, 10);
+		comentarios.setDefaultRenderer(Object.class, new miRendererComentarios());
 		
 		// Scroll
 		JScrollPane scrollComentarios = new JScrollPane(comentarios);
@@ -375,5 +379,28 @@ public class VentanaPelicula extends JFrame {
 		mensaje.repaint();
 	}
 	
-	
+	private class miRendererComentarios extends DefaultTableCellRenderer{
+		public miRendererComentarios() {
+			
+		}
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	        if (column==0) {
+	        	if (value instanceof Integer) {
+	        		int valorActual=(Integer) value;
+	        		if (valorActual<=2) {
+	        			setForeground(Color.red);
+	        		}else if(valorActual==3) {
+	        			setForeground(Color.orange);
+	        		}else {
+	        			setForeground(Color.green);
+	        		}
+	        	}
+	        }
+			
+			return this;
+		}
+	}
 }
