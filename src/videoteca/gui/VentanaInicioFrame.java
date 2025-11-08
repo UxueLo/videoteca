@@ -74,7 +74,7 @@ public class VentanaInicioFrame extends JFrame{
 		
 		//menu del lado
 		menu = new JPanel();
-		menu.setBackground(colorPrincipal);
+		menu.setBackground(new Color(103, 114, 135));
 		menu.setPreferredSize(new Dimension(300, 0));
 		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
