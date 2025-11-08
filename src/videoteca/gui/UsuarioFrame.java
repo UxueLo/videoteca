@@ -294,12 +294,17 @@ public class UsuarioFrame extends JFrame{
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			if(column==0) {
+				setHorizontalAlignment(JLabel.LEFT);
+			}else {
+				setHorizontalAlignment(JLabel.CENTER);
+			}
 			if(isSelected) {
 				setBackground(new Color(62, 71, 82));
 				setForeground(Color.white);
 			}else {
 				if (row%2==0) {
-					setBackground(Color.gray);
+					setBackground(new Color(232, 226, 220));
 					setForeground(Color.black);
 				}else {
 					setBackground(Color.white);
