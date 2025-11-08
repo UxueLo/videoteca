@@ -412,6 +412,7 @@ public class VentanaPelicula extends JFrame {
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (filaTablaComicentarios!=-1 && row == filaTablaComicentarios && !isSelected) {
+				//IAG
 				setBackground(Color.gray);
 				setForeground(Color.white);
 			}else {
@@ -428,6 +429,16 @@ public class VentanaPelicula extends JFrame {
 	                setForeground(Color.black);
 	            }
 	        }
+			if (column == 0) {
+			            double valoracion = Double.parseDouble(value.toString());
+			            if (valoracion <= 2.0) {
+			                setForeground(Color.red);
+			            } else if (valoracion == 3.0) {
+			                setForeground(Color.orange);
+			            } else if (valoracion >= 4.0) {
+			                setForeground(Color.green); 
+			            }	
+	        } 
 			return this;
 		}
 	}
