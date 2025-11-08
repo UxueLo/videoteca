@@ -27,6 +27,14 @@ import videoteca.io.GestionImagenes;
 public class VentanaInicioFrame extends JFrame{
 	private Usuario usuario;
 	private ArrayList<Pelicula> peliculas;
+	private JPanel centro;
+	private Color colorPrincipal= new Color(255,0,0); //cambiar en el codigo
+	private Color colorFondo= new Color(35, 35, 35);
+	private JScrollPane scrollCentro;
+	private JLabel textoCabeza;
+	private JPanel peliculasPanel;
+	private JPanel menu;
+	
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
 		this.usuario=usuario;
 		this.peliculas=peliculas;
@@ -35,40 +43,40 @@ public class VentanaInicioFrame extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //parar al cerrar
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //abrirlo en pantalla completa
 		setResizable(false); //siempre estara en pantalla completa
-		getContentPane().setBackground(new Color(32,32,32)); //cambiar el fondo
+		getContentPane().setBackground(colorFondo); //cambiar el fondo
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout
 		
 		//centro: titulo y peliculas
-		JPanel centro= new JPanel();
+		centro= new JPanel();
 		centro.setLayout(new BorderLayout());
-		centro.setBackground(new Color(32,32,32));
+		centro.setBackground(colorFondo);
 		//Insertar el centro en un ScrollPane
-		JScrollPane scrollCentro= new JScrollPane(centro);
+		scrollCentro= new JScrollPane(centro);
 		scrollCentro.getVerticalScrollBar().setUnitIncrement(16);
 		add(scrollCentro, BorderLayout.CENTER);
 		
         
 			//titulo
-		JLabel textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
-		textoCabeza.setForeground(new Color(255,0,0));
+		textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
+		textoCabeza.setForeground(colorPrincipal);
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
 		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //IAG
 		centro.add(textoCabeza, BorderLayout.NORTH);
 			//peliculas
-		JPanel peliculasPanel= new JPanel();
+		peliculasPanel= new JPanel();
 		peliculasPanel.setLayout(new GridLayout(5,2, 100, 100));
 		peliculasPanel.setBorder(BorderFactory.createEmptyBorder(0,0, 50, 0));
-		peliculasPanel.setBackground(new Color(32,32,32));
+		peliculasPanel.setBackground(colorFondo);
 		ArrayList<Pelicula> Top10= getTopPeliculas(peliculas);
 		setTop10(Top10, peliculasPanel);
 		centro.add(peliculasPanel, BorderLayout.CENTER);
 		
 		//menu del lado
-		JPanel menu = new JPanel();
-		menu.setBackground(new Color(153,0,0));
+		menu = new JPanel();
+		menu.setBackground(colorPrincipal);
 		menu.setPreferredSize(new Dimension(300, 0));
 		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
