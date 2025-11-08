@@ -311,8 +311,9 @@ public class UsuarioFrame extends JFrame{
 					setForeground(Color.black);
 				}
 			}
-			return this;
 			
+			
+			return this;
 		}
 	}
 	
