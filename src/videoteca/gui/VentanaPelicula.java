@@ -6,10 +6,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -56,7 +59,7 @@ public class VentanaPelicula extends JFrame {
 	private JLabel poster;
 	private ArrayList<Pelicula> carrito;
 	private JLabel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
-
+	private int filaTablaComicentarios=-1;
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
@@ -263,6 +266,29 @@ public class VentanaPelicula extends JFrame {
 		this.comentarios = new JTable(modeloTablaComentarios);
 		comentarios.setSize(10, 10);
 		comentarios.setDefaultRenderer(Object.class, new miRendererComentarios());
+		MouseMotionListener miMouseMotionListener = new MouseMotionListener() {
+		    @Override
+		    public void mouseMoved(MouseEvent e) {
+		        Point puntoRaton = new Point(e.getX(), e.getY());
+		        // Detecta en qué fila está el ratón
+		        filaTablaComicentarios = comentarios.rowAtPoint(puntoRaton);
+		        // Fuerza el repintado para aplicar el color
+		        comentarios.repaint();
+		    } 
+		    
+		    @Override
+		    public void mouseDragged(MouseEvent e) {
+		        // nada
+		    }
+		};
+		MouseAdapter miMouseAdapter = new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		        filaTablaComicentarios = -1;  // Resetea cuando el ratón entra
+		        comentarios.repaint(); // Repinta para quitar el color
+		    }
+		};
+		comentarios.addMouseMotionListener(miMouseMotionListener);
+		comentarios.addMouseListener(miMouseAdapter);
 		
 		// Scroll
 		JScrollPane scrollComentarios = new JScrollPane(comentarios);
@@ -356,8 +382,6 @@ public class VentanaPelicula extends JFrame {
 			comentarios.setRowHeight(30);									// Agrandar la altura de cada fila de la tabla
 			comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
 			comentarios.getColumnModel().getColumn(0).setMinWidth(300);
-			comentarios.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {{ setHorizontalAlignment(javax.swing.JLabel.CENTER); }});		// Hacer que los numeros de las valoraciones se vean en el centro
-
 		} else {
 			Comentario comAñadido = p.getComentarios().get(p.getComentarios().size()-1);
 			modeloTablaComentarios.addRow(new Object[] {Double.toString(comAñadido.getValoracion()),comAñadido.getTexto()} );	// Añadir la ultima reseña a la tabla
@@ -387,19 +411,23 @@ public class VentanaPelicula extends JFrame {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	        if (column==0) {
-	        	if (value instanceof Integer) {
-	        		int valorActual=(Integer) value;
-	        		if (valorActual<=2) {
-	        			setForeground(Color.red);
-	        		}else if(valorActual==3) {
-	        			setForeground(Color.orange);
-	        		}else {
-	        			setForeground(Color.green);
-	        		}
-	        	}
+			if (filaTablaComicentarios!=-1 && row == filaTablaComicentarios && !isSelected) {
+				setBackground(Color.gray);
+				setForeground(Color.white);
+			}else {
+	            if (isSelected) {
+	            	setOpaque(true);
+	                setBackground(new Color(62, 71, 82));
+	                setForeground(Color.black);
+	            } else {
+	                if (row % 2 == 0) {
+	                    setBackground(new Color(240, 240, 240));
+	                } else {
+	                    setBackground(Color.white);
+	                }
+	                setForeground(Color.black);
+	            }
 	        }
-			
 			return this;
 		}
 	}
