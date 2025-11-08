@@ -201,7 +201,7 @@ public class VentanaPelicula extends JFrame {
 		titulo.setText(p.getTitulo());
 		titulo.setFont(new Font("Garamond", Font.BOLD, 55));
 		titulo.setBackground(panelPrincipal.getBackground());
-		titulo.setForeground(new Color(255,0,0));
+		titulo.setForeground(new Color(111, 130, 179));
 		panelNorte.setBackground(panelPrincipal.getBackground());
 		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 		
@@ -287,7 +287,7 @@ public class VentanaPelicula extends JFrame {
 		
 		// Crear ambos botones y ajustar color
 		this.alquilar = new JButton("Alquilar");
-		this.alquilar.setBackground(new Color(153,0,0));
+		this.alquilar.setBackground(new Color(112, 124, 156));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		this.alquilar.addActionListener(new ActionListener() {
 			
@@ -308,7 +308,7 @@ public class VentanaPelicula extends JFrame {
 		});
 		
 		this.reseñar = new JButton("Reseñar");
-		this.reseñar.setBackground(new Color(153,0,0));
+		this.reseñar.setBackground(new Color(112, 124, 156));
 		this.reseñar.setFont(new Font("Arial", Font.BOLD, 35));
 		this.reseñar.addActionListener(new ActionListener() {
 			

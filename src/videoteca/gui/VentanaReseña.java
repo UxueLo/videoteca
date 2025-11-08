@@ -127,7 +127,7 @@ public class VentanaReseña extends JFrame {
 		titulo.setText(p.getTitulo());
 		titulo.setFont(new Font("Garamond", Font.BOLD, 40));
 		titulo.setBackground(panelPrincipal.getBackground());
-		titulo.setForeground(new Color(255,0,0));
+		titulo.setForeground(new Color(112, 124, 156));
 		panelNorte.setBackground(panelPrincipal.getBackground());
 		panelNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
 		
@@ -175,7 +175,7 @@ public class VentanaReseña extends JFrame {
 		panelSurSur.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 		
 		this.reseñar = new JButton("Reseñar");			// Crear el boton de "reseñar"
-		reseñar.setBackground(new Color(153,0,0));
+		reseñar.setBackground(new Color(112, 124, 156));
 		reseñar.setFont(new Font("Arial", Font.BOLD, 35));
 		
 		panelSurSur.add(reseñar, BorderLayout.CENTER);

@@ -26,7 +26,7 @@ public class VentanaInicioFrame extends JFrame{
 	private Usuario usuario;
 	private ArrayList<Pelicula> peliculas;
 	private JPanel centro;
-	private Color colorPrincipal= new Color(179, 111, 131); //cambiar en el codigo
+	private Color colorPrincipal= new Color(111, 130, 179); //cambiar en el codigo
 	private Color colorFondo= new Color(35, 35, 35);
 	private JScrollPane scrollCentro;
 	private JLabel textoCabeza;

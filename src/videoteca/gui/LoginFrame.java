@@ -20,7 +20,7 @@ public class LoginFrame extends JFrame{
 	private JTextField usuario;
 	private JPasswordField contraseña;
 	private JButton botonInicarSesion;
-	private Color colorTexto = new Color(204,0,0);
+	private Color colorTexto = new Color(111, 130, 179);
 	private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
 	
 	//constructor

@@ -30,7 +30,7 @@ public class UsuarioFrame extends JFrame{
 	private JPanel panelCentral;
 	private JPanel panelPelicula;
 	private JTable tablaPeliculas;
-	private Color colorTexto = new Color(204,0,0);
+	private Color colorTexto = new Color(54, 57, 66);
 	private Font fuenteTexto = new Font("Times New Roman",Font.BOLD,30);
 	private DefaultTableModel modeloTablaPeliculas;
 	private JLabel labelTitulo;
@@ -188,7 +188,7 @@ public class UsuarioFrame extends JFrame{
 		
 		//boton reseñar
 		botonReseñar = new JButton();
-		botonReseñar.setBackground(colorTexto);
+		botonReseñar.setBackground(new Color(111, 130, 179));
 		botonReseñar.setText("Reseñar");
 		botonReseñar.setFont(fuenteDatos);
 		botonReseñar.setBounds(600, 25, 120, 30);
