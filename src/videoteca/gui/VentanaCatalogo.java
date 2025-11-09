@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import videoteca.domain.*;
 
@@ -25,7 +26,49 @@ public class VentanaCatalogo extends JFrame {
     public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
         this.usuario = usuario;
         this.peliculas = peliculas;
-        inicializarVentana();
+        mostrarBarraDeProgreso(peliculas);
+    }
+    
+    private void mostrarBarraDeProgreso(ArrayList<Pelicula> peliculas) {
+        JDialog dialogoCarga = new JDialog(this, "Cargando Catálogo...", true);
+        JProgressBar barraProgreso = new JProgressBar(0, 100);
+        barraProgreso.setStringPainted(true);
+        dialogoCarga.add(BorderLayout.CENTER, barraProgreso);
+        dialogoCarga.setSize(300, 75);
+        dialogoCarga.setLocationRelativeTo(this);
+
+        SwingWorker<Void, Integer> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                int total = peliculas.size();
+                int actual = 0;
+
+                for (Pelicula p : peliculas) {
+                    // Simular carga de imagen
+                    new ImageIcon("images/" + p.getTitulo() + ".jpg");
+                    Thread.sleep(20);
+                    actual++;
+                    publish((int) ((double) actual / total * 100));
+                }
+
+                // Inicializa la ventana principal cuando termine la carga
+                SwingUtilities.invokeAndWait(() -> inicializarVentana());
+                return null;
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                barraProgreso.setValue(chunks.get(chunks.size() - 1));
+            }
+
+            @Override
+            protected void done() {
+                dialogoCarga.dispose();
+            }
+        };
+
+        worker.execute();
+        dialogoCarga.setVisible(true);
     }
 
     private void inicializarVentana() {
