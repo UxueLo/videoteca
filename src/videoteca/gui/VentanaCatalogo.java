@@ -94,9 +94,17 @@ public class VentanaCatalogo extends JFrame {
         comboEdad.insertItemAt(null, 0);
         comboEdad.setSelectedIndex(0);
 
-        JButton btnFiltrar = new JButton("Filtrar");
-        estiloBotonRojo(btnFiltrar);
-        btnFiltrar.addActionListener(e -> aplicarFiltros());
+        comboGenero.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                aplicarFiltros();
+            }
+        });
+
+        comboEdad.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                aplicarFiltros();
+            }
+        });
 
         JButton btnReset = new JButton("Reiniciar");
         estiloBotonNegro(btnReset);
@@ -115,8 +123,6 @@ public class VentanaCatalogo extends JFrame {
         lblEdad.setForeground(Color.WHITE);
         panelFiltros.add(lblEdad);
         panelFiltros.add(comboEdad);
-
-        panelFiltros.add(btnFiltrar);
         panelFiltros.add(btnReset);
         panelFiltros.add(btnCarrito);
 
