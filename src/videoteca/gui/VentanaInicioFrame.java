@@ -110,7 +110,7 @@ public class VentanaInicioFrame extends JFrame{
 					}else if(opcion=="Registrarse") {
 						RegistrarFrame reg= new RegistrarFrame();
 						reg.setVisible(true);
-					}else if (opcion=="Catalogo") {
+					}else if (opcion=="Catálogo") {
 						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
 						venCat.setVisible(true);
 					}else if (opcion=="Usuario") {
