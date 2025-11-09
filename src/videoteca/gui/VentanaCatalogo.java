@@ -22,6 +22,7 @@ public class VentanaCatalogo extends JFrame {
     private JPanel panelCatalogo;
     private JComboBox<Genero> comboGenero;
     private JComboBox<EdadRecomendada> comboEdad;
+    private JButton btnCarrito;
 
     public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
         this.usuario = usuario;
@@ -110,8 +111,9 @@ public class VentanaCatalogo extends JFrame {
         estiloBotonNegro(btnReset);
         btnReset.addActionListener(e -> resetFiltros());
 
-        JButton btnCarrito = new JButton("🛒 Ir al carrito");
+        btnCarrito = new JButton(); 
         estiloBotonRojo(btnCarrito);
+        actualizarBotonCarrito(); 
         btnCarrito.addActionListener(e -> abrirCarrito());
 
         JLabel lblGenero = new JLabel("Género:");
@@ -225,6 +227,7 @@ public class VentanaCatalogo extends JFrame {
         else {
             usuario.getCarritoUsuario().add(p);
             JOptionPane.showMessageDialog(this, p.getTitulo() + " añadida al carrito 🎬", "Carrito", JOptionPane.INFORMATION_MESSAGE);
+            actualizarBotonCarrito();
         }
     }
 
@@ -273,5 +276,16 @@ public class VentanaCatalogo extends JFrame {
             public void mouseExited(MouseEvent e) { b.setBackground(Color.BLACK); }
         });
     }
+
+	private void actualizarBotonCarrito() {
+	    int cantidad = usuario.getCarritoUsuario().size();
+	    if (cantidad == 0) {
+	        btnCarrito.setText("🛒 Carrito");
+	    } else if (cantidad == 1) {
+	        btnCarrito.setText("🛒 Carrito 1");
+	    } else {
+	        btnCarrito.setText("🛒 Carrito" + cantidad);
+	    }
+	}
 }
 
