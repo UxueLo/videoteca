@@ -36,6 +36,7 @@ public class VentanaCatalogo extends JFrame {
         barraProgreso.setStringPainted(true);
         dialogoCarga.add(BorderLayout.CENTER, barraProgreso);
         dialogoCarga.setSize(300, 75);
+        dialogoCarga.setResizable(false);
         dialogoCarga.setLocationRelativeTo(this);
 
         SwingWorker<Void, Integer> worker = new SwingWorker<>() {
@@ -270,7 +271,7 @@ public class VentanaCatalogo extends JFrame {
 
 
     private void agregarAlCarrito(Pelicula p) {
-        if (carrito.contains(p))
+        if (usuario.getCarritoUsuario().contains(p))
             JOptionPane.showMessageDialog(this, "Esta película ya está en el carrito.", "Aviso", JOptionPane.WARNING_MESSAGE);
         else {
             usuario.getCarritoUsuario().add(p);
@@ -332,7 +333,7 @@ public class VentanaCatalogo extends JFrame {
 	    } else if (cantidad == 1) {
 	        btnCarrito.setText("🛒 Carrito 1");
 	    } else {
-	        btnCarrito.setText("🛒 Carrito" + cantidad);
+	        btnCarrito.setText("🛒 Carrito " + cantidad);
 	    }
 	}
 }
