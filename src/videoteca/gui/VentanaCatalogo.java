@@ -112,7 +112,7 @@ public class VentanaCatalogo extends JFrame {
         btnReset.addActionListener(e -> resetFiltros());
 
         btnCarrito = new JButton(); 
-        estiloBotonRojo(btnCarrito);
+        estiloBotonAzul(btnCarrito);
         actualizarBotonCarrito(); 
         btnCarrito.addActionListener(e -> abrirCarrito());
 
@@ -184,7 +184,7 @@ public class VentanaCatalogo extends JFrame {
 
             // Botón agregar al carrito
             JButton btnCarrito = new JButton("🛒 Añadir al carrito");
-            estiloBotonRojo(btnCarrito);
+            estiloBotonAzul(btnCarrito);
             btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
             btnCarrito.addActionListener(e -> agregarAlCarrito(p));
 
@@ -254,15 +254,15 @@ public class VentanaCatalogo extends JFrame {
         cargarPeliculas(peliculas);
     }
 
-    private void estiloBotonRojo(JButton b) {
-        b.setBackground(new Color(180, 0, 0));
+    private void estiloBotonAzul(JButton b) {
+        b.setBackground(new Color(112, 124, 156));
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
         b.setFont(new Font("SansSerif", Font.BOLD, 13));
         b.setBorder(new LineBorder(Color.BLACK, 1));
         b.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) { b.setBackground(new Color(220, 0, 0)); }
-            public void mouseExited(MouseEvent e) { b.setBackground(new Color(180, 0, 0)); }
+            public void mouseExited(MouseEvent e) { b.setBackground(new Color(103, 114, 135)); }
         });
     }
 

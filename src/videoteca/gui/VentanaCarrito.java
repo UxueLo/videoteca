@@ -39,7 +39,7 @@ public class VentanaCarrito extends JFrame {
         // TEXTO SUPERIOR
         JLabel info = new JLabel("Aquí puede alquilar sus películas seleccionadas", SwingConstants.CENTER);
         info.setFont(new Font("Garamond", Font.BOLD, 45));
-        info.setForeground(new Color(255,0,0));
+        info.setForeground(new Color(111, 130, 179));
         info.setBorder(new EmptyBorder(15, 0, 15, 0));
         add(info, BorderLayout.NORTH);
 
@@ -61,11 +61,11 @@ public class VentanaCarrito extends JFrame {
         precioTotal.setForeground(Color.WHITE);
 
         JButton btnLimpiar = new JButton("Limpiar carrito");
-        estiloBotonRojo(btnLimpiar);
+        estiloBotonAzul(btnLimpiar);
         btnLimpiar.addActionListener(e -> limpiarCarrito());
 
         JButton btnAlquilar = new JButton("Alquilar");
-        estiloBotonRojo(btnAlquilar);
+        estiloBotonAzul(btnAlquilar);
         btnAlquilar.addActionListener(e -> alquilarPeliculas());
 
         panelInferior.add(precioTotal);
@@ -119,7 +119,7 @@ public class VentanaCarrito extends JFrame {
 
             // Botón quitar
             JButton btnQuitar = new JButton("Quitar");
-            estiloBotonRojo(btnQuitar);
+            estiloBotonAzul(btnQuitar);
             btnQuitar.addActionListener(e -> {
                 carrito.remove(p);
                 actualizarCarrito();
@@ -178,8 +178,8 @@ public class VentanaCarrito extends JFrame {
         }
     }
 
-    private void estiloBotonRojo(JButton b) {
-        b.setBackground(new Color(180, 0, 0));
+    private void estiloBotonAzul(JButton b) {
+        b.setBackground(new Color(112, 124, 156));
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
         b.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -190,7 +190,7 @@ public class VentanaCarrito extends JFrame {
             }
 
             public void mouseExited(MouseEvent e) {
-                b.setBackground(new Color(180, 0, 0));
+                b.setBackground(new Color(103, 114, 135));
             }
         });
     }
