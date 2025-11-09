@@ -131,7 +131,7 @@ public class VentanaCatalogo extends JFrame {
         add(panelFiltros, BorderLayout.NORTH);
 
         // PANEL CENTRAL - CATALOGO
-        panelCatalogo = new JPanel(new GridLayout(0, 4, 20, 20));
+        panelCatalogo = new JPanel();
         panelCatalogo.setBackground(Color.BLACK);
         JScrollPane scroll = new JScrollPane(panelCatalogo);
         scroll.setBorder(null);
@@ -143,81 +143,129 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void cargarPeliculas(ArrayList<Pelicula> lista) {
+        // Quitamos todo lo que había antes en el panel
         panelCatalogo.removeAll();
 
+        // Usamos GridBagLayout para organizar las tarjetas en filas y columnas
+        panelCatalogo.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(0, 0, 20, 20); // espacio entre tarjetas
+        gbc.fill = GridBagConstraints.HORIZONTAL; // que ocupen todo el ancho de la columna
+
+        int columnas = 4;   // queremos 4 columnas
+        int contador = 0;   // cuenta cuántas tarjetas hemos puesto
+
+        // Guardamos todas las tarjeta y buscamos la más alta
+        ArrayList<JPanel> tarjetas = new ArrayList<>();
+        int maxHeight = 0; // altura máxima encontrada
         for (Pelicula p : lista) {
-            JPanel card = new JPanel();
-            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-            card.setBackground(Color.DARK_GRAY);
-
-            // Imagen
-            JLabel lblImg = new JLabel();
-            lblImg.setAlignmentX(CENTER_ALIGNMENT);
-            lblImg.setPreferredSize(new Dimension(200, 280));
-
-            String ruta = "images/" + p.getTitulo() + ".jpg";
-            File archivo = new File(ruta);
-            ImageIcon icon;
-
-            if (archivo.exists()) {
-                icon = new ImageIcon(ruta);
-            } else {
-                icon = new ImageIcon("images/default.jpg");
-            }
-
-            // Escalar la imagen y asignarla al JLabel
-            Image imagenEscalada = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
-            lblImg.setIcon(new ImageIcon(imagenEscalada));
-
-            // Título 
-            JLabel lblTitulo = new JLabel(p.getTitulo(), SwingConstants.CENTER);
-            lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
-            lblTitulo.setForeground(Color.WHITE);
-            lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
-            lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
-
-            // Precio
-            JLabel lblPrecio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
-            lblPrecio.setFont(new Font("SansSerif", Font.BOLD, 13));
-            lblPrecio.setForeground(Color.WHITE);
-            lblPrecio.setAlignmentX(CENTER_ALIGNMENT);
-
-            // Botón agregar al carrito
-            JButton btnCarrito = new JButton("🛒 Añadir al carrito");
-            estiloBotonAzul(btnCarrito);
-            btnCarrito.setAlignmentX(CENTER_ALIGNMENT);
-            btnCarrito.addActionListener(e -> agregarAlCarrito(p));
-
-            // Click en la película → abrir ventana de detalles
-            card.addMouseListener(new MouseAdapter() { 
-                @Override 
-                public void mouseClicked(MouseEvent e) { 
-                    // Abrir la ventana de película
-                    VentanaPelicula ventanaPelicula = new VentanaPelicula(p, usuario);
-                    ventanaPelicula.setVisible(true);
-                }
-                @Override 
-                public void mouseEntered(MouseEvent e) { 
-                    card.setBackground(new Color(60, 0, 0)); 
-                } 
-                @Override 
-                public void mouseExited(MouseEvent e) { 
-                    card.setBackground(Color.DARK_GRAY); 
-                } 
-            });
-
-            card.add(lblImg);
-            card.add(Box.createVerticalStrut(5));
-            card.add(lblTitulo);
-            card.add(lblPrecio);
-            card.add(Box.createVerticalStrut(10));
-            card.add(btnCarrito);
-
-            panelCatalogo.add(card);
+            JPanel tarjeta = crearCard(p);
+            tarjetas.add(tarjeta);
+            // actualizamos la altura máxima
+            maxHeight = Math.max(maxHeight, tarjeta.getPreferredSize().height);
         }
 
+        // Añadimos las cards reales al panel
+        for (JPanel tarjeta : tarjetas) {
+            // columna = resto de dividir contador entre columnas
+            gbc.gridx = contador % columnas;
+            // fila = división entera de contador entre columnas
+            gbc.gridy = contador / columnas;
+            gbc.weightx = 1;
+            gbc.weighty = 0;
+
+            // todas las tarjetas tendrán la misma altura (la mayor encontrada)
+            Dimension pref = tarjeta.getPreferredSize();
+            tarjeta.setPreferredSize(new Dimension(pref.width, maxHeight));
+
+            panelCatalogo.add(tarjeta, gbc);
+            contador++;
+        }
+
+        // Si la última fila no está completa, añadimos "tarjetas invisibles"
+        int resto = contador % columnas;
+        if (resto != 0) {
+            int faltan = columnas - resto; // cuántas tarjetas faltan para completar la fila
+            for (int i = 0; i < faltan; i++) {
+                gbc.gridx = (contador + i) % columnas;
+                gbc.gridy = (contador + i) / columnas;
+                gbc.weightx = 1;
+                gbc.weighty = 0;
+
+                // panel invisible que ocupa el mismo espacio que una tarjeta
+                JPanel filler = new JPanel();
+                filler.setOpaque(false); // transparente
+                filler.setPreferredSize(new Dimension(200, maxHeight));
+                panelCatalogo.add(filler, gbc);
+            }
+            contador += faltan;
+        }
+
+        // Añadimos un panel invisible al final para que no se estire todo hacia abajo
+        gbc.gridx = 0;
+        gbc.gridy = (contador / columnas) + 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        JPanel fillerFinal = new JPanel();
+        fillerFinal.setOpaque(false);
+        panelCatalogo.add(fillerFinal, gbc);
+
+        // Actualizamos el panel para que se vea todo correctamente
         panelCatalogo.revalidate();
         panelCatalogo.repaint();
+    }
+
+
+    // Crea la tarjeta de cada película 
+    private JPanel crearCard(Pelicula p) {
+        JPanel tarjeta = new JPanel();
+        tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
+        tarjeta.setBackground(Color.DARK_GRAY);
+        tarjeta.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Imagen
+        JLabel imagen = new JLabel();
+        imagen.setAlignmentX(Component.CENTER_ALIGNMENT);
+        String ruta = "images/" + p.getTitulo() + ".jpg";
+        File archivo = new File(ruta);
+        ImageIcon icon = archivo.exists() ? new ImageIcon(ruta) : new ImageIcon("images/default.jpg");
+        Image imagenEscalada = icon.getImage().getScaledInstance(200, 280, Image.SCALE_SMOOTH);
+        imagen.setIcon(new ImageIcon(imagenEscalada));
+
+        // Título y precio
+        JLabel titulo = new JLabel(p.getTitulo(), SwingConstants.CENTER);
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 16));
+        titulo.setForeground(Color.WHITE);
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titulo.setBorder(new EmptyBorder(5, 0, 5, 0));
+
+        JLabel precio = new JLabel(String.format("%.2f €", p.getPrecio()), SwingConstants.CENTER);
+        precio.setFont(new Font("SansSerif", Font.BOLD, 13));
+        precio.setForeground(Color.WHITE);
+        precio.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Botón añadir al carrito
+        JButton btnCarrito = new JButton("🛒 Añadir al carrito");
+        estiloBotonAzul(btnCarrito);
+        btnCarrito.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnCarrito.addActionListener(e -> agregarAlCarrito(p));
+
+        // Hover y click para abrir ventana de detalles
+        tarjeta.addMouseListener(new MouseAdapter() { 
+            @Override 
+            public void mouseClicked(MouseEvent e) { new VentanaPelicula(p, usuario).setVisible(true); }
+            @Override public void mouseEntered(MouseEvent e) { tarjeta.setBackground(new Color(60, 0, 0)); } 
+            @Override public void mouseExited(MouseEvent e) { tarjeta.setBackground(Color.DARK_GRAY); } 
+        });
+
+        tarjeta.add(imagen);
+        tarjeta.add(Box.createVerticalStrut(5));
+        tarjeta.add(titulo);
+        tarjeta.add(precio);
+        tarjeta.add(Box.createVerticalStrut(10));
+        tarjeta.add(btnCarrito);
+
+        return tarjeta;
     }
 
 
