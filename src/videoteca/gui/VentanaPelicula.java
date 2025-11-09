@@ -328,10 +328,10 @@ public class VentanaPelicula extends JFrame {
 					usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
 					usuario.getCarritoUsuario().add(p);
 					//Mensaje de confirmacion
-					JOptionPane.showMessageDialog(null,"Pelicula añadida al carrito","Pelicula añadida",JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);
 					actualizarAlquilado();
 				} else {
-					JOptionPane.showMessageDialog(null,"La pelicula ya esta añadida al carrito","Pelicula ya añadida",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La película ya está añadida al carrito","Película ya añadida",JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}
