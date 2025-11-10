@@ -23,3 +23,16 @@
 hs_err_pid*
 replay_pid*
 /bin/
+
+# Configuración de IDEs
+.idea/
+.vscode/
+.metadata/
+.settings/
+*.iml
+.project
+.classpath
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
