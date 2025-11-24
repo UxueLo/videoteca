@@ -1,4 +1,4 @@
-package videoteca.persistence;
+package videoteca.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +21,38 @@ public class GestorBDUsuario {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
 			System.err.format("* Error al cargar el driver de la BBDD: %s\n", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Inicializa la base de datos creando las tablas si no existen
+	 */
+	public void inicializarTablas() {
+		String sqlUsuario = "CREATE TABLE IF NOT EXISTS USUARIO (" +
+				"EMAIL TEXT PRIMARY KEY, " +
+				"NOMBRE TEXT NOT NULL, " +
+				"EDAD INTEGER NOT NULL, " +
+				"FECHA_NACIMIENTO TEXT NOT NULL, " +
+				"CONTRASEÑA TEXT NOT NULL, " +
+				"SALDO INTEGER DEFAULT 0)";
+		
+		try {
+	        java.io.File dbDir = new java.io.File("resources/db");
+	        if (!dbDir.exists()) {
+	            dbDir.mkdirs();
+	            System.out.println("Directorio de base de datos creado: resources/db");
+	        }
+
+	        //Conectar a la base de datos
+	        Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	        Statement stmt = con.createStatement();
+
+	        // Crear las tablas
+	        stmt.execute(sqlUsuario);
+	        System.out.println("Tabla USUARIO creada o ya existe");
+	        
+		}catch (Exception e) {
+			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
 		}
 	}
 
