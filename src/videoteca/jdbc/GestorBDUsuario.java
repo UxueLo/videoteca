@@ -63,7 +63,7 @@ public class GestorBDUsuario {
 	 */
 	public Usuario verificarUsuario(String nombreUsuario,String contraseña) {
 		Usuario usuario = null;
-		String sql = "SELECT * FROM USUARIO WHERE USUARIO = ? AND CONTRASEÑA = ?";
+		String sql = "SELECT * FROM USUARIO WHERE NOMBRE = ? AND CONTRASEÑA = ?";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 		     PreparedStatement pst = con.prepareStatement(sql)) {
@@ -104,7 +104,7 @@ public class GestorBDUsuario {
 	 */
 	public boolean existeUsuario(String nombreUsuario) {
 		boolean existe = false;
-		String sql = "SELECT COUNT(*) FROM USUARIO WHERE USUARIO = ?";
+		String sql = "SELECT COUNT(*) FROM USUARIO WHERE NOMBRE = ?";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 		     PreparedStatement pst = con.prepareStatement(sql)) {
@@ -208,7 +208,7 @@ public class GestorBDUsuario {
 	 */
 	public boolean actualizarSaldo(String nombreUsuario, int nuevoSaldo) {
 		boolean actualizado = false;
-		String sql = "UPDATE USUARIO SET SALDO = ? WHERE USUARIO	 = ?";
+		String sql = "UPDATE USUARIO SET SALDO = ? WHERE NOMBRE = ?";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 		     PreparedStatement pst = con.prepareStatement(sql)) {

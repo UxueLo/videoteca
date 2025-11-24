@@ -2,14 +2,20 @@ package videoteca.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.time.LocalDate;
+import java.time.Period;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import videoteca.domain.Usuario;
+import videoteca.jdbc.GestorBDUsuario;
 
 public class RegistrarFrame extends JFrame{
 	//private JLabel textoRegistrarse;
@@ -27,9 +33,15 @@ public class RegistrarFrame extends JFrame{
 		private JButton botonIniciarSesion;
 		private Color colorTexto = new Color(111, 130, 179);
 		private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
+		private GestorBDUsuario gestor;
 		
 		//constructor
 		public RegistrarFrame() {
+			
+			//Gestor de la BD del Usuario
+			this.gestor = new GestorBDUsuario();
+			
+			//Datos del Frame
 			setTitle("Registrarse");
 			setSize(800,500);
 			setLocationRelativeTo(null);
@@ -131,17 +143,7 @@ public class RegistrarFrame extends JFrame{
 			botonIniciarSesion.setFont(fuenteTexto);
 			botonIniciarSesion.setBounds(310,350,220,50);
 			botonIniciarSesion.addActionListener(e ->{
-				if(usuario.getText().isBlank() && email.getText().isBlank() &&contraseña.getPassword().length == 0 && 
-						repetirContraseña.getPassword().length == 0 && fechaNacimiento.getText().isBlank()) {
-					System.err.println("Rellena todos los campos, por favor");
-				}else if(!email.getText().contains("@") || !email.getText().contains(".")){
-					System.err.println("Email no valido");
-				}else if (contraseña.getPassword() != repetirContraseña.getPassword()) {
-					System.err.println("Las dos contraseñas no son iguales");
-				}else {
-					System.out.println("Usuario "+usuario.getText()+" ha iniciado sesión");
-				}
-				
+				registrarUsuario();
 			});
 			
 			
@@ -158,6 +160,34 @@ public class RegistrarFrame extends JFrame{
 			panelPrincipal.add(labelFechaNacimiento);
 			panelPrincipal.add(fechaNacimiento);
 			panelPrincipal.add(botonIniciarSesion);
+		}
+
+		private void registrarUsuario() {
+			//Comprobar que el usuario no existe ya
+			String nombre = usuario.getText();
+			if (gestor.existeUsuario(nombre)) {
+				JOptionPane.showMessageDialog(null,"Este nombre de Usuario ya existe, inicia sesión o escoge otro","Usuario existente",JOptionPane.PLAIN_MESSAGE);
+			}else {
+				//Crear usuario e iniciar sesion
+				if(usuario.getText().isBlank() && email.getText().isBlank() &&contraseña.getPassword().length == 0 && 
+						repetirContraseña.getPassword().length == 0 && fechaNacimiento.getText().isBlank()) {
+					JOptionPane.showMessageDialog(null,"Rellena todos los campos, por favor","Campos faltantes",JOptionPane.PLAIN_MESSAGE);
+				}else if(!email.getText().contains("@") || !email.getText().contains(".")){
+					JOptionPane.showMessageDialog(null,"Email no valido","Email invalido",JOptionPane.PLAIN_MESSAGE);
+				}else if (contraseña.getPassword().equals(repetirContraseña.getPassword())){
+					JOptionPane.showMessageDialog(null,"Las dos contraseñas no son iguales","Contraseña incorrecta",JOptionPane.PLAIN_MESSAGE);
+				}else {
+					//Calcular edad
+					LocalDate nacimiento= LocalDate.parse(fechaNacimiento.getText());
+			        LocalDate hoy = LocalDate.now();
+			        int edad = Period.between(nacimiento, hoy).getYears();
+					
+			        //Crear nuevo usuario
+					Usuario user= new Usuario(nombre,email.getText(),edad, nacimiento, contraseña.getPassword().toString());
+					gestor.registrarUsuario(user);
+					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
+				}
+			}
 		}
 		
 	}

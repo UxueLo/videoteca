@@ -79,8 +79,8 @@ public class Main {
 //		UsuarioFrame frame = new UsuarioFrame(usuario);
 //		frame.setVisible(true);
 		
-		//GestorBDUsuario gestor = new GestorBDUsuario();
-		//gestor.inicializarTablas();
+		GestorBDUsuario gestor = new GestorBDUsuario();
+		gestor.inicializarTablas();
 		
 		//Para ir probando Ventana Catalogo
 		//new VentanaCatalogo(usuario, peliculas);
