@@ -167,6 +167,47 @@ public class GestorBD {
 	}
 	
 	/**
+	 * Obtiene un usuario por nombre y contraseña
+	 * @param nombre Nombre del usuario
+	 * @param contraseña Contraseña del usuario
+	 * @return Usuario si existe y la contraseña es correcta, null en caso contrario
+	 */
+	public Usuario obtenerUsuario(String nombre, String contraseña) {
+		Usuario usuario = null;
+		String sql = "SELECT * FROM USUARIO WHERE NOMBRE = ? AND CONTRASEÑA = ?";
+		
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+		     PreparedStatement pst = con.prepareStatement(sql)) {
+			
+			pst.setString(1, nombre);
+			pst.setString(2, contraseña);
+			
+			ResultSet rs = pst.executeQuery();
+			
+			if (rs.next()) {
+				String email = rs.getString("EMAIL");
+				int edad = rs.getInt("EDAD");
+				String fechaStr = rs.getString("FECHA_NACIMIENTO");
+				LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
+				int saldo = rs.getInt("SALDO");
+				
+				usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
+				usuario.aumentarSaldo(saldo);
+				
+				System.out.println("Usuario encontrado: " + nombre);
+			} else {
+				System.out.println("Nombre o contraseña incorrectos");
+			}
+			
+			rs.close();
+		} catch (Exception e) {
+			System.err.format("* Error obteniendo usuario por nombre: %s.\n", e.getMessage());
+		}
+		
+		return usuario;
+	}
+	
+	/**
 	 * Carga todos los usuarios de la base de datos
 	 * @return Lista de usuarios
 	 */

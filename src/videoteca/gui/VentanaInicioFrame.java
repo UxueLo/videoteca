@@ -151,6 +151,16 @@ public class VentanaInicioFrame extends JFrame{
 		setVisible(true); //ventana visible
 	}
 	
+	protected void actualizarUsuario(Usuario nuevoUsuario) {
+		    this.usuario = nuevoUsuario;
+		    // Cambiar texto en el Label
+		    JLabel userLabel = (JLabel) menu.getComponent(0); // El primer elemento es el usuario
+		    userLabel.setText("Hola " + usuario.getNombre() + "!");
+		    menu.revalidate();
+		    menu.repaint();
+		
+	}
+
 	//encontrar las 10 peliculas con mejor media
 	public ArrayList<Pelicula> getTopPeliculas(ArrayList<Pelicula> peliculas){
 		ArrayList<Pelicula> mejoresPeliculas= new ArrayList<Pelicula>();

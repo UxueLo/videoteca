@@ -118,11 +118,17 @@ public class LoginFrame extends JFrame{
 			JOptionPane.showMessageDialog(null,"Para crear cuenta vete a Registrarme","Usuario no existente",JOptionPane.PLAIN_MESSAGE);
 		}else {
 			if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
-				JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
-			
-				//cambiar usuario del resto de ventanas
-				Usuario user = gestor.obtenerUsuario("nombre","contraseña");
-				this.ventanaInicio.usuario = user;
+				try {
+					//cambiar usuario del resto de ventanas
+					Usuario user = gestor.obtenerUsuario(nombre,new String(contraseña.getPassword()));
+					this.ventanaInicio.usuario = user;
+					this.ventanaInicio.actualizarUsuario(user);
+					this.dispose(); //elimina ventana de iniciar sesion
+					//mensaje correcto
+					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
+				}catch (Exception e) {
+					JOptionPane.showMessageDialog(null,"Algo ha salido mal" ,"No se ha podido iniciar sesion",JOptionPane.PLAIN_MESSAGE);
+				}
 			}else {
 				JOptionPane.showMessageDialog(null,"Rellena todos los campos, por favor","Iniciar Sesion",JOptionPane.PLAIN_MESSAGE);
 			}

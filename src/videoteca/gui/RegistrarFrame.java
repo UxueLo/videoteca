@@ -191,6 +191,8 @@ public class RegistrarFrame extends JFrame{
 					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
 					//Cambiar usuario en la ventana Principal
 					this.ventanaInicio.usuario = user;
+					this.ventanaInicio.actualizarUsuario(user);
+					this.dispose(); //elimina ventana de iniciar sesion
 				}
 			}
 		}
