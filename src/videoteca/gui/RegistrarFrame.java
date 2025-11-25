@@ -34,12 +34,14 @@ public class RegistrarFrame extends JFrame{
 		private Color colorTexto = new Color(111, 130, 179);
 		private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
 		private GestorBD gestor;
+		private VentanaInicioFrame ventanaInicio;
 		
 		//constructor
-		public RegistrarFrame() {
+		public RegistrarFrame(VentanaInicioFrame ventanaInicio) {
 			
 			//Gestor de la BD del Usuario
 			this.gestor = new GestorBD();
+			this.ventanaInicio = ventanaInicio;
 			
 			//Datos del Frame
 			setTitle("Registrarse");
@@ -131,6 +133,7 @@ public class RegistrarFrame extends JFrame{
 			labelFechaNacimiento.setBounds(80,290,230,30);;
 			
 			//fechaNacimiento
+			//TODO añadir yyyy-mm-dd
 			fechaNacimiento = new JTextField();
 			fechaNacimiento.setForeground(colorTexto);
 			fechaNacimiento.setFont(fuenteTexto);
@@ -186,6 +189,8 @@ public class RegistrarFrame extends JFrame{
 					Usuario user= new Usuario(nombre,email.getText(),edad, nacimiento, contraseña.getPassword().toString());
 					gestor.registrarUsuario(user);
 					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
+					//Cambiar usuario en la ventana Principal
+					this.ventanaInicio.usuario = user;
 				}
 			}
 		}

@@ -23,7 +23,7 @@ import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
 
 public class VentanaInicioFrame extends JFrame{
-	private Usuario usuario;
+	public Usuario usuario;
 	private ArrayList<Pelicula> peliculas;
 	private JPanel centro;
 	private Color colorPrincipal= new Color(111, 130, 179); //cambiar en el codigo
@@ -105,10 +105,10 @@ public class VentanaInicioFrame extends JFrame{
 				@Override
 				public void mousePressed(MouseEvent e) {
 					if (opcion=="Iniciar Sesion") {
-						LoginFrame logIn= new LoginFrame();
+						LoginFrame logIn= new LoginFrame(VentanaInicioFrame.this);
 						logIn.setVisible(true);
 					}else if(opcion=="Registrarse") {
-						RegistrarFrame reg= new RegistrarFrame();
+						RegistrarFrame reg= new RegistrarFrame(VentanaInicioFrame.this);
 						reg.setVisible(true);
 					}else if (opcion=="Catálogo") {
 						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);

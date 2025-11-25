@@ -7,9 +7,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import videoteca.domain.Usuario;
+import videoteca.jdbc.GestorBD;
 
 public class LoginFrame extends JFrame{
 	
@@ -22,9 +26,16 @@ public class LoginFrame extends JFrame{
 	private JButton botonInicarSesion;
 	private Color colorTexto = new Color(111, 130, 179);
 	private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
+	private GestorBD gestor;
+	private VentanaInicioFrame ventanaInicio;
 	
 	//constructor
-	public LoginFrame() {
+	public LoginFrame(VentanaInicioFrame ventanaInicio) {
+		
+		//Gestor de la BD del Usuario
+		this.gestor = new GestorBD();
+		this.ventanaInicio = ventanaInicio;
+		
 		setTitle("Iniciar Sesión");
 		setSize(800,500);
 		setLocationRelativeTo(null);
@@ -87,12 +98,7 @@ public class LoginFrame extends JFrame{
 		botonInicarSesion.setFont(fuenteTexto);
 		botonInicarSesion.setBounds(290,290,220,60);
 		botonInicarSesion.addActionListener(e ->{
-			if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
-				System.out.println("Usuario "+usuario.getText()+" ha iniciado sesión");
-			}else {
-				System.err.println("Rellena todos los campos, por favor");
-			}
-			
+			iniciarSesion();
 		});
 		
 		
@@ -103,6 +109,24 @@ public class LoginFrame extends JFrame{
 		panelPrincipal.add(labelContraseña);
 		panelPrincipal.add(contraseña);
 		panelPrincipal.add(botonInicarSesion);
+	}
+
+	private void iniciarSesion() {
+		//Comprobar que el usuario no existe ya
+		String nombre = usuario.getText();
+		if (!gestor.existeUsuario(nombre)) {
+			JOptionPane.showMessageDialog(null,"Para crear cuenta vete a Registrarme","Usuario no existente",JOptionPane.PLAIN_MESSAGE);
+		}else {
+			if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
+				JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
+			
+				//cambiar usuario del resto de ventanas
+				Usuario user = gestor.obtenerUsuario("nombre","contraseña");
+				this.ventanaInicio.usuario = user;
+			}else {
+				JOptionPane.showMessageDialog(null,"Rellena todos los campos, por favor","Iniciar Sesion",JOptionPane.PLAIN_MESSAGE);
+			}
+		}
 	}
 	
 }
