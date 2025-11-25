@@ -10,7 +10,7 @@ import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
-import videoteca.jdbc.GestorBDUsuario;
+import videoteca.jdbc.GestorBD;
 
 public class Main {
 
@@ -79,7 +79,7 @@ public class Main {
 //		UsuarioFrame frame = new UsuarioFrame(usuario);
 //		frame.setVisible(true);
 		
-		GestorBDUsuario gestor = new GestorBDUsuario();
+		GestorBD gestor = new GestorBD();
 		gestor.inicializarTablas();
 		
 		//Para ir probando Ventana Catalogo

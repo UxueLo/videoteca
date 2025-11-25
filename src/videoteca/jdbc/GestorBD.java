@@ -11,12 +11,12 @@ import java.util.List;
 
 import videoteca.domain.Usuario;
 
-public class GestorBDUsuario {
+public class GestorBD {
 
 	private static final String SQLITE_FILE = "resources/db/usuario.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + SQLITE_FILE;
     
-	public GestorBDUsuario() {
+	public GestorBD() {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -55,6 +55,8 @@ public class GestorBDUsuario {
 			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
 		}
 	}
+	
+	//Funciones de gestion del usuario
 
 	/**
 	 * Verifica si un usuario existe en la base de datos y si la contraseña es correcta
@@ -262,5 +264,7 @@ public class GestorBDUsuario {
 		
 		return actualizado;
 	}
+	
+	//Otras funciones
 
 }

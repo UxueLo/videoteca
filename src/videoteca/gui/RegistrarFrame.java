@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import videoteca.domain.Usuario;
-import videoteca.jdbc.GestorBDUsuario;
+import videoteca.jdbc.GestorBD;
 
 public class RegistrarFrame extends JFrame{
 	//private JLabel textoRegistrarse;
@@ -33,13 +33,13 @@ public class RegistrarFrame extends JFrame{
 		private JButton botonIniciarSesion;
 		private Color colorTexto = new Color(111, 130, 179);
 		private Font fuenteTexto = new Font("Arial",Font.BOLD,20);
-		private GestorBDUsuario gestor;
+		private GestorBD gestor;
 		
 		//constructor
 		public RegistrarFrame() {
 			
 			//Gestor de la BD del Usuario
-			this.gestor = new GestorBDUsuario();
+			this.gestor = new GestorBD();
 			
 			//Datos del Frame
 			setTitle("Registrarse");
