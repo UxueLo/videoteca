@@ -44,10 +44,10 @@ public class UsuarioFrame extends JFrame{
 
 
 
-	public UsuarioFrame(Usuario usuario) {
+	public UsuarioFrame(VentanaInicioFrame ventanaInicio) {
 		
 		//Asignamos el usuario al Frame
-		this.usuario = usuario;
+		this.usuario = ventanaInicio.usuario;
 		
 		//Datos del JFrame
 		this.setLayout(new BorderLayout());

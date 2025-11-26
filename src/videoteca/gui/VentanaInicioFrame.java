@@ -114,7 +114,7 @@ public class VentanaInicioFrame extends JFrame{
 						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
 						venCat.setVisible(true);
 					}else if (opcion=="Usuario") {
-						UsuarioFrame us= new UsuarioFrame(usuario);
+						UsuarioFrame us= new UsuarioFrame(VentanaInicioFrame.this);
 						us.setVisible(true);
 					}else if (opcion=="Carrito") {
 						VentanaCarrito vcr= new VentanaCarrito(usuario);
