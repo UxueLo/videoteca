@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -181,26 +182,39 @@ public class VentanaReseña extends JFrame {
 		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
 		this.reseñar.addActionListener(new ActionListener() {
+			
+			//TODO comprobar que la sesion esta iniciada
 					
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
 				
-				if (valoracion != -1) {
-					ArrayList<Comentario> comentarios = p.getComentarios();
-					comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
-					p.setComentarios(comentarios);
+				//Comprobar que la sesion esta iniciada
+				if (!usuario.getNombre().isBlank()) {
+					// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
 					
-					if (vp != null) {
-						vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+					if (valoracion != -1) {
+						ArrayList<Comentario> comentarios = p.getComentarios();
+						comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
+						p.setComentarios(comentarios);
+						
+						if (vp != null) {
+							vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+						}
+						
+						VentanaReseña.this.dispose();
+					} else {
+						System.err.println("Valora la película");
+					
 					}
-					
-					VentanaReseña.this.dispose();
-				} else {
-					System.err.println("Valora la película");
+				
+				}else {
+					JOptionPane.showMessageDialog(VentanaReseña.this, 
+				            "Inicia sesion antes de hacer reseñas", 
+				            "Error de autenticación", 
+				            JOptionPane.ERROR_MESSAGE);
+				    }
 				}
 				
-			}
 		});
 		
 		

@@ -40,7 +40,7 @@ import videoteca.io.GestionImagenes;
 public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
-	private Usuario usuario;
+	Usuario usuario;
 	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
@@ -321,19 +321,30 @@ public class VentanaPelicula extends JFrame {
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
 		this.alquilar.addActionListener(new ActionListener() {
 			
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Meter la pelicula en el carrito
-				if (!usuario.getCarritoUsuario().contains(p)) {
-					usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
-					usuario.getCarritoUsuario().add(p);
-					//Mensaje de confirmacion
-					JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);
-					actualizarAlquilado();
-				} else {
-					JOptionPane.showMessageDialog(null,"La película ya está añadida al carrito","Película ya añadida",JOptionPane.INFORMATION_MESSAGE);
-				}
 				
+				//TODO
+				if (!usuario.getNombre().isBlank()) {
+					// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
+				
+					// Meter la pelicula en el carrito
+					if (!usuario.getCarritoUsuario().contains(p)) {
+						usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+						usuario.getCarritoUsuario().add(p);
+						//Mensaje de confirmacion
+						JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);
+						actualizarAlquilado();
+					} else {
+						JOptionPane.showMessageDialog(null,"La película ya está añadida al carrito","Película ya añadida",JOptionPane.INFORMATION_MESSAGE);
+					}
+				}else {
+					JOptionPane.showMessageDialog(VentanaPelicula.this, 
+				            "Inicia sesion antes de alquilar peliculas", 
+				            "Error de autenticación", 
+				            JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
