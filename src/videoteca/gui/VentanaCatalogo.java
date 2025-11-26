@@ -24,8 +24,8 @@ public class VentanaCatalogo extends JFrame {
     private JComboBox<EdadRecomendada> comboEdad;
     private JButton btnCarrito;
 
-    public VentanaCatalogo(Usuario usuario, ArrayList<Pelicula> peliculas) {
-        this.usuario = usuario;
+    public VentanaCatalogo(VentanaInicioFrame ventanaInicio, ArrayList<Pelicula> peliculas) {
+        this.usuario = ventanaInicio.usuario;
         this.peliculas = peliculas;
         mostrarBarraDeProgreso(peliculas);
     }

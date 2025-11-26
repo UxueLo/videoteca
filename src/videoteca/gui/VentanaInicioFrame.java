@@ -111,13 +111,13 @@ public class VentanaInicioFrame extends JFrame{
 						RegistrarFrame reg= new RegistrarFrame(VentanaInicioFrame.this);
 						reg.setVisible(true);
 					}else if (opcion=="Catálogo") {
-						VentanaCatalogo venCat= new VentanaCatalogo(usuario, peliculas);
+						VentanaCatalogo venCat= new VentanaCatalogo(VentanaInicioFrame.this, peliculas);
 						venCat.setVisible(true);
 					}else if (opcion=="Usuario") {
 						UsuarioFrame us= new UsuarioFrame(VentanaInicioFrame.this);
 						us.setVisible(true);
 					}else if (opcion=="Carrito") {
-						VentanaCarrito vcr= new VentanaCarrito(usuario);
+						VentanaCarrito vcr= new VentanaCarrito(VentanaInicioFrame.this);
 						vcr.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte

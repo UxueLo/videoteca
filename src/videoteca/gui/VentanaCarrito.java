@@ -19,8 +19,8 @@ public class VentanaCarrito extends JFrame {
     private JPanel panelCarrito;
     private JLabel precioTotal;
 
-    public VentanaCarrito(Usuario usuario) {
-        this.usuario = usuario;
+    public VentanaCarrito(VentanaInicioFrame ventanaInicio) {
+        this.usuario = ventanaInicio.usuario;
         this.carrito = usuario.getCarritoUsuario();
         inicializarVentana();
     }
