@@ -177,7 +177,7 @@ public class RegistrarFrame extends JFrame{
 					JOptionPane.showMessageDialog(null,"Rellena todos los campos, por favor","Campos faltantes",JOptionPane.PLAIN_MESSAGE);
 				}else if(!email.getText().contains("@") || !email.getText().contains(".")){
 					JOptionPane.showMessageDialog(null,"Email no valido","Email invalido",JOptionPane.PLAIN_MESSAGE);
-				}else if (contraseña.getPassword().equals(repetirContraseña.getPassword())){
+				}else if (!new String(contraseña.getPassword()).equals(new String(repetirContraseña.getPassword()))){
 					JOptionPane.showMessageDialog(null,"Las dos contraseñas no son iguales","Contraseña incorrecta",JOptionPane.PLAIN_MESSAGE);
 				}else {
 					//Calcular edad
@@ -186,7 +186,7 @@ public class RegistrarFrame extends JFrame{
 			        int edad = Period.between(nacimiento, hoy).getYears();
 					
 			        //Crear nuevo usuario
-					Usuario user= new Usuario(nombre,email.getText(),edad, nacimiento, contraseña.getPassword().toString());
+			        Usuario user= new Usuario(nombre, email.getText(), edad, nacimiento, new String(contraseña.getPassword()));
 					gestor.registrarUsuario(user);
 					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
 					//Cambiar usuario en la ventana Principal

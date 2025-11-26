@@ -29,8 +29,8 @@ public class GestorBD {
 	 */
 	public void inicializarTablas() {
 		String sqlUsuario = "CREATE TABLE IF NOT EXISTS USUARIO (" +
-				"EMAIL TEXT PRIMARY KEY, " +
-				"NOMBRE TEXT NOT NULL, " +
+				"NOMBRE TEXT PRIMARY KEY," +
+				"EMAIL TEXT NOT NULL UNIQUE, " +
 				"EDAD INTEGER NOT NULL, " +
 				"FECHA_NACIMIENTO TEXT NOT NULL, " +
 				"CONTRASEÑA TEXT NOT NULL, " +

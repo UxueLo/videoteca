@@ -112,27 +112,46 @@ public class LoginFrame extends JFrame{
 	}
 
 	private void iniciarSesion() {
-		//Comprobar que el usuario no existe ya
-		String nombre = usuario.getText();
-		if (!gestor.existeUsuario(nombre)) {
-			JOptionPane.showMessageDialog(null,"Para crear cuenta vete a Registrarme","Usuario no existente",JOptionPane.PLAIN_MESSAGE);
-		}else {
-			if(!usuario.getText().isBlank() && contraseña.getPassword().length > 0) {
-				try {
-					//cambiar usuario del resto de ventanas
-					Usuario user = gestor.obtenerUsuario(nombre,new String(contraseña.getPassword()));
-					this.ventanaInicio.usuario = user;
-					this.ventanaInicio.actualizarUsuario(user);
-					this.dispose(); //elimina ventana de iniciar sesion
-					//mensaje correcto
-					JOptionPane.showMessageDialog(null,"Usuario "+usuario.getText()+" ha iniciado sesión","Sesión iniciada",JOptionPane.PLAIN_MESSAGE);
-				}catch (Exception e) {
-					JOptionPane.showMessageDialog(null,"Algo ha salido mal" ,"No se ha podido iniciar sesion",JOptionPane.PLAIN_MESSAGE);
-				}
-			}else {
-				JOptionPane.showMessageDialog(null,"Rellena todos los campos, por favor","Iniciar Sesion",JOptionPane.PLAIN_MESSAGE);
-			}
-		}
+	    String nombre = usuario.getText().trim(); // trim() elimina espacios
+	    String pass = new String(contraseña.getPassword());
+	    
+	    // Verificar que los campos no están vacíos
+	    if (nombre.isBlank() || pass.isBlank()) {
+	        JOptionPane.showMessageDialog(this, 
+	            "Rellena todos los campos, por favor", 
+	            "Campos vacíos", 
+	            JOptionPane.WARNING_MESSAGE);
+	        return;
+	    }
+	    
+	    // Verificar si el usuario existe
+	    if (!gestor.existeUsuario(nombre)) {
+	        JOptionPane.showMessageDialog(this, 
+	            "Para crear cuenta vete a Registrarme", 
+	            "Usuario no existente", 
+	            JOptionPane.WARNING_MESSAGE);
+	        return;
+	    }
+	    
+	    // Intentar obtener el usuario
+	    Usuario user = gestor.obtenerUsuario(nombre, pass);
+	    
+	    if (user != null) {
+	        // Login exitoso
+	        this.ventanaInicio.usuario = user;
+	        this.ventanaInicio.actualizarUsuario(user);
+	        JOptionPane.showMessageDialog(this, 
+	            "Usuario " + nombre + " ha iniciado sesión", 
+	            "Sesión iniciada", 
+	            JOptionPane.INFORMATION_MESSAGE);
+	        this.dispose();
+	    } else {
+	        // Contraseña incorrecta
+	        JOptionPane.showMessageDialog(this, 
+	            "La contraseña es incorrecta", 
+	            "Error de autenticación", 
+	            JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 	
 }

@@ -108,6 +108,7 @@ public class VentanaInicioFrame extends JFrame{
 						LoginFrame logIn= new LoginFrame(VentanaInicioFrame.this);
 						logIn.setVisible(true);
 					}else if(opcion=="Registrarse") {
+						//TODO hacer que no se abre si el usuario ya tiene sesion iniciada
 						RegistrarFrame reg= new RegistrarFrame(VentanaInicioFrame.this);
 						reg.setVisible(true);
 					}else if (opcion=="Catálogo") {
