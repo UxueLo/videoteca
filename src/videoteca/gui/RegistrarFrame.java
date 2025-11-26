@@ -166,6 +166,21 @@ public class RegistrarFrame extends JFrame{
 		}
 
 		private void registrarUsuario() {
+			//Comprobar que no hay una sesion abierta
+			Usuario us = ventanaInicio.usuario;
+			if (!us.getNombre().isBlank()) {
+				int opcion = JOptionPane.showConfirmDialog(botonIniciarSesion,
+						"Ya hay una sesion abierta, desea cerrarla?",
+						"Sesion existente",
+		                JOptionPane.YES_NO_OPTION,
+		                JOptionPane.QUESTION_MESSAGE);
+				
+		        if (opcion == JOptionPane.NO_OPTION) {
+		        	this.dispose(); // Cerrar ventana
+		        	return;
+		        } 
+			}
+			
 			//Comprobar que el usuario no existe ya
 			String nombre = usuario.getText();
 			if (gestor.existeUsuario(nombre)) {
