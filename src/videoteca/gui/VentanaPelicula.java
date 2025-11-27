@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -425,14 +426,14 @@ public class VentanaPelicula extends JFrame {
 			if(column==0) { //si es la columna de valoracion
 				setHorizontalAlignment(JLabel.CENTER);
 				setFont(new Font("Arial", Font.BOLD, 18));
-				double valoracion = Double.parseDouble(value.toString());
-	            if (valoracion <= 2.0) {
-	                setForeground(Color.red);
-	            } else if (valoracion == 3.0) {
-	                setForeground(Color.orange);
-	            } else if (valoracion >= 4.0) {
-	                setForeground(Color.green); 
-	            }	
+				String valoracion = value.toString();
+	            
+				// Conseguir las imágenes de la valoración
+				String ruta = "Images/"+ valoracion + ".png";
+				ImageIcon icon = new ImageIcon(ruta);
+				Image imagenEscalada = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+				setIcon(new ImageIcon(imagenEscalada));
+				
 			}else { //si es la columna de texto
 				setHorizontalAlignment(JLabel.LEFT);
 				setForeground(Color.black);

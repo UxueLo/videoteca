@@ -38,7 +38,7 @@ public class Pelicula {
 		this.comentarios = new ArrayList<>();
 		comentarios.add(new Comentario(3, "normal"));
 		comentarios.add(new Comentario(4, "buena"));
-		comentarios.add(new Comentario(2, "horrible"));
+		comentarios.add(new Comentario(2, "mala"));
 		
 	}
 	

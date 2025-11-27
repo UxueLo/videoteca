@@ -58,7 +58,7 @@ public class VentanaInicioFrame extends JFrame{
 		
         
 			//titulo
-		textoCabeza = new JLabel("Peliculas mejor valoradas", JLabel.CENTER);
+		textoCabeza = new JLabel("Películas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(colorPrincipal);
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
 		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //IAG
