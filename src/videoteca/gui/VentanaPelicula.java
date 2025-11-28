@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -14,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -59,7 +61,9 @@ public class VentanaPelicula extends JFrame {
 	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
 	private ArrayList<Pelicula> carrito;
-	private JLabel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
+	private JPanel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
+	private JLabel im;
+	private JLabel texto;
 	private int filaTablaComentarios=-1;
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
@@ -190,11 +194,16 @@ public class VentanaPelicula extends JFrame {
 		// Añadir PanelCentralEste
 		this.panelCentralEste = new JPanel();
 		panelCentralEste.setBackground(panelPrincipal.getBackground());
-		this.mensaje = new JLabel();
-		mensaje.setFont(new Font("Arial", Font.BOLD, 40));
-		mensaje.setOpaque(true);
+		this.mensaje = new JPanel();
+		mensaje.setLayout(new BorderLayout());
+		mensaje.setBackground(new Color(111, 130, 179));
+		this.im = new JLabel();
+		this.texto = new JLabel();
 		
 		actualizarAlquilado();
+		
+		mensaje.add(texto);
+		mensaje.add(im, BorderLayout.SOUTH);
 		
 		panelCentral.add(panelCentralEste, BorderLayout.EAST);
 		panelCentralEste.add(mensaje);
@@ -391,9 +400,10 @@ public class VentanaPelicula extends JFrame {
 				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
 			}
 			
-			comentarios.setRowHeight(30);									// Agrandar la altura de cada fila de la tabla
+			comentarios.setRowHeight(40);									// Agrandar la altura de cada fila de la tabla
 			comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
 			comentarios.getColumnModel().getColumn(0).setMinWidth(300);
+			comentarios.setGridColor(panelPrincipal.getBackground());
 		} else {
 			Comentario comAñadido = p.getComentarios().get(p.getComentarios().size()-1);
 			modeloTablaComentarios.addRow(new Object[] {Double.toString(comAñadido.getValoracion()),comAñadido.getTexto()} );	// Añadir la ultima reseña a la tabla
@@ -406,11 +416,24 @@ public class VentanaPelicula extends JFrame {
 	
 	public void actualizarAlquilado() {
 		if (usuario.getCarritoUsuario().contains(p)) {
-			mensaje.setText(" En el carrito ");
-			mensaje.setBackground(Color.white);
+			texto.setText("  En el carrito  ");
+			texto.setFont(new Font("Arial", Font.BOLD, 40));
+			texto.setBackground(new Color(111, 130, 179));
+
+	        String ruta = "images/carrito.png";
+	        ImageIcon icon = new ImageIcon(ruta);
+	        Image imagenEscalada = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+	        im.setIcon(new ImageIcon(imagenEscalada));
+	        im.setHorizontalAlignment(JLabel.CENTER);
+	        
+	        texto.setOpaque(true);
+	        im.setOpaque(true);
+	        im.setBackground(new Color(111, 130, 179));
+			
+			
 		} else {
-			mensaje.setText("");
-			mensaje.setBackground(panelPrincipal.getBackground());
+			texto.setOpaque(false);
+			im.setOpaque(false);
 		}
 		mensaje.repaint();
 	}
@@ -424,15 +447,27 @@ public class VentanaPelicula extends JFrame {
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if(column==0) { //si es la columna de valoracion
+				setOpaque(true);
 				setHorizontalAlignment(JLabel.CENTER);
-				setFont(new Font("Arial", Font.BOLD, 18));
-				String valoracion = value.toString();
+				String valoracion = (String) value;
 	            
 				// Conseguir las imágenes de la valoración
-				String ruta = "Images/"+ valoracion + ".png";
-				ImageIcon icon = new ImageIcon(ruta);
-				Image imagenEscalada = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+				String ruta = "Images/" + valoracion + ".png";
+		        File archivo = new File(ruta);
+		        ImageIcon icon;
+		        
+		        if (archivo.exists()) {
+		            icon = new ImageIcon(ruta);
+		            setText("");
+		        } else {
+		            icon = new ImageIcon("images/default.jpg");
+		            setText("hola");
+		        }	// TODO arreglar esto
+				
+				Image imagenEscalada = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 				setIcon(new ImageIcon(imagenEscalada));
+				
+				setOpaque(true);
 				
 			}else { //si es la columna de texto
 				setHorizontalAlignment(JLabel.LEFT);
