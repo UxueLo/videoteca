@@ -64,10 +64,10 @@ public class VentanaInicioFrame extends JFrame{
 		JPanel panelPeliculasCambiando= new JPanel(new BorderLayout());
 		posters= new JLabel();
 		posters.setOpaque(true);
-		posters.setBackground(new Color(69, 68, 68));
+		posters.setBackground(new Color(10, 10, 10));
 		posters.setHorizontalAlignment(JLabel.CENTER);
 		JPanel botones= new JPanel();
-		botones.setBackground(new Color(69, 68, 68));
+		botones.setBackground(new Color(10, 10, 10));
 		hilo= new hiloMuestraPeliciulas(peliculas, posters); //SE INICIALIZA PORQUE NO SE VA A DETENER NUNCA, SOLO HABRA UN HILO
 		hilo.start();
 		botonReanudar= new JButton("Reanudar");
