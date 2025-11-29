@@ -166,16 +166,44 @@ public class VentanaCarrito extends JFrame {
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            if (numTarjeta.getText().isEmpty() || nombreTarjeta.getText().isEmpty() || CVV.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "¡Alquiler realizado con éxito! 🎬", "Éxito",
-                        JOptionPane.INFORMATION_MESSAGE);
-                
-                carrito.clear();
-                actualizarCarrito();
+            String tarjeta = numTarjeta.getText().trim();
+            String nombre = nombreTarjeta.getText().trim();
+            String cvv = CVV.getText().trim();
+
+            String error = validarDatosPago(tarjeta, nombre, cvv);
+            if (error != null) {
+                JOptionPane.showMessageDialog(this, error, "Error en los datos", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Simular pago exitoso
+            JOptionPane.showMessageDialog(this,
+                    "¡Alquiler realizado con éxito! 🎬\n\n" + generarResumenAlquiler(),
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            carrito.clear();
+            actualizarCarrito();
         }
+    }
+    
+    private String validarDatosPago(String tarjeta, String nombre, String cvv) {
+        if (tarjeta.isEmpty()) return "El número de tarjeta no puede estar vacío.";
+        if (nombre.isEmpty()) return "El nombre en la tarjeta no puede estar vacío.";
+        if (cvv.isEmpty()) return "El CVV no puede estar vacío.";
+        if (!tarjeta.matches("\\d{13,19}")) return "Número de tarjeta inválido (13-19 dígitos).";
+        if (!cvv.matches("\\d{3,4}")) return "CVV inválido (3 o 4 dígitos).";
+        return null;
+    }
+    
+    private String generarResumenAlquiler() {
+        StringBuilder sb = new StringBuilder("Películas alquiladas:\n");
+        double total = 0;
+        for (Pelicula p : carrito) {
+            sb.append(" - ").append(p.getTitulo()).append("\n");
+            total += p.getPrecio();
+        }
+        sb.append("\nTotal: ").append(String.format("%.2f €", total));
+        return sb.toString();
     }
 
     private void estiloBotonAzul(JButton b) {
