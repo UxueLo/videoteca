@@ -41,6 +41,7 @@ public class VentanaInicioFrame extends JFrame{
 	private JLabel posters;
 	private hiloMuestraPeliciulas hilo;
 	boolean pausado=false;
+	private JPanel panelIncial;
 	
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
 		this.usuario=usuario;
@@ -57,12 +58,16 @@ public class VentanaInicioFrame extends JFrame{
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout
 		
+		
+		panelIncial= new JPanel(new BorderLayout());
 		//TODO: En el North poner el Panel con las peliculas cambiando
 		JPanel panelPeliculasCambiando= new JPanel(new BorderLayout());
 		posters= new JLabel();
-		posters.setBackground(colorFondo);
+		posters.setOpaque(true);
+		posters.setBackground(new Color(69, 68, 68));
 		posters.setHorizontalAlignment(JLabel.CENTER);
 		JPanel botones= new JPanel();
+		botones.setBackground(new Color(69, 68, 68));
 		hilo= new hiloMuestraPeliciulas(peliculas, posters); //SE INICIALIZA PORQUE NO SE VA A DETENER NUNCA, SOLO HABRA UN HILO
 		hilo.start();
 		botonReanudar= new JButton("Reanudar");
@@ -83,7 +88,7 @@ public class VentanaInicioFrame extends JFrame{
 		panelPeliculasCambiando.add(botones, BorderLayout.SOUTH);
 		panelPeliculasCambiando.add(posters, BorderLayout.CENTER);
 		add(panelPeliculasCambiando, BorderLayout.NORTH);
-		
+		panelIncial.add(panelPeliculasCambiando, BorderLayout.NORTH);
 		
 		
 		
@@ -101,16 +106,22 @@ public class VentanaInicioFrame extends JFrame{
 		textoCabeza = new JLabel("Películas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(colorPrincipal);
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
-		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); //IAG
-		centro.add(textoCabeza, BorderLayout.NORTH);
+		textoCabeza.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0)); 
+		textoCabeza.setOpaque(true);
+		textoCabeza.setBackground(colorFondo);
+		
 			//peliculas
+		JPanel panelPeliculasTitulo= new JPanel(new BorderLayout());
+		panelPeliculasTitulo.add(textoCabeza, BorderLayout.NORTH);
 		peliculasPanel= new JPanel();
 		peliculasPanel.setLayout(new GridLayout(5,2, 100, 100));
 		peliculasPanel.setBorder(BorderFactory.createEmptyBorder(0,0, 50, 0));
 		peliculasPanel.setBackground(colorFondo);
 		ArrayList<Pelicula> Top10= getTopPeliculas(peliculas);
 		setTop10(Top10, peliculasPanel);
-		centro.add(peliculasPanel, BorderLayout.CENTER);
+		panelPeliculasTitulo.add(peliculasPanel, BorderLayout.CENTER);
+		panelIncial.add(panelPeliculasTitulo, BorderLayout.CENTER);
+		centro.add(panelIncial, BorderLayout.CENTER);
 		
 		//menu del lado
 		menu = new JPanel();
@@ -291,12 +302,15 @@ public class VentanaInicioFrame extends JFrame{
 		
 		@Override
 		public void run() {
+			Random rand= new Random();
 			while(!pausado) {
-				Random rand= new Random();
-				int peliculaActInd= rand.nextInt(peliculas.size()-1); //indice random
+				for (MouseListener ml : labelPeliculas.getMouseListeners()) { //IAG
+                    labelPeliculas.removeMouseListener(ml);
+                }
+				int peliculaActInd= rand.nextInt(peliculas.size()); //indice random
 				Pelicula peliculaAct= peliculas.get(peliculaActInd); //la pelicula actual
 				Image posterAct= peliculaAct.getPoster().getImage();
-				Image posterEscalado= posterAct.getScaledInstance(70, 100, 0);
+				Image posterEscalado= posterAct.getScaledInstance(250, 350, 0);
 				labelPeliculas.setIcon(new ImageIcon(posterEscalado));
 				labelPeliculas.addMouseListener(new MouseAdapter() {
 					@Override
