@@ -12,8 +12,11 @@ public class Usuario {
 	private LocalDate fechaNacimineto;
 	private String contraseña;
 	private int saldo = 0;
+	private int intentosHechos;
+	private LocalDate ultimoDiaIntento;
 	private ArrayList<Reserva> peliculasAlquiladas = new ArrayList<Reserva>();
 	private ArrayList<Pelicula> carritoUsuario= new ArrayList<Pelicula>();
+	
 	
 	//constructor
 	public Usuario(String nombre, String email, int edad, LocalDate fechaNacimineto, String contraseña) {
@@ -22,6 +25,7 @@ public class Usuario {
 		this.edad = edad;
 		this.fechaNacimineto = fechaNacimineto;
 		this.contraseña = contraseña;
+		
 	}
 	
 	//setters
@@ -67,10 +71,22 @@ public class Usuario {
 		this.carritoUsuario = carritoUsuario;
 	}
 
+	public int getIntentosHechos() {
+		return intentosHechos;
+	}
+
+	public void incrementarIntentos() {
+		if (this.ultimoDiaIntento!=LocalDate.now()) { //si es un dia nuevo
+			ultimoDiaIntento=LocalDate.now();
+			intentosHechos=1;
+		}else { //si el ultimo intento si que es de hoy
+			intentosHechos=getIntentosHechos()+1;
+		}
+	}
+
 	//metodos
 	public void addrReserva(Reserva reserva) {
 		this.peliculasAlquiladas.add(reserva);
 	}
-	
 	
 }
