@@ -5,14 +5,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,10 +36,16 @@ public class VentanaInicioFrame extends JFrame{
 	private JLabel textoCabeza;
 	private JPanel peliculasPanel;
 	private JPanel menu;
+	private JButton botonReanudar;
+	private JButton botonParar;
+	private JLabel posters;
+	private hiloMuestraPeliciulas hilo;
+	boolean pausado=false;
 	
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
 		this.usuario=usuario;
 		this.peliculas=peliculas;
+		
 		//Ventana
 		setTitle("Ventana de Inicio"); //titulo
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //parar al cerrar
@@ -46,6 +56,36 @@ public class VentanaInicioFrame extends JFrame{
 		
 		//Layouts
 		setLayout(new BorderLayout()); // el layout principal sera un BorderLayout
+		
+		//TODO: En el North poner el Panel con las peliculas cambiando
+		JPanel panelPeliculasCambiando= new JPanel(new BorderLayout());
+		posters= new JLabel();
+		posters.setBackground(colorFondo);
+		posters.setHorizontalAlignment(JLabel.CENTER);
+		JPanel botones= new JPanel();
+		hilo= new hiloMuestraPeliciulas(peliculas, posters); //SE INICIALIZA PORQUE NO SE VA A DETENER NUNCA, SOLO HABRA UN HILO
+		hilo.start();
+		botonReanudar= new JButton("Reanudar");
+		botonReanudar.setEnabled(false);
+		botonReanudar.addActionListener(evt ->{
+			botonReanudar.setEnabled(false);
+			botonParar.setEnabled(true);
+			pausado=false;
+		});
+		botonParar= new JButton("Parar");
+		botonParar.addActionListener(evt ->{
+			botonParar.setEnabled(false);
+			botonReanudar.setEnabled(true);
+			pausado=true;
+		});
+		botones.add(botonReanudar);
+		botones.add(botonParar);
+		panelPeliculasCambiando.add(botones, BorderLayout.SOUTH);
+		panelPeliculasCambiando.add(posters, BorderLayout.CENTER);
+		add(panelPeliculasCambiando, BorderLayout.NORTH);
+		
+		
+		
 		
 		//centro: titulo y peliculas
 		centro= new JPanel();
@@ -238,5 +278,43 @@ public class VentanaInicioFrame extends JFrame{
 	        panelPeliculas.add(peliculaActual);
 	    }
 	}
+	
+	
+	
+	public class hiloMuestraPeliciulas extends Thread{
+		ArrayList<Pelicula> peliculas;
+		JLabel labelPeliculas;
+		public hiloMuestraPeliciulas(ArrayList<Pelicula> peliculas, JLabel labelPeliculas) {
+			this.peliculas=peliculas;
+			this.labelPeliculas= labelPeliculas;
+		}
+		
+		@Override
+		public void run() {
+			while(!pausado) {
+				Random rand= new Random();
+				int peliculaActInd= rand.nextInt(peliculas.size()-1); //indice random
+				Pelicula peliculaAct= peliculas.get(peliculaActInd); //la pelicula actual
+				Image posterAct= peliculaAct.getPoster().getImage();
+				Image posterEscalado= posterAct.getScaledInstance(70, 100, 0);
+				labelPeliculas.setIcon(new ImageIcon(posterEscalado));
+				labelPeliculas.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						VentanaPelicula pel= new VentanaPelicula(peliculaAct, usuario);
+						pel.setVisible(true);
+					}
+				});
+				try {
+					sleep(5000); //dejamos el poster 5 segundos
+				} catch (InterruptedException e) {
+					System.out.println("Error haciendo el sleep");
+				}
+			}
+		}
+		
+	}
+	
+	
 	
 }
