@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -134,8 +135,12 @@ public class VentanaInicioFrame extends JFrame{
 			JLabel campo= new JLabel();
 			//si es el usuario: foto y nombew
 			if (opcion=="Usuario") {
-				campo.setText("Hola " + usuario.getNombre()+ "!");
-				campo.setFont(new Font("Arial", Font.BOLD, 40));
+				if (usuario.getNombre()=="") {
+					campo.setText("Inicia sesion o Registrate");
+				}else {
+					campo.setText("Hola " + usuario.getNombre()+ "!");
+				}
+				campo.setFont(new Font("Arial", Font.BOLD, 30));
 				campo.setIcon(new ImageIcon("Images/iconoUsuario.png")); //TODO la foto del perfil
 				campo.setHorizontalTextPosition(JLabel.RIGHT); 
 				campo.setVerticalTextPosition(JLabel.CENTER);
@@ -171,10 +176,19 @@ public class VentanaInicioFrame extends JFrame{
 						VentanaCarrito vcr= new VentanaCarrito(VentanaInicioFrame.this);
 						vcr.setVisible(true);
 					}else if (opcion=="Prueba Suerte") {
-						PruebaSuerte ps=new PruebaSuerte();
-						ps.setVisible(true);
+						if (usuario.getNombre()=="") {
+							JOptionPane.showMessageDialog(
+								    null, 
+								    "¡Tienes que iniciar sesion o Registrarte para poder acceder!", 
+								    "Usuario necesario",
+								    JOptionPane.INFORMATION_MESSAGE // Icono que se muestra (un círculo azul)
+								);
+						}else {
+							PruebaSuerte ps=new PruebaSuerte();
+							ps.setVisible(true);
+						}
 					}
-					//TODO implementar el cerrar sesion y el Prueba Suerte
+					
 				}
 				
 				@Override
@@ -205,11 +219,13 @@ public class VentanaInicioFrame extends JFrame{
 		setVisible(true); //ventana visible
 	}
 	
-	protected void actualizarUsuario(Usuario nuevoUsuario) {
+
+protected void actualizarUsuario(Usuario nuevoUsuario) {
 		    this.usuario = nuevoUsuario;
 		    // Cambiar texto en el Label
 		    JLabel userLabel = (JLabel) menu.getComponent(0); // El primer elemento es el usuario
 		    userLabel.setText("Hola " + usuario.getNombre() + "!");
+		    
 		    menu.revalidate();
 		    menu.repaint();
 		

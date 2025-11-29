@@ -12,6 +12,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import videoteca.domain.Usuario;
@@ -36,12 +37,24 @@ public class PruebaSuerte extends JFrame{
 		};
 		this.setContentPane(panelPrincipal);
 		
-		int intentosHechos=usuario.getIntentosHechos();
-		JButton botonJugar = new JButton("<html>Probar suerte <br> Intentos: " + (3-intentosHechos) + "</html>");
+		
+		JButton botonJugar = new JButton("Probar Suerte");
 		botonJugar.setPreferredSize(new Dimension(400, 200));
 		botonJugar.setBackground(Color.white);
 		botonJugar.setForeground(Color.green);
 		botonJugar.setFont(new Font("Agency FB", Font.BOLD, 40));
+		botonJugar.addActionListener(evt ->{
+			usuario.incrementarIntentos();
+			JOptionPane.showMessageDialog(
+				    this, // Componente padre (normalmente 'this' o null)
+				    "Te quedan "+ (3- usuario.getIntentosHechos()) +" intentos hoy", // El mensaje
+				    "Intentos restantes", // Título de la ventana
+				    JOptionPane.INFORMATION_MESSAGE // Icono que se muestra (un círculo azul)
+				);
+		});
+		if (usuario.getIntentosHechos()>=3) {
+			botonJugar.setEnabled(false);
+		}
 		
 		//IAG
 		// 2. CONFIGURACIÓN DEL CENTRADO USANDO GridBagConstraints
