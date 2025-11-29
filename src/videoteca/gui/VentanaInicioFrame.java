@@ -170,6 +170,9 @@ public class VentanaInicioFrame extends JFrame{
 					}else if (opcion=="Carrito") {
 						VentanaCarrito vcr= new VentanaCarrito(VentanaInicioFrame.this);
 						vcr.setVisible(true);
+					}else if (opcion=="Prueba Suerte") {
+						PruebaSuerte ps=new PruebaSuerte();
+						ps.setVisible(true);
 					}
 					//TODO implementar el cerrar sesion y el Prueba Suerte
 				}
