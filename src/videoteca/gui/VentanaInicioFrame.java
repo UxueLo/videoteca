@@ -5,15 +5,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
+import java.awt.Cursor;
 
+import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -39,14 +39,19 @@ public class VentanaInicioFrame extends JFrame{
 	private JPanel menu;
 	private JButton botonReanudar;
 	private JButton botonParar;
-	private JLabel posters;
-	private hiloMuestraPeliciulas hilo;
+	private JPanel panelPosterDinamico;
+	private hiloMuestraPeliculas hilo;
 	boolean pausado=false;
 	private JPanel panelIncial;
 	
 	public VentanaInicioFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
-		this.usuario=usuario;
-		this.peliculas=peliculas;
+	    // Asegurarse de que el usuario no sea null
+	    if (usuario == null) {
+	        this.usuario = new Usuario("", "", 0, null, "");
+	    } else {
+	        this.usuario = usuario;
+	    }
+	    this.peliculas = peliculas;
 		
 		//Ventana
 		setTitle("Ventana de Inicio"); //titulo
@@ -61,16 +66,19 @@ public class VentanaInicioFrame extends JFrame{
 		
 		
 		panelIncial= new JPanel(new BorderLayout());
-		//TODO: En el North poner el Panel con las peliculas cambiando
-		JPanel panelPeliculasCambiando= new JPanel(new BorderLayout());
-		posters= new JLabel();
-		posters.setOpaque(true);
-		posters.setBackground(new Color(10, 10, 10));
-		posters.setHorizontalAlignment(JLabel.CENTER);
-		JPanel botones= new JPanel();
-		botones.setBackground(new Color(10, 10, 10));
-		hilo= new hiloMuestraPeliciulas(peliculas, posters); //SE INICIALIZA PORQUE NO SE VA A DETENER NUNCA, SOLO HABRA UN HILO
-		hilo.start();
+		// Panel superior: título + poster + botones
+		JPanel panelPeliculasCambiando = new JPanel(new BorderLayout());
+		
+        JLabel tituloPoster = new JLabel("Película destacada", JLabel.CENTER);
+        tituloPoster.setFont(new Font("Garamond", Font.BOLD, 45));
+        tituloPoster.setForeground(colorPrincipal);
+        panelPeliculasCambiando.add(tituloPoster, BorderLayout.NORTH);
+        
+        panelPosterDinamico = new JPanel(new BorderLayout());
+        panelPosterDinamico.setOpaque(true);
+        panelPosterDinamico.setBackground(new Color(35, 35, 35));
+        panelPeliculasCambiando.add(panelPosterDinamico, BorderLayout.CENTER);
+
 		botonReanudar= new JButton("Reanudar");
 		botonReanudar.setEnabled(false);
 		botonReanudar.addActionListener(evt ->{
@@ -78,16 +86,24 @@ public class VentanaInicioFrame extends JFrame{
 			botonParar.setEnabled(true);
 			pausado=false;
 		});
-		botonParar= new JButton("Parar");
+		
+		botonParar = new JButton("Parar");
 		botonParar.addActionListener(evt ->{
-			botonParar.setEnabled(false);
-			botonReanudar.setEnabled(true);
-			pausado=true;
+		    botonParar.setEnabled(false);
+		    botonReanudar.setEnabled(true);
+		    pausado=true;
 		});
+		
+		JPanel botones = new JPanel();
+        botones.setBackground(new Color(20, 20, 20)); 
 		botones.add(botonReanudar);
 		botones.add(botonParar);
 		panelPeliculasCambiando.add(botones, BorderLayout.SOUTH);
-		panelPeliculasCambiando.add(posters, BorderLayout.CENTER);
+		
+		// Hilo para mostrar posters
+        hilo = new hiloMuestraPeliculas(peliculas, panelPosterDinamico);
+        hilo.start();
+        
 		add(panelPeliculasCambiando, BorderLayout.NORTH);
 		panelIncial.add(panelPeliculasCambiando, BorderLayout.NORTH);
 		
@@ -103,7 +119,7 @@ public class VentanaInicioFrame extends JFrame{
 		add(scrollCentro, BorderLayout.CENTER);
 		
         
-			//titulo
+		//titulo
 		textoCabeza = new JLabel("Películas mejor valoradas", JLabel.CENTER);
 		textoCabeza.setForeground(colorPrincipal);
 		textoCabeza.setFont(new Font("Garamond", Font.BOLD, 45));
@@ -111,7 +127,7 @@ public class VentanaInicioFrame extends JFrame{
 		textoCabeza.setOpaque(true);
 		textoCabeza.setBackground(colorFondo);
 		
-			//peliculas
+		//peliculas
 		JPanel panelPeliculasTitulo= new JPanel(new BorderLayout());
 		panelPeliculasTitulo.add(textoCabeza, BorderLayout.NORTH);
 		peliculasPanel= new JPanel();
@@ -124,7 +140,7 @@ public class VentanaInicioFrame extends JFrame{
 		panelIncial.add(panelPeliculasTitulo, BorderLayout.CENTER);
 		centro.add(panelIncial, BorderLayout.CENTER);
 		
-		//menu del lado
+		//menu lateral
 		menu = new JPanel();
 		menu.setBackground(new Color(103, 114, 135));
 		menu.setPreferredSize(new Dimension(300, 0));
@@ -133,8 +149,8 @@ public class VentanaInicioFrame extends JFrame{
 		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catálogo", "Carrito", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
 			JLabel campo= new JLabel();
-			//si es el usuario: foto y nombew
-			if (opcion=="Usuario") {
+			//si es el usuario: foto y nombre
+			if (opcion.equals("Usuario")) {
 				if (usuario.getNombre()=="") {
 					campo.setText("Inicia sesion o Registrate");
 				}else {
@@ -151,84 +167,112 @@ public class VentanaInicioFrame extends JFrame{
 			}
 			
 			campo.addMouseListener(new MouseListener() {
-				
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// nada
-					
-				}
-				
-				@Override
-				public void mousePressed(MouseEvent e) {
-					if (opcion=="Iniciar Sesion") {
-						LoginFrame logIn= new LoginFrame(VentanaInicioFrame.this);
-						logIn.setVisible(true);
-					}else if(opcion=="Registrarse") {
-						RegistrarFrame reg= new RegistrarFrame(VentanaInicioFrame.this);
-						reg.setVisible(true);
-					}else if (opcion=="Catálogo") {
-						VentanaCatalogo venCat= new VentanaCatalogo(VentanaInicioFrame.this, peliculas);
-						venCat.setVisible(true);
-					}else if (opcion=="Usuario") {
-						UsuarioFrame us= new UsuarioFrame(VentanaInicioFrame.this);
-						us.setVisible(true);
-					}else if (opcion=="Carrito") {
-						VentanaCarrito vcr= new VentanaCarrito(VentanaInicioFrame.this);
-						vcr.setVisible(true);
-					}else if (opcion=="Prueba Suerte") {
-						if (usuario.getNombre()=="") {
-							JOptionPane.showMessageDialog(
-								    null, 
-								    "¡Tienes que iniciar sesion o Registrarte para poder acceder!", 
-								    "Usuario necesario",
-								    JOptionPane.INFORMATION_MESSAGE // Icono que se muestra (un círculo azul)
-								);
-						}else {
-							PruebaSuerte ps=new PruebaSuerte();
-							ps.setVisible(true);
-						}
-					}
-					
-				}
-				
-				@Override
-				public void mouseExited(MouseEvent e) {
-					if (opcion!="Usuario") {
-						campo.setFont(new Font("Arial",Font.PLAIN, 18));
-					}
-					
-				}
-				
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					if (opcion!="Usuario") {
-						campo.setFont(new Font("Arial",Font.BOLD, 23));
-					}
-				}
-				
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					// nada
-					
-				}
-			});
-			menu.add(campo);
-		}
-		add(menu, BorderLayout.EAST);
-		
-		setVisible(true); //ventana visible
-	}
-	
+                @Override public void mouseReleased(MouseEvent e) {}
+                @Override public void mouseClicked(MouseEvent e) {}
+                @Override public void mouseExited(MouseEvent e) { if (!opcion.equals("Usuario")) campo.setFont(new Font("Arial", Font.PLAIN, 18)); }
+                @Override public void mouseEntered(MouseEvent e) { if (!opcion.equals("Usuario")) campo.setFont(new Font("Arial", Font.BOLD, 23)); }
 
-protected void actualizarUsuario(Usuario nuevoUsuario) {
-		    this.usuario = nuevoUsuario;
-		    // Cambiar texto en el Label
-		    JLabel userLabel = (JLabel) menu.getComponent(0); // El primer elemento es el usuario
-		    userLabel.setText("Hola " + usuario.getNombre() + "!");
-		    
-		    menu.revalidate();
-		    menu.repaint();
-		
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    switch (opcion) {
+                        case "Iniciar Sesion":
+                            new LoginFrame(VentanaInicioFrame.this).setVisible(true);
+                            break;
+                        case "Registrarse":
+                            new RegistrarFrame(VentanaInicioFrame.this).setVisible(true);
+                            break;
+                        case "Catálogo":
+                            new VentanaCatalogo(VentanaInicioFrame.this, peliculas).setVisible(true);
+                            break;
+                        case "Usuario":
+                        case "Carrito":
+                        case "Prueba Suerte":
+                            // Requieren usuario - VERIFICACIÓN CORREGIDA
+                            if (!estaUsuarioAutenticado()) {
+                                JOptionPane.showMessageDialog(
+                                    VentanaInicioFrame.this,
+                                    "¡Tienes que iniciar sesión para acceder a esta opción!",
+                                    "Usuario necesario",
+                                    JOptionPane.INFORMATION_MESSAGE
+                                );
+                            } else {
+                                if (opcion.equals("Usuario")) 
+                                    new UsuarioFrame(VentanaInicioFrame.this).setVisible(true);
+                                else if (opcion.equals("Carrito")) 
+                                    new VentanaCarrito(VentanaInicioFrame.this).setVisible(true);
+                                //else if (opcion.equals("Prueba Suerte")) 
+                                  //  new PruebaSuerte().setVisible(true);
+                            }
+                            break;
+                        case "Cerrar sesion":
+                            cerrarSesion();
+                            break;
+                    }
+                }
+            });
+            menu.add(campo);
+        }
+        add(menu, BorderLayout.EAST);
+
+        setVisible(true);
+    }
+	
+	private void cerrarSesion() {
+	    if (usuario != null && !usuario.getNombre().trim().isEmpty()) {
+	        int respuesta = JOptionPane.showConfirmDialog(
+	            this,
+	            "¿Estás seguro de que quieres cerrar sesión?",
+	            "Cerrar sesión",
+	            JOptionPane.YES_NO_OPTION
+	        );
+	        
+	        if (respuesta == JOptionPane.YES_OPTION) {
+	            // Crear un usuario "vacío"
+	            this.usuario = new Usuario("", "", 0, null, "");
+	            actualizarUsuario(this.usuario);
+	            JOptionPane.showMessageDialog(
+	                this,
+	                "Sesión cerrada correctamente",
+	                "Sesión finalizada",
+	                JOptionPane.INFORMATION_MESSAGE
+	            );
+	        }
+	    } else {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "No hay ninguna sesión activa",
+	            "Información",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
+	    }
+	}	
+	
+	private boolean estaUsuarioAutenticado() {
+	    return usuario != null && 
+	           usuario.getNombre() != null && 
+	           !usuario.getNombre().trim().isEmpty() &&
+	           !usuario.getNombre().equals("");
+	}
+
+	protected void actualizarUsuario(Usuario nuevoUsuario) {
+	    this.usuario = nuevoUsuario;
+	    
+	    // Cambiar texto en el Label
+	    JLabel userLabel = (JLabel) menu.getComponent(0); // El primer elemento es el usuario
+	    
+	    if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()) {
+	        userLabel.setText("Inicia sesion o Registrate");
+	    } else {
+	        userLabel.setText("Hola " + usuario.getNombre() + "!");
+	    }
+	    
+	    // Actualizar icono si es necesario
+	    userLabel.setIcon(new ImageIcon("Images/iconoUsuario.png"));
+	    userLabel.setHorizontalTextPosition(JLabel.RIGHT); 
+	    userLabel.setVerticalTextPosition(JLabel.CENTER);
+	    
+	    menu.revalidate();
+	    menu.repaint();
 	}
 
 	//encontrar las 10 peliculas con mejor media
@@ -239,19 +283,11 @@ protected void actualizarUsuario(Usuario nuevoUsuario) {
 			return peliculas; //si hay justo 10 o menos, se devuelven las peliculas
 		}
 		//sino, buscamos las 10 mejores
-		//TODO preguntas Generos favoritos en el registro y si hubiera igualdad, mostrar el mas relevante
-		//Ordenamos con Collections, para eso creamos un Comparator
-		Collections.sort(copiaPeliculas, new Comparator<Pelicula>() {
-			@Override
-			public int compare(Pelicula p1, Pelicula p2) {
-				return -(Double.compare(p1.getPuntuacionMedia(), p2.getPuntuacionMedia()));
-			}
-		});
-		for (int i=0; i<10;i++) {
-			mejoresPeliculas.addLast(copiaPeliculas.get(i));
-		}
-		return mejoresPeliculas;
-	}
+		Collections.sort(copiaPeliculas, (p1, p2) -> -Double.compare(p1.getPuntuacionMedia(), p2.getPuntuacionMedia()));
+        for (int i = 0; i < 10; i++) 
+            mejoresPeliculas.add(copiaPeliculas.get(i)); 
+        return mejoresPeliculas;
+    }
 	
 	
 	
@@ -311,43 +347,85 @@ protected void actualizarUsuario(Usuario nuevoUsuario) {
 	
 	
 	
-	public class hiloMuestraPeliciulas extends Thread{
-		ArrayList<Pelicula> peliculas;
-		JLabel labelPeliculas;
-		public hiloMuestraPeliciulas(ArrayList<Pelicula> peliculas, JLabel labelPeliculas) {
-			this.peliculas=peliculas;
-			this.labelPeliculas= labelPeliculas;
-		}
-		
-		@Override
-		public void run() {
-			Random rand= new Random();
-			while(!pausado) {
-				for (MouseListener ml : labelPeliculas.getMouseListeners()) { //IAG
-                    labelPeliculas.removeMouseListener(ml);
+	public class hiloMuestraPeliculas extends Thread {
+        private final ArrayList<Pelicula> peliculas;
+        private final JPanel panelPeliculas;
+        private final int ancho = 250;
+        private final int alto = 350;
+
+        public hiloMuestraPeliculas(ArrayList<Pelicula> peliculas, JPanel panelPeliculas) {
+            this.peliculas = peliculas;
+            this.panelPeliculas = panelPeliculas;
+            panelPeliculas.setOpaque(true);
+            panelPeliculas.setBackground(new Color(20, 20, 20));
+        }
+
+        @Override
+        public void run() {
+            Random rand = new Random();
+            while (true) {
+                if (!pausado && !peliculas.isEmpty()) {
+                    int indice = rand.nextInt(peliculas.size());
+                    Pelicula pelicula = peliculas.get(indice);
+
+                    JLabel posterLabel = GestionImagenes.cargarImagen(pelicula.getTitulo(), ancho, alto);
+
+                    SwingUtilities.invokeLater(() -> {
+                        // Limpiar el panel
+                        panelPeliculas.removeAll();
+                        
+                        // Crear label para el título
+                        JLabel tituloLabel = new JLabel(pelicula.getTitulo(), JLabel.CENTER);
+                        tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
+                        tituloLabel.setForeground(Color.white);
+                        tituloLabel.setBackground(new Color(20, 20, 20));
+                        tituloLabel.setOpaque(true);
+                        tituloLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+                        
+                        // Label para el poster
+                        JLabel posterContainer = new JLabel();
+                        posterContainer.setIcon(posterLabel.getIcon());
+                        posterContainer.setHorizontalAlignment(JLabel.CENTER);
+                        posterContainer.setBackground(new Color(20, 20, 20));
+                        posterContainer.setOpaque(true);
+                        
+                        // Añadir componentes al panel
+                        panelPeliculas.add(tituloLabel, BorderLayout.NORTH);
+                        panelPeliculas.add(posterContainer, BorderLayout.CENTER);
+                        
+                        panelPeliculas.revalidate();
+                        panelPeliculas.repaint();
+                        
+                        // Configurar el cursor y eventos del panel completo
+                        panelPeliculas.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                        // Limpiar listeners anteriores
+                        for (MouseListener ml : panelPeliculas.getMouseListeners()) {
+                            panelPeliculas.removeMouseListener(ml);
+                        }
+
+                        // Añadir nuevo listener
+                        panelPeliculas.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                new VentanaPelicula(pelicula, usuario).setVisible(true);
+                            }
+                        });
+                    });
+
+                    try {
+                        Thread.sleep(3000 + rand.nextInt(2000));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-				int peliculaActInd= rand.nextInt(peliculas.size()); //indice random
-				Pelicula peliculaAct= peliculas.get(peliculaActInd); //la pelicula actual
-				Image posterAct= peliculaAct.getPoster().getImage();
-				Image posterEscalado= posterAct.getScaledInstance(250, 350, 0);
-				labelPeliculas.setIcon(new ImageIcon(posterEscalado));
-				labelPeliculas.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						VentanaPelicula pel= new VentanaPelicula(peliculaAct, usuario);
-						pel.setVisible(true);
-					}
-				});
-				try {
-					sleep(5000); //dejamos el poster 5 segundos
-				} catch (InterruptedException e) {
-					System.out.println("Error haciendo el sleep");
-				}
-			}
-		}
-		
-	}
-	
-	
-	
+            }
+        }
+    }
 }
