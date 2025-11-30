@@ -11,6 +11,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -329,38 +331,35 @@ public class VentanaPelicula extends JFrame {
 		this.alquilar = new JButton("Alquilar");
 		this.alquilar.setBackground(new Color(112, 124, 156));
 		this.alquilar.setFont(new Font("Arial", Font.BOLD, 35));
+		
+		// Dos formas de alquilar:
+		// 1 - Clickndo en el boton con el mouse
 		this.alquilar.addActionListener(new ActionListener() {
 			
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				//TODO
-				if (!usuario.getNombre().isBlank()) {
-					// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
-				
-					// Meter la pelicula en el carrito
-					if (!usuario.getCarritoUsuario().contains(p)) {
-						usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
-						usuario.getCarritoUsuario().add(p);
-						//Mensaje de confirmacion
-						JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);
-						actualizarAlquilado();
-					} else {
-						JOptionPane.showMessageDialog(null,"La película ya está añadida al carrito","Película ya añadida",JOptionPane.INFORMATION_MESSAGE);
-					}
-				}else {
-					JOptionPane.showMessageDialog(VentanaPelicula.this, 
-				            "Inicia sesion antes de alquilar peliculas", 
-				            "Error de autenticación", 
-				            JOptionPane.ERROR_MESSAGE);
-				}
+				alquilar();
 			}
 		});
+		
+		// 2 - Pulsando la tecla A
+		KeyAdapter keyAdapterAlquilar = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_A) {
+					alquilar();
+				}		
+			}
+		};
+		
 		
 		this.reseñar = new JButton("Reseñar");
 		this.reseñar.setBackground(new Color(112, 124, 156));
 		this.reseñar.setFont(new Font("Arial", Font.BOLD, 35));
+		
+		// Dos formas de abrir la ventana Reseña:
+		// 1 - Clickando el boton con el mouse
 		this.reseñar.addActionListener(new ActionListener() {
 			
 			@Override
@@ -369,12 +368,29 @@ public class VentanaPelicula extends JFrame {
 				abrirReseña();
 			}
 
-			private void abrirReseña() {
-				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
-				ventanaReseña.setVisible(true);
-				
-			}
 		});
+		
+		// 2 - Pulsando la tecla R
+		KeyAdapter keyAdapterReseña = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_R) {
+					abrirReseña();
+				}		
+			}
+		};
+		
+		// Implementar los KeyListener
+		panelPrincipal.addKeyListener(keyAdapterAlquilar);       
+		this.addKeyListener(keyAdapterAlquilar);
+		this.setFocusable(true);
+		
+		panelPrincipal.addKeyListener(keyAdapterReseña);       
+		this.addKeyListener(keyAdapterReseña);
+		this.setFocusable(true);
+
+
+		
 		
 		
 		panelSurSur.add(alquilar);
@@ -382,6 +398,37 @@ public class VentanaPelicula extends JFrame {
 		
 		
 
+	}
+	
+	
+	private void alquilar() {
+		if (!usuario.getNombre().isBlank()) {
+			// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
+		
+			// Meter la pelicula en el carrito
+			if (!usuario.getCarritoUsuario().contains(p)) {
+				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+				usuario.getCarritoUsuario().add(p);
+				//Mensaje de confirmacion
+				JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);
+				actualizarAlquilado();
+			} else {
+				JOptionPane.showMessageDialog(null,"La película ya está añadida al carrito","Película ya añadida",JOptionPane.INFORMATION_MESSAGE);
+			}
+		}else {
+			JOptionPane.showMessageDialog(VentanaPelicula.this, 
+		            "Inicia sesion antes de alquilar peliculas", 
+		            "Error de autenticación", 
+		            JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	
+	// Abrir la ventana de reseña
+	private void abrirReseña() {
+		VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
+		ventanaReseña.setVisible(true);
+		
 	}
 	
 	

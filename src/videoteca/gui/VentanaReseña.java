@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import videoteca.io.GestionImagenes;
 public class VentanaReseña extends JFrame {
 	
 	private int mouseRowEstrellas;
+	private Pelicula p;
 	private Usuario usuario;
 	private JPanel panelPrincipal;	
 	private JPanel panelCentral;	// Panel en donde estaran las estrellas para puntuar
@@ -49,6 +52,7 @@ public class VentanaReseña extends JFrame {
 	
 	
 	public VentanaReseña (Pelicula p, Usuario usuario,VentanaPelicula vp) {
+		this.p = p;
 		this.usuario=usuario;
 		this.vp = vp;
 		
@@ -181,6 +185,7 @@ public class VentanaReseña extends JFrame {
 		
 		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
+		// Action listener para añadir la reseña
 		this.reseñar.addActionListener(new ActionListener() {
 			
 			//TODO comprobar que la sesion esta iniciada
@@ -189,38 +194,44 @@ public class VentanaReseña extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				//Comprobar que la sesion esta iniciada
-				if (!usuario.getNombre().isBlank()) {
-					// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
-					
-					if (valoracion != -1) {
-						ArrayList<Comentario> comentarios = p.getComentarios();
-						comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
-						p.setComentarios(comentarios);
-						
-						if (vp != null) {
-							vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
-						}
-						
-						VentanaReseña.this.dispose();
-					} else {
-						System.err.println("Valora la película");
-					
-					}
-				
-				}else {
-					JOptionPane.showMessageDialog(VentanaReseña.this, 
-				            "Inicia sesion antes de hacer reseñas", 
-				            "Error de autenticación", 
-				            JOptionPane.ERROR_MESSAGE);
-				    }
-				}
+				pulsarReseñar();
+			}
 				
 		});
 		
+	}
+	
+	
+	// Añadir la reseña
+	public void pulsarReseñar () {
+				
+		//Comprobar que la sesion esta iniciada
+		if (!usuario.getNombre().isBlank()) {
+			// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
+			
+			if (valoracion != -1) {
+				ArrayList<Comentario> comentarios = p.getComentarios();
+				comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
+				p.setComentarios(comentarios);
+				
+				if (vp != null) {
+					vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+				}
+				
+				VentanaReseña.this.dispose();
+			} else {
+				System.err.println("Valora la película");
+			
+			}
 		
-		
-		
-	}	
+		}else {
+			JOptionPane.showMessageDialog(VentanaReseña.this, 
+		            "Inicia sesion antes de hacer reseñas", 
+		            "Error de autenticación", 
+		            JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
 	
 	
 	public void actualizarEstrellas() {
