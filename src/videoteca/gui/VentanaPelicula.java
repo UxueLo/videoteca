@@ -66,7 +66,13 @@ public class VentanaPelicula extends JFrame {
 	private JPanel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
 	private JLabel im;
 	private JLabel texto;
+	
 	private int filaTablaComentarios=-1;
+	
+	private Boolean abierto = false;
+	private VentanaComentario ventanaComentario;
+	
+	
 	
 	public VentanaPelicula (Pelicula p, Usuario usuario) {
 		
@@ -316,6 +322,20 @@ public class VentanaPelicula extends JFrame {
 		
 		actualizarComentarios();
 		
+		comentarios.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int fila = comentarios.rowAtPoint(e.getPoint());
+				Comentario com = p.getComentarios().get(fila);
+
+				VentanaComentario ventanaComentario = new VentanaComentario(p, com);
+
+
+			}
+		});
+
+		
 		
 		
 		// Crear el PanelSurSur, colocado al sur del PanelSur, donde estaran los botones "alquilar" y "añadir"
@@ -496,29 +516,25 @@ public class VentanaPelicula extends JFrame {
 			if(column==0) { //si es la columna de valoracion
 				setOpaque(true);
 				setHorizontalAlignment(JLabel.CENTER);
-				String valoracion = (String) value;
+				
+				String valStr = (String) value;
+				Double valDoub = Double.parseDouble(valStr);
+				Integer valInt = (int) Math.round(valDoub);
 	            
 				// Conseguir las imágenes de la valoración
-				String ruta = "Images/" + valoracion + ".png";
+				String ruta = "Images/" + valInt.toString() + ".png";
 		        File archivo = new File(ruta);
-		        ImageIcon icon;
+		        ImageIcon icon = new ImageIcon(ruta);
+		        setText("");
 		        
-		        if (archivo.exists()) {
-		            icon = new ImageIcon(ruta);
-		            setText("");
-		        } else {
-		            icon = new ImageIcon("images/default.jpg");
-		            setText("hola");
-		        }	// TODO arreglar esto
-				
 				Image imagenEscalada = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 				setIcon(new ImageIcon(imagenEscalada));
 				
-				setOpaque(true);
-				
 			}else { //si es la columna de texto
+				setIcon(null);
 				setHorizontalAlignment(JLabel.LEFT);
 				setForeground(Color.black);
+				setText("  " + value.toString());
 			}
 			
 			if (filaTablaComentarios!=-1 && row == filaTablaComentarios && !isSelected) { //si esta dentro de la tabla & si la fila es en la que esta el raton & si esta seleccionado (pata que no se quite el color de seleccionado)
@@ -528,7 +544,8 @@ public class VentanaPelicula extends JFrame {
 				}
 			}else {
 	            if (isSelected) {
-	                setBackground(new Color(111, 130, 179));
+	                setBackground(new Color(111, 130, 179));                
+	                
 	                if (column==1) {
 	                	 setForeground(Color.black);
 	                }
