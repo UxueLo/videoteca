@@ -185,7 +185,8 @@ public class VentanaReseña extends JFrame {
 		
 		panelSurSur.add(reseñar, BorderLayout.CENTER);
 		
-		// Action listener para añadir la reseña
+		// Dos formas para poner la reseña:
+		// 1 - Action listener para añadir la reseña
 		this.reseñar.addActionListener(new ActionListener() {
 			
 			//TODO comprobar que la sesion esta iniciada
@@ -198,6 +199,22 @@ public class VentanaReseña extends JFrame {
 			}
 				
 		});
+		
+		// 2 - Clickar ENTER sin haber puesto una reseña escrita, es decir, solo la valoracion
+		KeyAdapter keyAdapter = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					pulsarReseñar();
+				}		
+			}
+		};
+		
+		panelPrincipal.addKeyListener(keyAdapter); 
+		this.addKeyListener(keyAdapter);
+		this.setFocusable(true);
+
+
 		
 	}
 	
