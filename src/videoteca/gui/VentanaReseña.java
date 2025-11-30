@@ -30,7 +30,6 @@ import videoteca.io.GestionImagenes;
 
 public class VentanaReseña extends JFrame {
 	
-	private int mouseRowEstrellas;
 	private Pelicula p;
 	private Usuario usuario;
 	private JPanel panelPrincipal;	
@@ -51,9 +50,9 @@ public class VentanaReseña extends JFrame {
 	private VentanaPelicula vp;
 	
 	
-	public VentanaReseña (Pelicula p, Usuario usuario,VentanaPelicula vp) {
+	public VentanaReseña (Pelicula p, Usuario usuario, VentanaPelicula vp) {
 		this.p = p;
-		this.usuario=usuario;
+		this.usuario = usuario;
 		this.vp = vp;
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
@@ -228,7 +227,7 @@ public class VentanaReseña extends JFrame {
 			
 			if (valoracion != -1) {
 				ArrayList<Comentario> comentarios = p.getComentarios();
-				comentarios.add(new Comentario(valoracion, comentarioEscrito.getText()));
+				comentarios.add(new Comentario(valoracion, comentarioEscrito.getText(), usuario, p));
 				p.setComentarios(comentarios);
 				
 				if (vp != null) {

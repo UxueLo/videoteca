@@ -62,15 +62,11 @@ public class VentanaPelicula extends JFrame {
 	private int numCom = 0;			// Contador del numero de comentarios de la pelicula
 	private DefaultTableModel modeloTablaComentarios;
 	private JLabel poster;
-	private ArrayList<Pelicula> carrito;
 	private JPanel mensaje;		// Nos dira si la pelicula esta alquilada/en el carrito o no
 	private JLabel im;
 	private JLabel texto;
 	
 	private int filaTablaComentarios=-1;
-	
-	private Boolean abierto = false;
-	private VentanaComentario ventanaComentario;
 	
 	
 	
@@ -523,7 +519,6 @@ public class VentanaPelicula extends JFrame {
 	            
 				// Conseguir las imágenes de la valoración
 				String ruta = "Images/" + valInt.toString() + ".png";
-		        File archivo = new File(ruta);
 		        ImageIcon icon = new ImageIcon(ruta);
 		        setText("");
 		        

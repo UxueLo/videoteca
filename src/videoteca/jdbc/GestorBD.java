@@ -9,12 +9,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import videoteca.domain.Comentario;
+import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
 
 public class GestorBD {
 
 	private static final String SQLITE_FILE = "resources/db/usuario.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + SQLITE_FILE;
+    
+    private static final String SQLTIE_FILE2 = "resources/db/comentario.db";
+    private static final String CONNECTION_STRING2 = "jdbc:sqlite:" + SQLTIE_FILE2; 
     
 	public GestorBD() {
 		try {
@@ -207,6 +212,42 @@ public class GestorBD {
 		return usuario;
 	}
 	
+	public Usuario obtenerUsuarioPorNombre (String nombre) {
+		Usuario usuario = null;
+		
+		String sql = "SELECT USUARIO WHERE NOMBRE = ?";
+		
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			     PreparedStatement pst = con.prepareStatement(sql)) {
+				
+				pst.setString(1, nombre);
+				
+				ResultSet rs = pst.executeQuery();
+				
+				if (rs.next()) {
+					String email = rs.getString("EMAIL");
+					int edad = rs.getInt("EDAD");
+					String fechaStr = rs.getString("FECHA_NACIMIENTO");
+					LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
+					String contraseña = rs.getString("CONTRASEÑA");
+					int saldo = rs.getInt("SALDO");
+					
+					usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
+					usuario.aumentarSaldo(saldo);
+					
+					System.out.println("Usuario encontrado: " + nombre);
+				} else {
+					System.out.println("Nombre incorrecto");
+				}
+				
+				rs.close();
+			} catch (Exception e) {
+				System.err.format("* Error obteniendo usuario por nombre: %s.\n", e.getMessage());
+			}
+		
+		return usuario;
+	}
+	
 	/**
 	 * Carga todos los usuarios de la base de datos
 	 * @return Lista de usuarios
@@ -306,6 +347,115 @@ public class GestorBD {
 		return actualizado;
 	}
 	
+	
+	// Funciones de comentarios
+	public void InicializarComentarios() {
+		// Crear la tabla
+		String sqlComentario = "CREATE TABLE IF NOT EXISTS COMENTARIO (" +
+				"NOMBRE_USUARIO TEXT NOT NULL," +
+				"NOMBRE_PELI TEXT NOT NULL, " +
+				"VALORACION INTEGER NOT NULL, " + 
+				"TEXTO TEXT, " + 
+				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELI), " +					// Cada usuario solo podra comentar cada pelicula una vez
+				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
+				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(NOMBRE) ) ";
+		
+		try {
+	        java.io.File dbDir = new java.io.File("resources/db");
+	        if (!dbDir.exists()) {
+	            dbDir.mkdirs();
+	            System.out.println("Directorio de base de datos creado: resources/db");
+	        }
+
+	        //Conectar a la base de datos
+	        Connection con = DriverManager.getConnection(CONNECTION_STRING2);
+	        Statement stmt = con.createStatement();
+
+	        // Crear las tablas
+	        stmt.execute(sqlComentario);
+	        System.out.println("Tabla COMENTARIO creada o ya existe");
+	        
+		}catch (Exception e) {
+			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
+		}
+	}
+	
+	
+	public boolean registrarComentarios (Comentario coment) {
+		boolean registrado = false;
+		
+		String sql = "INSERT INTO COMENTARIO (NOMBRE_USUARIO, NOMBRE_PELI, VALORACION, TEXTO) VALUES (?,?,?,?)";
+		
+		try (Connection con =  DriverManager.getConnection(CONNECTION_STRING2);
+			PreparedStatement stmt = con.prepareStatement(sql)) {
+			
+			stmt.setString(1, coment.getUser().getNombre());
+			stmt.setString(2, coment.getP().getTitulo());
+			stmt.setInt(3, coment.getValoracion());
+			stmt.setString(4, coment.getTexto());
+			
+			if (stmt.executeUpdate() == 1) {
+				System.out.println("Comentario añadido correctamente a la pelicula " + coment.getP().getTitulo());
+				registrado = true;
+			} else {
+				System.out.println("No se pudo añadir el comentario");
+			}
+			
+		} catch (Exception e) {
+			System.err.format("* Error registrando la pelicula: %s.\n", e.getMessage());
+		}
+		
+		return registrado;
+	}
+	
+	
+	public Comentario obtenerComentarioDeUser (String NombreUser, String tituloPeli) {
+		
+		Comentario comentario = null;
+		String sql = "SELECT COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
+		
+		try (Connection con = DriverManager.getConnection(SQLTIE_FILE2);
+				PreparedStatement stmt = con.prepareStatement(sql)){
+			
+			stmt.setString(1, NombreUser);
+			stmt.setString(2, tituloPeli);
+			
+			ResultSet resultSet = stmt.executeQuery();
+			
+			if (resultSet.next()) {
+				int valoracionCom = resultSet.getInt("VALORACION");
+				String textoCom = resultSet.getString("TEXTO");
+				
+				Usuario user = obtenerUsuarioPorNombre(NombreUser);
+				Pelicula peli = obtenerPeliculaPorTitulo(tituloPeli);
+				
+				comentario = new Comentario(valoracionCom, textoCom, user, peli);
+				
+				System.out.println("Comentario de " + NombreUser + " de la pelicula " + tituloPeli);
+				
+			} else {
+				System.out.println("No se ha encontrado ningun comentario de este usuario en esta pelicula");
+			}
+			
+		} catch (Exception e) {
+			System.err.println("* Error al obtener el comentario del usuario: %s.\n" + e.getMessage());
+		}
+		
+		return comentario;
+	}
+	
+	
+	
+	
+	
 	//Otras funciones
+	
+	public Pelicula obtenerPeliculaPorTitulo(String titulo) {
+		Pelicula pelicula = null;
+		
+		// TODO si existe devolver la pelicula buscando por el titulo, igual que el obtenerUsuarioPorNombre (mas arriba)
+		
+		return pelicula;
+	}
 
 }
