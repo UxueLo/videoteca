@@ -338,6 +338,43 @@ public class GestorBD {
 		return actualizado;
 	}
 	
+	/**
+	 * Obtiene un usuario solo por su nombre (método auxiliar)
+	 * @param nombre Nombre del usuario
+	 * @return Usuario si existe, null en caso contrario
+	 */
+	private Usuario obtenerUsuarioPorNombre(String nombre) {
+	    Usuario usuario = null;
+	    String sql = "SELECT * FROM USUARIO WHERE NOMBRE = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, nombre);
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next()) {
+	            String email = rs.getString("EMAIL");
+	            int edad = rs.getInt("EDAD");
+	            String fechaStr = rs.getString("FECHA_NACIMIENTO");
+	            LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
+	            String contraseña = rs.getString("CONTRASEÑA");
+	            int saldo = rs.getInt("SALDO");
+	            
+	            usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
+	            usuario.aumentarSaldo(saldo);
+	        }
+	        
+	        rs.close();
+	    } catch (Exception e) {
+	        System.err.format("* Error obteniendo usuario por nombre: %s\n", e.getMessage());
+	    }
+	    
+	    return usuario;
+	}
+
+	
 	
 	// Funciones de comentarios
 	
@@ -366,6 +403,51 @@ public class GestorBD {
 		}
 		
 		return registrado;
+	}
+	
+	/**
+	 * Obtiene todos los comentarios de una película
+	 * @param pelicula Película de la que se quieren obtener los comentarios
+	 * @return Lista de comentarios de la película
+	 */
+	public List<Comentario> obtenerComentariosDePelicula(Pelicula pelicula) {
+	    List<Comentario> comentarios = new ArrayList<>();
+	    String sql = "SELECT * FROM COMENTARIO WHERE NOMBRE_PELICULA = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, pelicula.getTitulo());
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        while (rs.next()) {
+	            String nombreUsuario = rs.getString("NOMBRE_USUARIO");
+	            int valoracion = rs.getInt("VALORACION");
+	            String texto = rs.getString("TEXTO");
+	            
+	            // Obtener el usuario completo de la base de datos
+	            Usuario usuario = obtenerUsuarioPorNombre(nombreUsuario);
+	            
+	            if (usuario != null) {
+	                Comentario comentario = new Comentario(valoracion, texto, usuario, pelicula);
+	                comentarios.add(comentario);
+	            }
+	        }
+	        
+	        rs.close();
+	        
+	        if (comentarios.isEmpty()) {
+	            System.out.println("No se encontraron comentarios para la película: " + pelicula.getTitulo());
+	        } else {
+	            System.out.println("Se encontraron " + comentarios.size() + " comentarios para la película: " + pelicula.getTitulo());
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error obteniendo comentarios de la película: %s\n", e.getMessage());
+	    }
+	    
+	    return comentarios;
 	}
 	
 	
@@ -427,6 +509,7 @@ public class GestorBD {
 		return filasBorradas;
 		
 	}
+	
 	
 	
 	// Funciones de peliculas

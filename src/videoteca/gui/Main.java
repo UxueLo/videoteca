@@ -65,12 +65,13 @@ public class Main {
 		//Prueba del Frame Principal
 		Usuario usuario= new Usuario("", "", 19, LocalDate.of(1, 1, 1), ""); //Usuario nulo inicial
 		//Cargar peliculas la BD
-		for (Pelicula p : peliculas) {
-			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
-			usuario.addrReserva(reserva);
-		}
-		//Cargar peliculas a la BD
+		GestorBD gestor = new GestorBD();
 		
+		//for (Pelicula p : peliculas) {
+		//	gestor.registrarPelicula(p);
+		//}
+		//Cargar peliculas a la BD
+		gestor.cargarPeliculas();
 		
 		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
@@ -82,7 +83,7 @@ public class Main {
 //		UsuarioFrame frame = new UsuarioFrame(usuario);
 //		frame.setVisible(true);
 		
-		GestorBD gestor = new GestorBD();
+		
 		gestor.inicializarTablas();
 		
 		//Para ir probando Ventana Catalogo
