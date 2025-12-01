@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -275,9 +276,9 @@ public class GestorBD {
 		String sql = "SELECT * FROM USUARIO";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-		     Statement stmt = con.createStatement()) {
+		     Statement pst = con.createStatement()) {
 			
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = pst.executeQuery(sql);
 			
 			while (rs.next()) {
 				String nombre = rs.getString("NOMBRE");
@@ -401,13 +402,13 @@ public class GestorBD {
 		Comentario comentario = null;
 		String sql = "SELECT COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
 		
-		try (Connection con = DriverManager.getConnection(SQLTIE_FILE2);
-				PreparedStatement stmt = con.prepareStatement(sql)){
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
+				PreparedStatement pst = con.prepareStatement(sql)){
 			
-			stmt.setString(1, NombreUser);
-			stmt.setString(2, tituloPeli);
+			pst.setString(1, NombreUser);
+			pst.setString(2, tituloPeli);
 			
-			ResultSet resultSet = stmt.executeQuery();
+			ResultSet resultSet = pst.executeQuery();
 			
 			if (resultSet.next()) {
 				int valoracionCom = resultSet.getInt("VALORACION");
@@ -429,6 +430,33 @@ public class GestorBD {
 		}
 		
 		return comentario;
+	}
+	
+	
+	public int borrarComentario (Usuario user, Pelicula p) {
+		int filasBorradas = 0;
+		String sql = "DELETE FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";	// TODO
+		
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
+				PreparedStatement pst = con.prepareStatement(sql)) {
+			
+			pst.setString(1, user.getNombre());
+			pst.setString(2, p.getTitulo());
+			
+			filasBorradas = pst.executeUpdate();
+			
+			if (filasBorradas > 0) {	// Borrar si no esta vacia
+				System.out.println("Comentario borrado correctamente");
+			} else {
+				System.out.println("No se ha podido borrar el comentario");
+			}
+			
+		} catch (Exception e) {
+			System.err.println("* Error al borrar el comentario del usuario: %s.\n" + e.getMessage());
+		}
+		
+		return filasBorradas;
+		
 	}
 	
 	

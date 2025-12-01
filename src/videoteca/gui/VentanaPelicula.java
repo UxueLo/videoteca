@@ -41,6 +41,7 @@ import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
 import videoteca.io.GestionImagenes;
+import videoteca.jdbc.GestorBD;
 
 public class VentanaPelicula extends JFrame {
 
@@ -67,6 +68,7 @@ public class VentanaPelicula extends JFrame {
 	private JLabel texto;
 	
 	private int filaTablaComentarios=-1;
+	private GestorBD gestor;
 	
 	
 	
@@ -75,6 +77,7 @@ public class VentanaPelicula extends JFrame {
 		this.usuario = usuario;
 		this.p = p;
 		this.usuario=usuario;
+		this.gestor = new GestorBD();
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Película");
@@ -382,6 +385,7 @@ public class VentanaPelicula extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Abrir VentanaReseña
 				abrirReseña();
+				
 			}
 
 		});
@@ -444,8 +448,30 @@ public class VentanaPelicula extends JFrame {
 	
 	// Abrir la ventana de reseña
 	private void abrirReseña() {
-		VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
-		ventanaReseña.setVisible(true);
+		if (gestor.obtenerComentarioDeUser(usuario.getNombre(), p.getTitulo()) == null) {	// Si no tiene ningun comentario para esta peli
+			VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
+			ventanaReseña.setVisible(true);
+			
+		} else {
+			int result = JOptionPane.showConfirmDialog(
+                       null,
+                       "Ya tienes un comentario en esta película, ¿Quieres rehacerlo?",
+                       "Repetición del comentario",
+                       JOptionPane.YES_NO_OPTION,
+                       JOptionPane.INFORMATION_MESSAGE);
+			
+			if (result == JOptionPane.YES_OPTION) {		// Si - Borrar comentario
+				gestor.borrarComentario(usuario, p);
+				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
+				ventanaReseña.setVisible(true);
+			} else {									// No - te lleva a tu reseña
+				Comentario comentario = gestor.obtenerComentarioDeUser(usuario.getNombre(), p.getTitulo());
+				VentanaComentario ventanaComentario = new VentanaComentario(p, comentario);
+				ventanaComentario.setVisible(true);
+			}
+
+		}
+		
 		
 	}
 	
