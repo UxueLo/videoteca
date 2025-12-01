@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -30,6 +31,7 @@ public class VentanaComentario extends JFrame {
 	private JPanel panelPrincipal;
 	private JPanel panelOeste;			// Valoracion
 	private JPanel panelCentral;		// Comentario (scroll)
+	private JPanel panelCentralNorte; 	// Usuario
 	
 	public VentanaComentario (Pelicula p, Comentario com) {
 		this.p = p;
@@ -89,6 +91,24 @@ public class VentanaComentario extends JFrame {
 		panelCentral.add(scroll);
 		add(panelCentral);
 		
+		// Panel central norte - usuario
+		this.panelCentralNorte = new JPanel();
+		panelCentralNorte.setLayout(new FlowLayout());
+		panelCentralNorte.setBackground(panelPrincipal.getBackground());
+		
+		JLabel usuario = new JLabel();
+		usuario.setText("Usuario: ");
+		usuario.setFont(new Font("Arial", Font.BOLD, 30));
+		usuario.setForeground(Color.white);
+		
+		JLabel userNom = new JLabel(com.getUser().getNombre());
+		userNom.setFont(new Font("Arial", Font.ITALIC, 30));
+		userNom.setForeground(Color.white);
+		
+		panelCentralNorte.add(usuario);
+		panelCentralNorte.add(userNom);
+		
+		panelCentral.add(panelCentralNorte, BorderLayout.NORTH);
 		
 		
 		

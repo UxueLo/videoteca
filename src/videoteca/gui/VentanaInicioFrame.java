@@ -68,15 +68,16 @@ public class VentanaInicioFrame extends JFrame{
 		panelIncial= new JPanel(new BorderLayout());
 		// Panel superior: título + poster + botones
 		JPanel panelPeliculasCambiando = new JPanel(new BorderLayout());
+		panelPeliculasCambiando.setBackground(colorFondo);
 		
-        JLabel tituloPoster = new JLabel("Película destacada", JLabel.CENTER);
+        JLabel tituloPoster = new JLabel("Películas destacada", JLabel.CENTER);
         tituloPoster.setFont(new Font("Garamond", Font.BOLD, 45));
         tituloPoster.setForeground(colorPrincipal);
         panelPeliculasCambiando.add(tituloPoster, BorderLayout.NORTH);
         
         panelPosterDinamico = new JPanel(new BorderLayout());
         panelPosterDinamico.setOpaque(true);
-        panelPosterDinamico.setBackground(new Color(35, 35, 35));
+        panelPosterDinamico.setBackground(colorFondo);
         panelPeliculasCambiando.add(panelPosterDinamico, BorderLayout.CENTER);
 
 		botonReanudar= new JButton("Reanudar");

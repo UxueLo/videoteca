@@ -224,6 +224,12 @@ public class GestorBD {
 		return usuario;
 	}
 	
+	
+	/**
+	 * Obtiene un usuario por nombre
+	 * @param nombre Nombre del usuario
+	 * @return Usuario si existe, null en caso contrario
+	 */
 	public Usuario obtenerUsuarioPorNombre (String nombre) {
 		Usuario usuario = null;
 		
@@ -361,37 +367,6 @@ public class GestorBD {
 	
 	
 	// Funciones de comentarios
-	public void InicializarComentarios() {
-		// Crear la tabla
-		String sqlComentario = "CREATE TABLE IF NOT EXISTS COMENTARIO (" +
-				"NOMBRE_USUARIO TEXT NOT NULL," +
-				"NOMBRE_PELI TEXT NOT NULL, " +
-				"VALORACION INTEGER NOT NULL, " + 
-				"TEXTO TEXT, " + 
-				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELI), " +					// Cada usuario solo podra comentar cada pelicula una vez
-				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
-				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(NOMBRE) ) ";
-		
-		try {
-	        java.io.File dbDir = new java.io.File("resources/db");
-	        if (!dbDir.exists()) {
-	            dbDir.mkdirs();
-	            System.out.println("Directorio de base de datos creado: resources/db");
-	        }
-
-	        //Conectar a la base de datos
-	        Connection con = DriverManager.getConnection(CONNECTION_STRING2);
-	        Statement stmt = con.createStatement();
-
-	        // Crear las tablas
-	        stmt.execute(sqlComentario);
-	        System.out.println("Tabla COMENTARIO creada o ya existe");
-	        
-		}catch (Exception e) {
-			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
-		}
-	}
-	
 	
 	public boolean registrarComentarios (Comentario coment) {
 		boolean registrado = false;
