@@ -399,10 +399,12 @@ public class VentanaPelicula extends JFrame {
 		// Implementar los KeyListener
 		panelPrincipal.addKeyListener(keyAdapterAlquilar);       
 		this.addKeyListener(keyAdapterAlquilar);
+		comentarios.addKeyListener(keyAdapterAlquilar);
 		this.setFocusable(true);
 		
 		panelPrincipal.addKeyListener(keyAdapterReseña);       
 		this.addKeyListener(keyAdapterReseña);
+		comentarios.addKeyListener(keyAdapterReseña);
 		this.setFocusable(true);
 
 
