@@ -27,6 +27,7 @@ import videoteca.domain.Comentario;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
+import videoteca.jdbc.GestorBD;
 
 public class VentanaReseña extends JFrame {
 	
@@ -48,12 +49,14 @@ public class VentanaReseña extends JFrame {
 	private ImageIcon estrellaVacia;
 	private ImageIcon estrellaRellena;
 	private VentanaPelicula vp;
+	private GestorBD gestor;
 	
 	
 	public VentanaReseña (Pelicula p, Usuario usuario, VentanaPelicula vp) {
 		this.p = p;
 		this.usuario = usuario;
 		this.vp = vp;
+		this.gestor = new GestorBD();
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
 		setTitle("Reseña");
@@ -187,13 +190,10 @@ public class VentanaReseña extends JFrame {
 		// Dos formas para poner la reseña:
 		// 1 - Action listener para añadir la reseña
 		this.reseñar.addActionListener(new ActionListener() {
-			
-			//TODO comprobar que la sesion esta iniciada
 					
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				//Comprobar que la sesion esta iniciada
 				pulsarReseñar();
 			}
 				
@@ -226,12 +226,15 @@ public class VentanaReseña extends JFrame {
 			// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
 			
 			if (valoracion != -1) {
+				Comentario esteCom = new Comentario(valoracion, comentarioEscrito.getText(), usuario, p);
 				ArrayList<Comentario> comentarios = p.getComentarios();
-				comentarios.add(new Comentario(valoracion, comentarioEscrito.getText(), usuario, p));
+				comentarios.add(esteCom);
 				p.setComentarios(comentarios);
 				
 				if (vp != null) {
 					vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+					gestor.registrarComentarios(esteCom);
+					
 				}
 				
 				VentanaReseña.this.dispose();

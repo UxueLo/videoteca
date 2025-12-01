@@ -435,7 +435,7 @@ public class GestorBD {
 	
 	public int borrarComentario (Usuario user, Pelicula p) {
 		int filasBorradas = 0;
-		String sql = "DELETE FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";	// TODO
+		String sql = "DELETE FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
 				PreparedStatement pst = con.prepareStatement(sql)) {
