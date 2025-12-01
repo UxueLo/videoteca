@@ -271,19 +271,64 @@ public class VentanaCatalogo extends JFrame {
 
         return tarjeta;
     }
-
+    
+    private boolean estaUsuarioAutenticado() {
+        // Siempre verificar desde ventanaInicio
+        if (ventanaInicio != null && ventanaInicio.usuario != null) {
+            this.usuario = ventanaInicio.usuario; // Sincronizar localmente
+            return ventanaInicio.usuario.getNombre() != null && 
+                   !ventanaInicio.usuario.getNombre().trim().isEmpty();
+        }
+        return false;
+    }
 
     private void agregarAlCarrito(Pelicula p) {
-        if (usuario.getCarritoUsuario().contains(p))
+        if (!estaUsuarioAutenticado()) {
+            int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¡Debes iniciar sesión para añadir películas al carrito!\n" +
+                "¿Deseas iniciar sesión ahora?",
+                "Sesión requerida",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (opcion == JOptionPane.YES_OPTION) {
+                new LoginFrame(ventanaInicio).setVisible(true);
+            }
+            return;
+        }
+        
+        // Usar usuario de ventanaInicio
+        if (ventanaInicio.usuario.getCarritoUsuario().contains(p))
             JOptionPane.showMessageDialog(this, "Esta película ya está en el carrito.", "Aviso", JOptionPane.WARNING_MESSAGE);
         else {
-            usuario.getCarritoUsuario().add(p);
+            ventanaInicio.usuario.getCarritoUsuario().add(p);
             JOptionPane.showMessageDialog(this, p.getTitulo() + " añadida al carrito 🎬", "Carrito", JOptionPane.INFORMATION_MESSAGE);
             actualizarBotonCarrito();
         }
     }
 
+
     private void abrirCarrito() {
+        // Añadir la misma validación que en agregarAlCarrito
+        if (!estaUsuarioAutenticado()) {
+            int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¡Debes iniciar sesión para acceder al carrito!\n" +
+                "¿Deseas iniciar sesión ahora?",
+                "Sesión requerida",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (opcion == JOptionPane.YES_OPTION) {
+                new LoginFrame(ventanaInicio).setVisible(true);
+            }
+            return;
+        }
+        
+        // Solo abrir el carrito si está autenticado
         new VentanaCarrito(ventanaInicio);
     }
 
@@ -329,15 +374,20 @@ public class VentanaCatalogo extends JFrame {
         });
     }
 
-	private void actualizarBotonCarrito() {
-	    int cantidad = usuario.getCarritoUsuario().size();
-	    if (cantidad == 0) {
-	        btnCarrito.setText("🛒 Carrito");
-	    } else if (cantidad == 1) {
-	        btnCarrito.setText("🛒 Carrito 1");
-	    } else {
-	        btnCarrito.setText("🛒 Carrito " + cantidad);
-	    }
-	}
+    private void actualizarBotonCarrito() {
+        if (ventanaInicio != null && ventanaInicio.usuario != null) {
+            int cantidad = ventanaInicio.usuario.getCarritoUsuario().size();
+            if (cantidad == 0) {
+                btnCarrito.setText("🛒 Carrito");
+            } else if (cantidad == 1) {
+                btnCarrito.setText("🛒 Carrito 1");
+            } else {
+                btnCarrito.setText("🛒 Carrito " + cantidad);
+            }
+        } else {
+            btnCarrito.setText("🛒 Carrito");
+        }
+    }
+
 }
 
