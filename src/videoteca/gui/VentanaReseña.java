@@ -220,35 +220,31 @@ public class VentanaReseña extends JFrame {
 	
 	// Añadir la reseña
 	public void pulsarReseñar () {
-				
-		//Comprobar que la sesion esta iniciada
-		if (!usuario.getNombre().isBlank()) {
-			// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
-			
-			if (valoracion != -1) {
-				Comentario esteCom = new Comentario(valoracion, comentarioEscrito.getText(), usuario, p);
-				ArrayList<Comentario> comentarios = p.getComentarios();
-				comentarios.add(esteCom);
-				p.setComentarios(comentarios);
-				
-				if (vp != null) {
-					vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
-					gestor.registrarComentarios(esteCom);
-					
-				}
-				
-				VentanaReseña.this.dispose();
-			} else {
-				System.err.println("Valora la película");
-			
-			}
+		// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
 		
-		}else {
-			JOptionPane.showMessageDialog(VentanaReseña.this, 
-		            "Inicia sesion antes de hacer reseñas", 
-		            "Error de autenticación", 
-		            JOptionPane.ERROR_MESSAGE);
-	    }
+		if (valoracion != -1) {
+			Comentario esteCom = new Comentario(valoracion, comentarioEscrito.getText(), usuario, p);
+			ArrayList<Comentario> comentarios = p.getComentarios();
+			comentarios.add(esteCom);
+			p.setComentarios(comentarios);
+			
+			if (vp != null) {
+				vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
+				gestor.registrarComentarios(esteCom);
+				
+			}
+			
+			VentanaReseña.this.dispose();
+		} else {
+			JOptionPane.showConfirmDialog(
+            null,
+            "Valora la película con las estrellas",
+            "Valoración inexistente",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE);
+		
+		}
+	
 	}
 	
 	

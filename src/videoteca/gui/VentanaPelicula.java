@@ -448,28 +448,36 @@ public class VentanaPelicula extends JFrame {
 	
 	// Abrir la ventana de reseña
 	private void abrirReseña() {
-		if (gestor.obtenerComentarioDeUser(usuario.getNombre(), p.getTitulo()) == null) {	// Si no tiene ningun comentario para esta peli
-			VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
-			ventanaReseña.setVisible(true);
-			
-		} else {
-			int result = JOptionPane.showConfirmDialog(
-                       null,
-                       "Ya tienes un comentario en esta película, ¿Quieres rehacerlo?",
-                       "Repetición del comentario",
-                       JOptionPane.YES_NO_OPTION,
-                       JOptionPane.INFORMATION_MESSAGE);
-			
-			if (result == JOptionPane.YES_OPTION) {		// Si - Borrar comentario
-				gestor.borrarComentario(usuario, p);
+		
+		if (!usuario.getNombre().isBlank()) {
+			if (gestor.obtenerComentarioDeUser(usuario, p) == null) {	// Si no tiene ningun comentario para esta peli
 				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
 				ventanaReseña.setVisible(true);
-			} else {									// No - te lleva a tu reseña
-				Comentario comentario = gestor.obtenerComentarioDeUser(usuario.getNombre(), p.getTitulo());
-				VentanaComentario ventanaComentario = new VentanaComentario(p, comentario);
-				ventanaComentario.setVisible(true);
-			}
+				
+			} else {
+				int result = JOptionPane.showConfirmDialog(
+	                       null,
+	                       "Ya tienes un comentario en esta película, ¿Quieres rehacerlo?",
+	                       "Repetición del comentario",
+	                       JOptionPane.YES_NO_OPTION,
+	                       JOptionPane.INFORMATION_MESSAGE);
+				
+				if (result == JOptionPane.YES_OPTION) {		// Si - Borrar comentario
+					gestor.borrarComentario(usuario, p);
+					VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
+					ventanaReseña.setVisible(true);
+				} else {									// No - te lleva a tu reseña
+					Comentario comentario = gestor.obtenerComentarioDeUser(usuario, p);
+					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario);
+					ventanaComentario.setVisible(true);
+				}
 
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, 
+		            "Inicia sesion antes de hacer reseñas", 
+		            "Error de autenticación", 
+		            JOptionPane.ERROR_MESSAGE);
 		}
 		
 		

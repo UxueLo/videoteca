@@ -1,5 +1,6 @@
 package videoteca.jdbc;
 
+import java.awt.geom.GeneralPath;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import videoteca.domain.Comentario;
+import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
 
@@ -21,6 +23,9 @@ public class GestorBD {
     
     private static final String SQLTIE_FILE2 = "resources/db/comentario.db";
     private static final String CONNECTION_STRING2 = "jdbc:sqlite:" + SQLTIE_FILE2; 
+    
+    private static final String SQLTIE_FILE3 = "resources/db/pelicula.db";
+    private static final String CONNECTION_STRING3 = "jdbc:sqlite:" + SQLTIE_FILE2; 
     
 	public GestorBD() {
 		try {
@@ -49,7 +54,15 @@ public class GestorBD {
 				"TEXTO TEXT, " + 
 				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELI), " +					// Cada usuario solo podra comentar cada pelicula una vez
 				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
-				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(NOMBRE) ) ";
+				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(TITULO) ) ";
+		
+		String sqlPelicula = "CREATE TABLE IF NOT EXISTS PELICULA (" +
+				"TITULO TEXT PRIMARY KEY," +
+				"DIRECTOR TEXT NOT NULL, " +
+				"AÑO INTEGER NOT NULL, " + 
+				"DURACION INTEGER NOT NULL, " + 
+				"PUNTUACION DOUBLE NOT NULL, " +
+				"PRECIO DOUBLE NOT NULL ) ";	// TODO No se si faltan mas columnas por meter (reparto, generos, edad recomendada, comentarios)
 		
 		try {
 	        java.io.File dbDir = new java.io.File("resources/db");
@@ -68,6 +81,9 @@ public class GestorBD {
 	        
 	        stmt.execute(sqlComentario);
 	        System.out.println("Tabla COMENTARIO creada o ya existe");
+	        
+	        stmt.execute(sqlPelicula);
+	        System.out.println("Tabla PELICULA creada o ya existe");
 	        
 		}catch (Exception e) {
 			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
@@ -225,48 +241,6 @@ public class GestorBD {
 		return usuario;
 	}
 	
-	
-	/**
-	 * Obtiene un usuario por nombre
-	 * @param nombre Nombre del usuario
-	 * @return Usuario si existe, null en caso contrario
-	 */
-	public Usuario obtenerUsuarioPorNombre (String nombre) {
-		Usuario usuario = null;
-		
-		String sql = "SELECT USUARIO WHERE NOMBRE = ?";
-		
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-			     PreparedStatement pst = con.prepareStatement(sql)) {
-				
-				pst.setString(1, nombre);
-				
-				ResultSet rs = pst.executeQuery();
-				
-				if (rs.next()) {
-					String email = rs.getString("EMAIL");
-					int edad = rs.getInt("EDAD");
-					String fechaStr = rs.getString("FECHA_NACIMIENTO");
-					LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
-					String contraseña = rs.getString("CONTRASEÑA");
-					int saldo = rs.getInt("SALDO");
-					
-					usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
-					usuario.aumentarSaldo(saldo);
-					
-					System.out.println("Usuario encontrado: " + nombre);
-				} else {
-					System.out.println("Nombre incorrecto");
-				}
-				
-				rs.close();
-			} catch (Exception e) {
-				System.err.format("* Error obteniendo usuario por nombre: %s.\n", e.getMessage());
-			}
-		
-		return usuario;
-	}
-	
 	/**
 	 * Carga todos los usuarios de la base de datos
 	 * @return Lista de usuarios
@@ -397,7 +371,7 @@ public class GestorBD {
 	}
 	
 	
-	public Comentario obtenerComentarioDeUser (String NombreUser, String tituloPeli) {
+	public Comentario obtenerComentarioDeUser (Usuario user, Pelicula p) {
 		
 		Comentario comentario = null;
 		String sql = "SELECT COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
@@ -405,8 +379,8 @@ public class GestorBD {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
 				PreparedStatement pst = con.prepareStatement(sql)){
 			
-			pst.setString(1, NombreUser);
-			pst.setString(2, tituloPeli);
+			pst.setString(1, user.getNombre());
+			pst.setString(2, p.getTitulo());
 			
 			ResultSet resultSet = pst.executeQuery();
 			
@@ -414,12 +388,9 @@ public class GestorBD {
 				int valoracionCom = resultSet.getInt("VALORACION");
 				String textoCom = resultSet.getString("TEXTO");
 				
-				Usuario user = obtenerUsuarioPorNombre(NombreUser);
-				Pelicula peli = obtenerPeliculaPorTitulo(tituloPeli);
+				comentario = new Comentario(valoracionCom, textoCom, user, p);
 				
-				comentario = new Comentario(valoracionCom, textoCom, user, peli);
-				
-				System.out.println("Comentario de " + NombreUser + " de la pelicula " + tituloPeli);
+				System.out.println("Comentario de " + user.getNombre() + " de la pelicula " + p.getTitulo());
 				
 			} else {
 				System.out.println("No se ha encontrado ningun comentario de este usuario en esta pelicula");
@@ -463,14 +434,8 @@ public class GestorBD {
 	
 	
 	
-	//Otras funciones
+	// Funciones de peliculas
 	
-	public Pelicula obtenerPeliculaPorTitulo(String titulo) {
-		Pelicula pelicula = null;
-		
-		// TODO si existe devolver la pelicula buscando por el titulo, igual que el obtenerUsuarioPorNombre (mas arriba)
-		
-		return pelicula;
-	}
+	
 
 }
