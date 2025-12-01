@@ -13,19 +13,14 @@ import java.util.List;
 
 import videoteca.domain.Comentario;
 import videoteca.domain.EdadRecomendada;
+import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
 
 public class GestorBD {
 
-	private static final String SQLITE_FILE = "resources/db/usuario.db";
-    private static final String CONNECTION_STRING = "jdbc:sqlite:" + SQLITE_FILE;
-    
-    private static final String SQLTIE_FILE2 = "resources/db/comentario.db";
-    private static final String CONNECTION_STRING2 = "jdbc:sqlite:" + SQLTIE_FILE2; 
-    
-    private static final String SQLTIE_FILE3 = "resources/db/pelicula.db";
-    private static final String CONNECTION_STRING3 = "jdbc:sqlite:" + SQLTIE_FILE2; 
+	private static final String SQLITE_FILE = "resources/db/videoteca.db";
+	private static final String CONNECTION_STRING = "jdbc:sqlite:" + SQLITE_FILE;
     
 	public GestorBD() {
 		try {
@@ -49,18 +44,21 @@ public class GestorBD {
 		
 		String sqlComentario = "CREATE TABLE IF NOT EXISTS COMENTARIO (" +
 				"NOMBRE_USUARIO TEXT NOT NULL," +
-				"NOMBRE_PELI TEXT NOT NULL, " +
+				"NOMBRE_PELICULA TEXT NOT NULL, " +
 				"VALORACION INTEGER NOT NULL, " + 
 				"TEXTO TEXT, " + 
-				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELI), " +					// Cada usuario solo podra comentar cada pelicula una vez
+				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELICULA), " +	// Cada usuario solo podra comentar cada pelicula una vez
 				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
 				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(TITULO) ) ";
 		
 		String sqlPelicula = "CREATE TABLE IF NOT EXISTS PELICULA (" +
 				"TITULO TEXT PRIMARY KEY," +
 				"DIRECTOR TEXT NOT NULL, " +
+				"REPARTO TEXT NOT NULL," +
+				"GENEROS TEXT NOT NULL," +
 				"AÑO INTEGER NOT NULL, " + 
 				"DURACION INTEGER NOT NULL, " + 
+				"EDAD_RECOMENDADA INTEGER NOT NULL," +
 				"PUNTUACION DOUBLE NOT NULL, " +
 				"PRECIO DOUBLE NOT NULL ) ";	// TODO No se si faltan mas columnas por meter (reparto, generos, edad recomendada, comentarios)
 		
@@ -346,9 +344,9 @@ public class GestorBD {
 	public boolean registrarComentarios (Comentario coment) {
 		boolean registrado = false;
 		
-		String sql = "INSERT INTO COMENTARIO (NOMBRE_USUARIO, NOMBRE_PELI, VALORACION, TEXTO) VALUES (?,?,?,?)";
+		String sql = "INSERT INTO COMENTARIO (NOMBRE_USUARIO, NOMBRE_PELICULA, VALORACION, TEXTO) VALUES (?,?,?,?)";
 		
-		try (Connection con =  DriverManager.getConnection(CONNECTION_STRING2);
+		try (Connection con =  DriverManager.getConnection(CONNECTION_STRING);
 			PreparedStatement stmt = con.prepareStatement(sql)) {
 			
 			stmt.setString(1, coment.getUser().getNombre());
@@ -374,9 +372,9 @@ public class GestorBD {
 	public Comentario obtenerComentarioDeUser (Usuario user, Pelicula p) {
 		
 		Comentario comentario = null;
-		String sql = "SELECT COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
+		String sql = "SELECT * FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELICULA = ?";
 		
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement pst = con.prepareStatement(sql)){
 			
 			pst.setString(1, user.getNombre());
@@ -406,9 +404,9 @@ public class GestorBD {
 	
 	public int borrarComentario (Usuario user, Pelicula p) {
 		int filasBorradas = 0;
-		String sql = "DELETE FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELI = ?";
+		String sql = "DELETE FROM COMENTARIO WHERE NOMBRE_USUARIO = ? AND NOMBRE_PELICULA = ?";
 		
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING2);
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement pst = con.prepareStatement(sql)) {
 			
 			pst.setString(1, user.getNombre());
@@ -431,11 +429,231 @@ public class GestorBD {
 	}
 	
 	
-	
-	
-	
 	// Funciones de peliculas
 	
+	/**
+	 * Verifica si existe una película con el título proporcionado
+	 * @param titulo Título de la película a verificar
+	 * @return true si existe, false en caso contrario
+	 */
+	public boolean existePelicula(String titulo) {
+	    boolean existe = false;
+	    String sql = "SELECT COUNT(*) FROM PELICULA WHERE TITULO = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, titulo);
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            existe = true;
+	        }
+	        
+	        rs.close();
+	    } catch (Exception e) {
+	        System.err.format("* Error verificando existencia de película: %s.\n", e.getMessage());
+	    }
+	    
+	    return existe;
+	}
+
+	/**
+	 * Registra una nueva película en la base de datos
+	 * @param pelicula Película a registrar
+	 * @return true si se registró correctamente, false en caso contrario
+	 */
+	public boolean registrarPelicula(Pelicula pelicula) {
+	    boolean registrado = false;
+	    
+	    // Verificar si la película ya existe
+	    if (existePelicula(pelicula.getTitulo())) {
+	        System.out.println("Ya existe una película con ese título");
+	        return false;
+	    }
+	    
+	    String sql = "INSERT INTO PELICULA (TITULO, DIRECTOR, REPARTO, GENEROS, AÑO, DURACION, EDAD_RECOMENDADA, PUNTUACION, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        // Convertir ArrayList de reparto a String separado por comas
+	        String repartoStr = String.join(",", pelicula.getReparto());
+	        
+	        // Convertir ArrayList de géneros a String separado por comas
+	        ArrayList<String> generosStr = new ArrayList<>();
+	        for (Genero g : pelicula.getGeneros()) {
+	            generosStr.add(g.name()); 
+	        }
+	        String generos = String.join(",", generosStr);
+	        
+	        pst.setString(1, pelicula.getTitulo());
+	        pst.setString(2, pelicula.getDirector());
+	        pst.setString(3, repartoStr);
+	        pst.setString(4, generos);
+	        pst.setInt(5, pelicula.getAñoLanzamiento());
+	        pst.setInt(6, pelicula.getDuracion());
+	        pst.setString(7, pelicula.getEdadRecomendada().name()); // Asumiendo que es un enum
+	        pst.setDouble(8, pelicula.getPuntuacionMedia());
+	        pst.setDouble(9, pelicula.getPrecio());
+	        
+	        if (pst.executeUpdate() == 1) {
+	            System.out.println("Película registrada correctamente: " + pelicula.getTitulo());
+	            registrado = true;
+	        } else {
+	            System.out.println("No se pudo registrar la película");
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error registrando película: %s.\n", e.getMessage());
+	    }
+	    
+	    return registrado;
+	}
+
+	/**
+	 * Obtiene una película por su título
+	 * @param titulo Título de la película
+	 * @return Película si existe, null en caso contrario
+	 */
+	public Pelicula obtenerPelicula(String titulo) {
+	    Pelicula pelicula = null;
+	    String sql = "SELECT * FROM PELICULA WHERE TITULO = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, titulo);
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next()) {
+	            String director = rs.getString("DIRECTOR");
+	            
+	            // Convertir String de reparto a ArrayList
+	            String repartoStr = rs.getString("REPARTO");
+	            ArrayList<String> reparto = new ArrayList<>();
+	            if (repartoStr != null && !repartoStr.isEmpty()) {
+	                for (String actor : repartoStr.split(",")) {
+	                    reparto.add(actor.trim());
+	                }
+	            }
+	            
+	            // Convertir String de géneros a ArrayList
+	            String generosStr = rs.getString("GENEROS");
+	            ArrayList<Genero> generos = new ArrayList<>();
+	            if (generosStr != null && !generosStr.isEmpty()) {
+	                for (String genero : generosStr.split(",")) {
+	                    generos.add(Genero.valueOf(genero.trim()));
+	                }
+	            }
+	            
+	            int año = rs.getInt("AÑO");
+	            int duracion = rs.getInt("DURACION");
+	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
+	            double puntuacion = rs.getDouble("PUNTUACION");
+	            double precio = rs.getDouble("PRECIO");
+	            
+	            pelicula = new Pelicula(titulo, director, reparto, generos, año, duracion, edadRecomendada, puntuacion, precio);
+	            
+	            System.out.println("Película encontrada: " + titulo);
+	        } else {
+	            System.out.println("No se encontró la película con título: " + titulo);
+	        }
+	        
+	        rs.close();
+	    } catch (Exception e) {
+	        System.err.format("* Error obteniendo película: %s.\n", e.getMessage());
+	    }
+	    
+	    return pelicula;
+	}
+
+	/**
+	 * Carga todas las películas de la base de datos
+	 * @return Lista de películas
+	 */
+	public List<Pelicula> cargarPeliculas() {
+	    List<Pelicula> peliculas = new ArrayList<>();
+	    String sql = "SELECT * FROM PELICULA";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         Statement stmt = con.createStatement()) {
+	        
+	        ResultSet rs = stmt.executeQuery(sql);
+	        
+	        while (rs.next()) {
+	            String titulo = rs.getString("TITULO");
+	            String director = rs.getString("DIRECTOR");
+	            
+	            // Convertir String de reparto a ArrayList
+	            String repartoStr = rs.getString("REPARTO");
+	            ArrayList<String> reparto = new ArrayList<>();
+	            if (repartoStr != null && !repartoStr.isEmpty()) {
+	                for (String actor : repartoStr.split(",")) {
+	                    reparto.add(actor.trim());
+	                }
+	            }
+	            
+	            // Convertir String de géneros a ArrayList
+	            String generosStr = rs.getString("GENEROS");
+	            ArrayList<Genero> generos = new ArrayList<>();
+	            if (generosStr != null && !generosStr.isEmpty()) {
+	                for (String genero : generosStr.split(",")) {
+	                    generos.add(Genero.valueOf(genero.trim()));
+	                }
+	            }
+	            
+	            int año = rs.getInt("AÑO");
+	            int duracion = rs.getInt("DURACION");
+	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
+	            double puntuacion = rs.getDouble("PUNTUACION");
+	            double precio = rs.getDouble("PRECIO");
+	            
+	            Pelicula pelicula = new Pelicula(titulo, director, reparto, generos, año, duracion, edadRecomendada, puntuacion, precio);
+	            peliculas.add(pelicula);
+	        }
+	        
+	        rs.close();
+	        System.out.println("Cargadas " + peliculas.size() + " películas de la base de datos");
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error cargando películas: %s.\n", e.getMessage());
+	    }
+	    
+	    return peliculas;
+	}
+
+
+	/**
+	 * Actualiza la puntuación de una película en la base de datos
+	 * @param titulo Título de la película
+	 * @param nuevaPuntuacion Nueva puntuación
+	 * @return true si se actualizó correctamente, false en caso contrario
+	 */
+	public boolean actualizarPuntuacion(String titulo, double nuevaPuntuacion) {
+	    boolean actualizado = false;
+	    String sql = "UPDATE PELICULA SET PUNTUACION = ? WHERE TITULO = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setDouble(1, nuevaPuntuacion);
+	        pst.setString(2, titulo);
+	        
+	        if (pst.executeUpdate() == 1) {
+	            System.out.println("Puntuación actualizada correctamente");
+	            actualizado = true;
+	        } else {
+	            System.out.println("No se pudo actualizar la puntuación");
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error actualizando puntuación: %s.\n", e.getMessage());
+	    }
+	    
+	    return actualizado;
+	}
 	
 
 }

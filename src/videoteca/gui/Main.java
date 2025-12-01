@@ -64,11 +64,14 @@ public class Main {
 		
 		//Prueba del Frame Principal
 		Usuario usuario= new Usuario("", "", 19, LocalDate.of(1, 1, 1), ""); //Usuario nulo inicial
-		//Cargar peliculas al Usuario
+		//Cargar peliculas la BD
 		for (Pelicula p : peliculas) {
 			Reserva reserva = new Reserva(p,LocalDate.of(p.getAñoLanzamiento(), 1, 1));
 			usuario.addrReserva(reserva);
 		}
+		//Cargar peliculas a la BD
+		
+		
 		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		
 		//Prueba UsuarioFrame
