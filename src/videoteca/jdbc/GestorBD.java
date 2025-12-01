@@ -41,6 +41,15 @@ public class GestorBD {
 				"CONTRASEÑA TEXT NOT NULL, " +
 				"SALDO INTEGER DEFAULT 0)";
 		
+		String sqlComentario = "CREATE TABLE IF NOT EXISTS COMENTARIO (" +
+				"NOMBRE_USUARIO TEXT NOT NULL," +
+				"NOMBRE_PELI TEXT NOT NULL, " +
+				"VALORACION INTEGER NOT NULL, " + 
+				"TEXTO TEXT, " + 
+				"PRIMARY KEY (NOMBRE_USUARIO, NOMBRE_PELI), " +					// Cada usuario solo podra comentar cada pelicula una vez
+				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
+				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(NOMBRE) ) ";
+		
 		try {
 	        java.io.File dbDir = new java.io.File("resources/db");
 	        if (!dbDir.exists()) {
@@ -55,6 +64,9 @@ public class GestorBD {
 	        // Crear las tablas
 	        stmt.execute(sqlUsuario);
 	        System.out.println("Tabla USUARIO creada o ya existe");
+	        
+	        stmt.execute(sqlComentario);
+	        System.out.println("Tabla COMENTARIO creada o ya existe");
 	        
 		}catch (Exception e) {
 			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
