@@ -485,7 +485,7 @@ public class VentanaPelicula extends JFrame {
 	
 	
 	public void actualizarComentarios() {
-		
+		//TODO  hacer que los comentarios se actualicen
 		// Cargar comentarios
 		
 		if (modeloTablaComentarios.getRowCount() == 0) {					// si la tabla esta vacia
@@ -493,7 +493,7 @@ public class VentanaPelicula extends JFrame {
 		            "VALORACIÓN", "COMENTARIO"
 		        });
 			
-			ArrayList<Comentario> listaComentarios = p.getComentarios();
+			ArrayList<Comentario> listaComentarios = gestor.obtenerComentariosDePelicula(p);
 			for(Comentario c : listaComentarios) {
 				this.numCom = numCom + 1;
 				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );

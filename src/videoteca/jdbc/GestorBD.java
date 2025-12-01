@@ -410,8 +410,8 @@ public class GestorBD {
 	 * @param pelicula Película de la que se quieren obtener los comentarios
 	 * @return Lista de comentarios de la película
 	 */
-	public List<Comentario> obtenerComentariosDePelicula(Pelicula pelicula) {
-	    List<Comentario> comentarios = new ArrayList<>();
+	public ArrayList<Comentario> obtenerComentariosDePelicula(Pelicula pelicula) {
+	    ArrayList<Comentario> comentarios = new ArrayList<>();
 	    String sql = "SELECT * FROM COMENTARIO WHERE NOMBRE_PELICULA = ?";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
