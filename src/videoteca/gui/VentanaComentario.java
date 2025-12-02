@@ -34,6 +34,7 @@ public class VentanaComentario extends JFrame {
 	private Pelicula p;
 	private Comentario com;
 	private Usuario user;
+	private VentanaPelicula vp;
 	
 	private JPanel panelPrincipal;
 	private JPanel panelCentral;		// Comentario (scroll)
@@ -43,10 +44,11 @@ public class VentanaComentario extends JFrame {
 	
 	private GestorBD gestor;
 	
-	public VentanaComentario (Pelicula p, Comentario com, Usuario user) {
+	public VentanaComentario (Pelicula p, Comentario com, Usuario user, VentanaPelicula vp) {
 		this.p = p;
 		this.com = com;
 		this.user = user;
+		this.vp = vp;
 		this.gestor = new GestorBD();
 		
 		setIconImage(new ImageIcon("Images/logo.png").getImage());
@@ -74,12 +76,12 @@ public class VentanaComentario extends JFrame {
 			texto.setText(com.getTexto());
 			texto.setFont(new Font("Arial", Font.PLAIN, 20));
 		} else {
-			texto.setText("\n \n \n \n \n No hay ningún comentrio en esta reseña");
+			texto.setText("\n \n \n No hay ningún comentrio en esta reseña");
 			texto.setFont(new Font("Arial", Font.ITALIC, 20));
 		}
 		
 		texto.setBackground(panelPrincipal.getBackground());
-		texto.setForeground(Color.white);;
+		texto.setForeground(Color.white);
 		texto.setLineWrap(true);
 		texto.setWrapStyleWord(true);
 		
@@ -161,6 +163,7 @@ public class VentanaComentario extends JFrame {
 					
 					if (result == JOptionPane.YES_OPTION) {
 						gestor.borrarComentario(com.getUser(), p);
+						vp.actualizarComentarios();
 						VentanaComentario.this.dispose();
 						
 					}

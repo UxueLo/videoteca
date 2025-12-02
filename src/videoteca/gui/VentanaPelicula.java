@@ -332,7 +332,7 @@ public class VentanaPelicula extends JFrame {
 				int fila = comentarios.rowAtPoint(e.getPoint());
 				Comentario com = p.getComentarios().get(fila);
 
-				VentanaComentario ventanaComentario = new VentanaComentario(p, com, usuario);
+				VentanaComentario ventanaComentario = new VentanaComentario(p, com, usuario, VentanaPelicula.this);
 				ventanaComentario.setVisible(true);
 
 
@@ -473,7 +473,7 @@ public class VentanaPelicula extends JFrame {
 					ventanaReseña.setVisible(true);
 				} else if (result == JOptionPane.NO_OPTION) {									// No - te lleva a tu reseña
 					Comentario comentario = gestor.obtenerComentarioDeUser(usuario, p);
-					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario, usuario);
+					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario, usuario, VentanaPelicula.this);
 					ventanaComentario.setVisible(true);
 				}
 
