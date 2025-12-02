@@ -487,17 +487,17 @@ public class VentanaPelicula extends JFrame {
 	public void actualizarComentarios() {
 		//TODO  hacer que los comentarios se actualicen
 		// Cargar comentarios
+		modeloTablaComentarios.setRowCount(0);
 		
-							// si la tabla esta vacia
+						// si la tabla esta vacia
 		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
 	            "VALORACIÓN", "COMENTARIO"
 	        });
 		
 		ArrayList<Comentario> listaComentarios = gestor.obtenerComentariosDePelicula(p);
+		p.getComentarios().removeAll(listaComentarios);
 		p.setComentarios(listaComentarios);
 		comentarios.repaint();
-		
-		
 		
 		for(Comentario c : listaComentarios) {
 			this.numCom = numCom + 1;
