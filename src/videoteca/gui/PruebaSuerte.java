@@ -142,6 +142,15 @@ public class PruebaSuerte extends JFrame {
         setLayout(new BorderLayout(10, 10));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (temporizador != null) {
+                    temporizador.cancel();
+                }
+            }
+        });
 
         // Panel superior
         JPanel panelSuperior = new JPanel(new BorderLayout());
@@ -280,6 +289,7 @@ public class PruebaSuerte extends JFrame {
     }
 
     private void finDelJuego() {
+        if (temporizador != null) temporizador.cancel();
         JOptionPane.showMessageDialog(this,
                 "¡Juego terminado!\n\nDescuento final: " + descuentoAcumulado + "%");
         dispose();
