@@ -75,10 +75,17 @@ public class VentanaComentario extends JFrame {
 		panelCentral.setLayout(new BorderLayout());
 		
 		JTextArea texto = new JTextArea();
-		texto.setText(com.getTexto());
+		
+		if (!com.getTexto().isBlank()) {
+			texto.setText("\n" + com.getTexto());
+			texto.setFont(new Font("Arial", Font.PLAIN, 20));
+		} else {
+			texto.setText("\n \n \n \n \n \n No hay ningún comentrio en esta reseña");
+			texto.setFont(new Font("Arial", Font.ITALIC, 20));
+		}
+		
 		texto.setBackground(panelPrincipal.getBackground());
 		texto.setForeground(Color.white);;
-		texto.setFont(new Font("Arial", Font.PLAIN, 20));
 		texto.setLineWrap(true);
 		texto.setWrapStyleWord(true);
 		
