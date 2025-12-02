@@ -72,7 +72,7 @@ public class Main {
 		//}
 		
 		
-		//Cargar peliculas a la BD
+		//Cargar peliculas de la BD
 		peliculas = gestor.cargarPeliculas();
 		
 		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
