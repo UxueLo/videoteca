@@ -229,8 +229,8 @@ public class VentanaReseña extends JFrame {
 			p.setComentarios(comentarios);
 			
 			if (vp != null) {
-				vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
 				gestor.registrarComentarios(esteCom);
+				vp.actualizarComentarios();		// Actualizar la tabla de reseñas en la ventanaPelicula
 				
 			}
 			

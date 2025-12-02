@@ -495,6 +495,8 @@ public class VentanaPelicula extends JFrame {
 			
 			ArrayList<Comentario> listaComentarios = gestor.obtenerComentariosDePelicula(p);
 			p.setComentarios(listaComentarios);
+			comentarios.repaint();
+			
 			for(Comentario c : listaComentarios) {
 				this.numCom = numCom + 1;
 				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
