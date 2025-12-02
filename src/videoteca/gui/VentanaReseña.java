@@ -223,6 +223,7 @@ public class VentanaReseña extends JFrame {
 		// TODO falta añadir la valoracion real y cambiar la tabla en VentanaPelicula
 		
 		if (valoracion != -1) {
+			gestor.borrarComentario(usuario, p);
 			Comentario esteCom = new Comentario(valoracion, comentarioEscrito.getText(), usuario, p);
 			ArrayList<Comentario> comentarios = p.getComentarios();
 			comentarios.remove(gestor.obtenerComentarioDeUser(usuario, p));

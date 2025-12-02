@@ -449,6 +449,7 @@ public class VentanaPelicula extends JFrame {
 	// Abrir la ventana de reseña
 	private void abrirReseña() {
 		
+		
 		if (!usuario.getNombre().isBlank()) {
 			if (gestor.obtenerComentarioDeUser(usuario, p) == null) {	// Si no tiene ningun comentario para esta peli
 				VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
@@ -462,8 +463,7 @@ public class VentanaPelicula extends JFrame {
 	                       JOptionPane.YES_NO_OPTION,
 	                       JOptionPane.INFORMATION_MESSAGE);
 				
-				if (result == JOptionPane.YES_OPTION) {		// Si - Borrar comentario
-					gestor.borrarComentario(usuario, p);
+				if (result == JOptionPane.YES_OPTION) {		// Si - Abrir reseña y borrar comentario
 					VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
 					ventanaReseña.setVisible(true);
 				} else {									// No - te lleva a tu reseña
