@@ -306,18 +306,22 @@ public class VentanaPelicula extends JFrame {
 		};
 		comentarios.addMouseMotionListener(miMouseMotionListener);
 		comentarios.addMouseListener(miMouseAdapter);
+		comentarios.setBackground(Color.black);
+		comentarios.setGridColor(Color.white);		// TODO hacer que funcione esto, cambiar el color de la linea a blanco
+		comentarios.getTableHeader().setReorderingAllowed(false);
+		comentarios.getTableHeader().setBackground(panelPrincipal.getBackground());
+		comentarios.getTableHeader().setForeground(Color.white);
+		comentarios.setShowGrid(true);
 		
 		// Scroll
 		JScrollPane scrollComentarios = new JScrollPane(comentarios);
 		scrollComentarios.getVerticalScrollBar().setUnitIncrement(16);
 		scrollComentarios.setBorder(new TitledBorder("Reseñas: "));
 		scrollComentarios.setPreferredSize(new Dimension(0, 350));
+		scrollComentarios.setBackground(new Color(112, 124, 156));
+		scrollComentarios.getViewport().setBackground(new Color(112,124,156));
 		
 		panelSur.add(scrollComentarios, BorderLayout.CENTER);
-		
-		
-		comentarios.setBackground(new Color(212,212,212));
-		comentarios.setForeground(panelPrincipal.getBackground());
 		
 		actualizarComentarios();
 		
@@ -328,7 +332,8 @@ public class VentanaPelicula extends JFrame {
 				int fila = comentarios.rowAtPoint(e.getPoint());
 				Comentario com = p.getComentarios().get(fila);
 
-				VentanaComentario ventanaComentario = new VentanaComentario(p, com);
+				VentanaComentario ventanaComentario = new VentanaComentario(p, com, usuario);
+				ventanaComentario.setVisible(true);
 
 
 			}
@@ -466,9 +471,9 @@ public class VentanaPelicula extends JFrame {
 				if (result == JOptionPane.YES_OPTION) {		// Si - Abrir reseña y borrar comentario
 					VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
 					ventanaReseña.setVisible(true);
-				} else {									// No - te lleva a tu reseña
+				} else if (result == JOptionPane.NO_OPTION) {									// No - te lleva a tu reseña
 					Comentario comentario = gestor.obtenerComentarioDeUser(usuario, p);
-					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario);
+					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario, usuario);
 					ventanaComentario.setVisible(true);
 				}
 
@@ -485,10 +490,8 @@ public class VentanaPelicula extends JFrame {
 	
 	
 	public void actualizarComentarios() {
-		//TODO  hacer que los comentarios se actualicen
 		modeloTablaComentarios.setRowCount(0);
 		
-						// si la tabla esta vacia
 		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
 	            "VALORACIÓN", "COMENTARIO"
 	        });
@@ -553,14 +556,13 @@ public class VentanaPelicula extends JFrame {
 				String valStr = (String) value;
 				Double valDoub = Double.parseDouble(valStr);
 				Integer valInt = (int) Math.round(valDoub);
-	            
-				// Conseguir las imágenes de la valoración
-				String ruta = "Images/" + valInt.toString() + ".png";
+					
+				String ruta = "Images/Estrellas" + valInt + ".png";
 		        ImageIcon icon = new ImageIcon(ruta);
-		        setText("");
 		        
-				Image imagenEscalada = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+				Image imagenEscalada = icon.getImage().getScaledInstance(120, 30, Image.SCALE_SMOOTH);
 				setIcon(new ImageIcon(imagenEscalada));
+				setText("");
 				
 			}else { //si es la columna de texto
 				setIcon(null);
@@ -582,7 +584,9 @@ public class VentanaPelicula extends JFrame {
 	                	 setForeground(Color.black);
 	                }
 	            } else {
-	            	setBackground(Color.white);
+	            	setBackground(panelPrincipal.getBackground());
+	            	setForeground(Color.white);
+	            	
 	            }
 	        }
 			return this;
