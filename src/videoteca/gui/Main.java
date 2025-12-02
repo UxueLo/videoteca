@@ -70,8 +70,10 @@ public class Main {
 		//for (Pelicula p : peliculas) {
 		//	gestor.registrarPelicula(p);
 		//}
+		
+		
 		//Cargar peliculas a la BD
-		gestor.cargarPeliculas();
+		peliculas = gestor.cargarPeliculas();
 		
 		VentanaInicioFrame framePrincipal= new VentanaInicioFrame(usuario, peliculas);
 		

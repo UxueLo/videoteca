@@ -656,8 +656,8 @@ public class GestorBD {
 	 * Carga todas las películas de la base de datos
 	 * @return Lista de películas
 	 */
-	public List<Pelicula> cargarPeliculas() {
-	    List<Pelicula> peliculas = new ArrayList<>();
+	public ArrayList<Pelicula> cargarPeliculas() {
+	    ArrayList<Pelicula> peliculas = new ArrayList<>();
 	    String sql = "SELECT * FROM PELICULA";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
