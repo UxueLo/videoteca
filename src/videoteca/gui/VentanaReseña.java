@@ -225,8 +225,10 @@ public class VentanaReseña extends JFrame {
 		if (valoracion != -1) {
 			Comentario esteCom = new Comentario(valoracion, comentarioEscrito.getText(), usuario, p);
 			ArrayList<Comentario> comentarios = p.getComentarios();
+			comentarios.remove(gestor.obtenerComentarioDeUser(usuario, p));
 			comentarios.add(esteCom);
 			p.setComentarios(comentarios);
+			
 			
 			if (vp != null) {
 				gestor.registrarComentarios(esteCom);

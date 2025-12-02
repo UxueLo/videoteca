@@ -488,28 +488,27 @@ public class VentanaPelicula extends JFrame {
 		//TODO  hacer que los comentarios se actualicen
 		// Cargar comentarios
 		
-		if (modeloTablaComentarios.getRowCount() == 0) {					// si la tabla esta vacia
-			modeloTablaComentarios.setColumnIdentifiers(new Object[] {
-		            "VALORACIÓN", "COMENTARIO"
-		        });
-			
-			ArrayList<Comentario> listaComentarios = gestor.obtenerComentariosDePelicula(p);
-			p.setComentarios(listaComentarios);
-			comentarios.repaint();
-			
-			for(Comentario c : listaComentarios) {
-				this.numCom = numCom + 1;
-				modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
-			}
-			
-			comentarios.setRowHeight(40);									// Agrandar la altura de cada fila de la tabla
-			comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
-			comentarios.getColumnModel().getColumn(0).setMinWidth(300);
-			comentarios.setGridColor(panelPrincipal.getBackground());
-		} else {
-			Comentario comAñadido = p.getComentarios().get(p.getComentarios().size()-1);
-			modeloTablaComentarios.addRow(new Object[] {Double.toString(comAñadido.getValoracion()),comAñadido.getTexto()} );	// Añadir la ultima reseña a la tabla
+							// si la tabla esta vacia
+		modeloTablaComentarios.setColumnIdentifiers(new Object[] {
+	            "VALORACIÓN", "COMENTARIO"
+	        });
+		
+		ArrayList<Comentario> listaComentarios = gestor.obtenerComentariosDePelicula(p);
+		p.setComentarios(listaComentarios);
+		comentarios.repaint();
+		
+		
+		
+		for(Comentario c : listaComentarios) {
+			this.numCom = numCom + 1;
+			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
 		}
+			
+		comentarios.setRowHeight(40);									// Agrandar la altura de cada fila de la tabla
+		comentarios.getColumnModel().getColumn(0).setMaxWidth(300);		// Hacer que la columna de valoraciones sea mas pequeña
+		comentarios.getColumnModel().getColumn(0).setMinWidth(300);
+		comentarios.setGridColor(panelPrincipal.getBackground());
+		
 			
 		comentarios.repaint();		// actualizar la tabla
 
