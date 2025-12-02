@@ -486,7 +486,6 @@ public class VentanaPelicula extends JFrame {
 	
 	public void actualizarComentarios() {
 		//TODO  hacer que los comentarios se actualicen
-		// Cargar comentarios
 		modeloTablaComentarios.setRowCount(0);
 		
 						// si la tabla esta vacia
