@@ -36,9 +36,9 @@ public class VentanaComentario extends JFrame {
 	private Usuario user;
 	
 	private JPanel panelPrincipal;
-	private JPanel panelOeste;			// Valoracion
 	private JPanel panelCentral;		// Comentario (scroll)
-	private JPanel panelCentralNorte; 	// Usuario
+	private JPanel panelNorte;			// Valoracion + usuario
+	private JPanel panelUser;		 	// Usuario
 	private JPanel panelSur;			// Boton eliminar
 	
 	private GestorBD gestor;
@@ -60,25 +60,6 @@ public class VentanaComentario extends JFrame {
 		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 		panelPrincipal.setLayout(new BorderLayout());
 		
-		
-		// Panel Oeste - Valoracion
-		this.panelOeste = new JPanel();
-		panelOeste.setBackground(panelPrincipal.getBackground());
-		panelOeste.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-		
-		JLabel valoracion = new JLabel();
-		valoracion.setBackground(panelPrincipal.getBackground());
-		
-		String ruta = "Images/" + com.getValoracion() + ".png";
-        ImageIcon icon = new ImageIcon(ruta);
-        
-		Image imagenEscalada = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-		valoracion.setIcon(new ImageIcon(imagenEscalada));
-		
-		valoracion.setOpaque(true);
-		
-		panelOeste.add(valoracion);
-		add(panelOeste, BorderLayout.WEST);
 		
 		
 		// Panel central - comentario (scroll)
@@ -112,11 +93,29 @@ public class VentanaComentario extends JFrame {
 		panelCentral.add(scroll);
 		add(panelCentral);
 		
-		// Panel central norte - usuario
-		this.panelCentralNorte = new JPanel();
-		panelCentralNorte.setLayout(new FlowLayout());
-		panelCentralNorte.setBackground(panelPrincipal.getBackground());
-		panelCentralNorte.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+		// Panel norte - valoracion + usuario
+		// valoracion
+		this.panelNorte = new JPanel();
+		panelNorte.setLayout(new GridLayout(1, 2, 10, 10));
+		panelNorte.setBackground(panelPrincipal.getBackground());
+		
+		JLabel valoracion = new JLabel();
+		String ruta = "Images/Estrellas" + com.getValoracion() + ".png";
+        ImageIcon icon = new ImageIcon(ruta);
+        
+		Image imagenEscalada = icon.getImage().getScaledInstance(240, 60, Image.SCALE_SMOOTH);
+		valoracion.setIcon(new ImageIcon(imagenEscalada));
+		valoracion.setHorizontalAlignment(JLabel.CENTER);
+		valoracion.setVerticalAlignment(JLabel.TOP);
+		
+		panelNorte.add(valoracion);
+		
+		
+		// usuario (panel user)
+		this.panelUser = new JPanel();
+		panelUser.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelUser.setBackground(panelPrincipal.getBackground());
+		panelUser.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
 		
 		JLabel usuario = new JLabel();
 		usuario.setText("Usuario: ");
@@ -127,10 +126,11 @@ public class VentanaComentario extends JFrame {
 		userNom.setFont(new Font("Arial", Font.ITALIC, 30));
 		userNom.setForeground(Color.white);
 		
-		panelCentralNorte.add(usuario);
-		panelCentralNorte.add(userNom);
+		panelUser.add(usuario);
+		panelUser.add(userNom);
 		
-		panelCentral.add(panelCentralNorte, BorderLayout.NORTH);
+		panelNorte.add(panelUser);
+		panelCentral.add(panelNorte, BorderLayout.NORTH);
 		
 		
 		// Panel sur - boton eliminar
