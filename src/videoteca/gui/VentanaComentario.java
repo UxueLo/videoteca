@@ -137,7 +137,7 @@ public class VentanaComentario extends JFrame {
 		
 		// Panel sur - boton eliminar
 		
-//		if (com.getUser() == user) {		// TODO hacer bien esta igualdad
+		if (com.getUser().getNombre().equals(user.getNombre())) {		// TODO hacer bien esta igualdad
 			this.panelSur = new JPanel();
 			panelSur.setLayout(new GridLayout());
 			JButton eliminar = new JButton("Eliminar comentario");
@@ -173,7 +173,7 @@ public class VentanaComentario extends JFrame {
 		
 		panelSur.add(eliminar);
 		add(panelSur, BorderLayout.SOUTH);
-//		}
+		}
 		
 		
 		
