@@ -120,12 +120,9 @@ public class UsuarioFrame extends JFrame{
 					String titulo= (String) tablaPeliculas.getValueAt(filaSeleccionada, 0);
 					
 					//obtener pelicula de ese titulo
-					for(Reserva r : usuario.getPeliculasAlquiladas()) {
-						Pelicula p = r.getPelicula();
-						if(p.getTitulo().equals(titulo)) {
-							pintarDatosPelicula(p);
-						}
-					}
+					Pelicula p = gestor.obtenerPelicula(titulo);
+					pintarDatosPelicula(p);
+					
 				}else {
 					ocultarDatosPelicula();
 					
