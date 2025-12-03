@@ -473,7 +473,6 @@ public class VentanaPelicula extends JFrame {
 		
 			// Meter la pelicula en el carrito
 			if (!usuario.getCarritoUsuario().contains(p)) {
-				usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
 				usuario.getCarritoUsuario().add(p);
 				//Mensaje de confirmacion
 				JOptionPane.showMessageDialog(null,"Película añadida al carrito","Película añadida",JOptionPane.PLAIN_MESSAGE);

@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
+import videoteca.jdbc.GestorBD;
 
 public class UsuarioFrame extends JFrame{
 	private Usuario usuario;
@@ -42,10 +43,14 @@ public class UsuarioFrame extends JFrame{
 	private JLabel labelDirectorPelicula;
 	private JLabel labelFechaEstreno;
 	private JButton botonReseñar;
+	private GestorBD gestor;
 
 
 
 	public UsuarioFrame(VentanaInicioFrame ventanaInicio) {
+		
+		//Asignamos el gestorBD
+		this.gestor = new GestorBD();
 		
 		//Asignamos el usuario al Frame
 		this.usuario = ventanaInicio.usuario;
@@ -253,7 +258,7 @@ public class UsuarioFrame extends JFrame{
 	            "Título", "Fecha de Reserva", "Fecha de Devolución"
 	        });
 		
-		ArrayList<Reserva> listaReservas = usuario.getPeliculasAlquiladas();
+		ArrayList<Reserva> listaReservas = gestor.obtenerReservasDeUsuario(usuario);
 		for(Reserva r : listaReservas) {
 			modeloTablaPeliculas.addRow(new Object[] {r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
 		}

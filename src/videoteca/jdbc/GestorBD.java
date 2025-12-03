@@ -15,6 +15,7 @@ import videoteca.domain.Comentario;
 import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
+import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 
 public class GestorBD {
@@ -62,6 +63,15 @@ public class GestorBD {
 				"PUNTUACION DOUBLE NOT NULL, " +
 				"PRECIO DOUBLE NOT NULL ) ";	// TODO No se si faltan mas columnas por meter (reparto, generos, edad recomendada, comentarios)
 		
+	    String sqlReserva = "CREATE TABLE IF NOT EXISTS RESERVA (" +
+	            "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+	            "NOMBRE_USUARIO TEXT NOT NULL," +
+	            "TITULO_PELICULA TEXT NOT NULL," +
+	            "FECHA_RESERVA TEXT NOT NULL," +
+	            "FECHA_DEVOLUCION TEXT NOT NULL," +
+	            "FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE)," +
+	            "FOREIGN KEY (TITULO_PELICULA) REFERENCES PELICULA(TITULO))";
+		
 		try {
 	        java.io.File dbDir = new java.io.File("resources/db");
 	        if (!dbDir.exists()) {
@@ -82,6 +92,9 @@ public class GestorBD {
 	        
 	        stmt.execute(sqlPelicula);
 	        System.out.println("Tabla PELICULA creada o ya existe");
+	        
+	        stmt.execute(sqlReserva);
+	        System.out.println("Tabla RESERVA creada o ya existe");
 	        
 		}catch (Exception e) {
 			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
@@ -240,42 +253,6 @@ public class GestorBD {
 	}
 	
 	/**
-	 * Carga todos los usuarios de la base de datos
-	 * @return Lista de usuarios
-	 */
-	public List<Usuario> cargarUsuarios() {
-		List<Usuario> usuarios = new ArrayList<>();
-		String sql = "SELECT * FROM USUARIO";
-		
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-		     Statement pst = con.createStatement()) {
-			
-			ResultSet rs = pst.executeQuery(sql);
-			
-			while (rs.next()) {
-				String nombre = rs.getString("NOMBRE");
-				String email = rs.getString("EMAIL");
-				int edad = rs.getInt("EDAD");
-				String fechaStr = rs.getString("FECHA_NACIMIENTO");
-				LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
-				String contraseña = rs.getString("CONTRASEÑA");
-				int saldo = rs.getInt("SALDO");
-				
-				Usuario usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
-				usuario.aumentarSaldo(saldo);
-				
-				usuarios.add(usuario);
-			}
-			
-			rs.close();
-		} catch (Exception e) {
-			System.err.format("* Error cargando usuarios: %s.\n", e.getMessage());
-		}
-		
-		return usuarios;
-	}
-	
-	/**
 	 * Actualiza el saldo de un usuario en la base de datos
 	 * @param nombreUsuario nombre del usuario
 	 * @param nuevoSaldo Nuevo saldo
@@ -300,39 +277,6 @@ public class GestorBD {
 			
 		} catch (Exception e) {
 			System.err.format("* Error actualizando saldo: %s.\n", e.getMessage());
-		}
-		
-		return actualizado;
-	}
-	
-	/**
-	 * Actualiza los datos de un usuario en la base de datos
-	 * @param usuario Usuario con los datos actualizados
-	 * @return true si se actualizó correctamente, false en caso contrario
-	 */
-	public boolean actualizarUsuario(Usuario usuario) {
-		boolean actualizado = false;
-		String sql = "UPDATE USUARIO SET CONTRASEÑA = ?, EDAD = ?, FECHA_NACIMIENTO = ?, EMAIL = ?, SALDO = ? WHERE NOMBRE = ?";
-		
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-		     PreparedStatement pst = con.prepareStatement(sql)) {
-			
-			pst.setString(1, usuario.getContraseña());
-			pst.setInt(2, usuario.getEdad());
-			pst.setString(3, usuario.getFechaNacimineto().toString());
-			pst.setString(4, usuario.getEmail());
-			pst.setInt(5, usuario.getSaldo());
-			pst.setString(6, usuario.getNombre());
-			
-			if (pst.executeUpdate() == 1) {
-				System.out.println("Usuario actualizado correctamente");
-				actualizado = true;
-			} else {
-				System.out.println("No se pudo actualizar el usuario");
-			}
-			
-		} catch (Exception e) {
-			System.err.format("* Error actualizando usuario: %s.\n", e.getMessage());
 		}
 		
 		return actualizado;
@@ -738,5 +682,173 @@ public class GestorBD {
 	    return actualizado;
 	}
 	
+	//Funciones de Reserva
+	/**
+	 * Registra una nueva reserva en la base de datos
+	 * @param usuario Usuario que realiza la reserva
+	 * @param reserva Reserva a registrar
+	 * @return true si se registró correctamente, false en caso contrario
+	 */
+	public boolean registrarReserva(Usuario usuario, Reserva reserva) {
+	    boolean registrado = false;
+	    String sql = "INSERT INTO RESERVA (NOMBRE_USUARIO, TITULO_PELICULA, FECHA_RESERVA, FECHA_DEVOLUCION) VALUES (?, ?, ?, ?)";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, usuario.getNombre());
+	        pst.setString(2, reserva.getPelicula().getTitulo());
+	        pst.setString(3, reserva.getFechaReserva().toString());
+	        pst.setString(4, reserva.getFechaDevolucion().toString());
+	        
+	        if (pst.executeUpdate() == 1) {
+	            System.out.println("Reserva registrada correctamente para " + usuario.getNombre());
+	            registrado = true;
+	        } else {
+	            System.out.println("No se pudo registrar la reserva");
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error registrando reserva: %s.\n", e.getMessage());
+	    }
+	    
+	    return registrado;
+	}
+
+	/**
+	 * Obtiene todas las reservas de un usuario
+	 * @param usuario Usuario del que se quieren obtener las reservas
+	 * @return Lista de reservas del usuario
+	 */
+	public ArrayList<Reserva> obtenerReservasDeUsuario(Usuario usuario) {
+	    ArrayList<Reserva> reservas = new ArrayList<>();
+	    String sql = "SELECT * FROM RESERVA WHERE NOMBRE_USUARIO = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, usuario.getNombre());
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        while (rs.next()) {
+	            String tituloPelicula = rs.getString("TITULO_PELICULA");
+	            String fechaReservaStr = rs.getString("FECHA_RESERVA");
+	            String fechaDevolucionStr = rs.getString("FECHA_DEVOLUCION");
+	            
+	            LocalDate fechaReserva = LocalDate.parse(fechaReservaStr);
+	            LocalDate fechaDevolucion = LocalDate.parse(fechaDevolucionStr);
+	            
+	            // Obtener la película completa
+	            Pelicula pelicula = obtenerPelicula(tituloPelicula);
+	            
+	            if (pelicula != null) {
+	                Reserva reserva = new Reserva(pelicula, fechaReserva, fechaDevolucion);
+	                reservas.add(reserva);
+	            }
+	        }
+	        
+	        rs.close();
+	        System.out.println("Se encontraron " + reservas.size() + " reservas para el usuario: " + usuario.getNombre());
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error obteniendo reservas del usuario: %s\n", e.getMessage());
+	    }
+	    
+	    return reservas;
+	}
+	
+	//TODO por si luego queremos hacer algo con las fechas de fin de la reserva
+	/**
+	 * Actualiza la fecha de devolución de una reserva
+	 * @param usuario Usuario de la reserva
+	 * @param pelicula Película de la reserva
+	 * @param nuevaFechaDevolucion Nueva fecha de devolución
+	 * @return true si se actualizó correctamente, false en caso contrario
+	 */
+	public boolean actualizarFechaDevolucion(Usuario usuario, Pelicula pelicula, LocalDate nuevaFechaDevolucion) {
+	    boolean actualizado = false;
+	    String sql = "UPDATE RESERVA SET FECHA_DEVOLUCION = ? WHERE NOMBRE_USUARIO = ? AND TITULO_PELICULA = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, nuevaFechaDevolucion.toString());
+	        pst.setString(2, usuario.getNombre());
+	        pst.setString(3, pelicula.getTitulo());
+	        
+	        if (pst.executeUpdate() > 0) {
+	            System.out.println("Fecha de devolución actualizada correctamente");
+	            actualizado = true;
+	        } else {
+	            System.out.println("No se pudo actualizar la fecha de devolución");
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error actualizando fecha de devolución: %s.\n", e.getMessage());
+	    }
+	    
+	    return actualizado;
+	}
+
+	/**
+	 * Elimina una reserva de la base de datos
+	 * @param usuario Usuario de la reserva
+	 * @param pelicula Película de la reserva
+	 * @return true si se eliminó correctamente, false en caso contrario
+	 */
+	public boolean eliminarReserva(Usuario usuario, Pelicula pelicula) {
+	    boolean eliminado = false;
+	    String sql = "DELETE FROM RESERVA WHERE NOMBRE_USUARIO = ? AND TITULO_PELICULA = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, usuario.getNombre());
+	        pst.setString(2, pelicula.getTitulo());
+	        
+	        if (pst.executeUpdate() > 0) {
+	            System.out.println("Reserva eliminada correctamente");
+	            eliminado = true;
+	        } else {
+	            System.out.println("No se encontró la reserva para eliminar");
+	        }
+	        
+	    } catch (Exception e) {
+	        System.err.format("* Error eliminando reserva: %s.\n", e.getMessage());
+	    }
+	    
+	    return eliminado;
+	}
+
+	/**
+	 * Verifica si un usuario tiene una reserva activa de una película
+	 * @param usuario Usuario a verificar
+	 * @param pelicula Película a verificar
+	 * @return true si existe la reserva, false en caso contrario
+	 */
+	public boolean existeReserva(Usuario usuario, Pelicula pelicula) {
+	    boolean existe = false;
+	    String sql = "SELECT COUNT(*) FROM RESERVA WHERE NOMBRE_USUARIO = ? AND TITULO_PELICULA = ?";
+	    
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement pst = con.prepareStatement(sql)) {
+	        
+	        pst.setString(1, usuario.getNombre());
+	        pst.setString(2, pelicula.getTitulo());
+	        
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            existe = true;
+	        }
+	        
+	        rs.close();
+	    } catch (Exception e) {
+	        System.err.format("* Error verificando existencia de reserva: %s.\n", e.getMessage());
+	    }
+	    
+	    return existe;
+	}
 
 }

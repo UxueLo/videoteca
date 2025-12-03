@@ -10,6 +10,7 @@ import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
+import videoteca.jdbc.GestorBD;
 
 public class VentanaCarrito extends JFrame {
 
@@ -21,7 +22,14 @@ public class VentanaCarrito extends JFrame {
     private JPanel panelCarrito;
     private JLabel precioTotal;
 
+	private GestorBD gestor;
+
     public VentanaCarrito(VentanaInicioFrame ventanaInicio) {
+    	
+    	//Añadir gestorBD
+    	this.gestor = new GestorBD();
+    	
+    	//Atributos de la ventana
         this.usuario = ventanaInicio.usuario;
         this.carrito = usuario.getCarritoUsuario();
         inicializarVentana();
@@ -185,7 +193,7 @@ public class VentanaCarrito extends JFrame {
 
             //Añadir peliculas al usuario
             for (Pelicula p : carrito) {
-            	usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+            	gestor.registrarReserva(usuario, new Reserva(p, LocalDate.now()));
             }
             
             carrito.clear();
