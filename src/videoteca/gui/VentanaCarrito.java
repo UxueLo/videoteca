@@ -4,8 +4,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import videoteca.domain.Pelicula;
+import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
 import videoteca.io.GestionImagenes;
 
@@ -181,6 +183,11 @@ public class VentanaCarrito extends JFrame {
                     "¡Alquiler realizado con éxito! 🎬\n\n" + generarResumenAlquiler(),
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
+            //Añadir peliculas al usuario
+            for (Pelicula p : carrito) {
+            	usuario.getPeliculasAlquiladas().add(new Reserva(p, LocalDate.now()));
+            }
+            
             carrito.clear();
             actualizarCarrito();
         }
