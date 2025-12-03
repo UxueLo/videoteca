@@ -315,7 +315,7 @@ public class VentanaInicioFrame extends JFrame{
 
 	            @Override
 	            public void mousePressed(MouseEvent e) {
-	                VentanaPelicula vp= new VentanaPelicula(pel, usuario);
+	                VentanaPelicula vp= new VentanaPelicula(pel, usuario, VentanaInicioFrame.this);
 	                vp.setVisible(true);
 	            }
 
@@ -409,7 +409,7 @@ public class VentanaInicioFrame extends JFrame{
                         panelPeliculas.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
-                                new VentanaPelicula(pelicula, usuario).setVisible(true);
+                                new VentanaPelicula(pelicula, usuario, VentanaInicioFrame.this).setVisible(true);
                             }
                         });
                     });

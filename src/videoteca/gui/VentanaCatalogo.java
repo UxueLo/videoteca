@@ -257,7 +257,7 @@ public class VentanaCatalogo extends JFrame {
         // Hover y click para abrir ventana de detalles
         tarjeta.addMouseListener(new MouseAdapter() { 
             @Override 
-            public void mouseClicked(MouseEvent e) { new VentanaPelicula(p, usuario).setVisible(true); }
+            public void mouseClicked(MouseEvent e) { new VentanaPelicula(p, usuario, ventanaInicio).setVisible(true); }
             @Override public void mouseEntered(MouseEvent e) { tarjeta.setBackground(new Color(60, 0, 0)); } 
             @Override public void mouseExited(MouseEvent e) { tarjeta.setBackground(Color.DARK_GRAY); } 
         });

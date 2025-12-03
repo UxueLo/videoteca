@@ -47,6 +47,7 @@ public class VentanaPelicula extends JFrame {
 
 	private Pelicula p;
 	Usuario usuario;
+	VentanaInicioFrame vif;
 	
 	private JPanel panelPrincipal;	// Panel principal, en el centro pondremos toda la info de la pelicula
 	private JPanel panelCentral;		// Informacion de la pelicula
@@ -72,8 +73,8 @@ public class VentanaPelicula extends JFrame {
 	
 	
 	
-	public VentanaPelicula (Pelicula p, Usuario usuario) {
-		
+	public VentanaPelicula (Pelicula p, Usuario usuario, VentanaInicioFrame vif) {
+		this.vif = vif;
 		this.usuario = usuario;
 		this.p = p;
 		this.usuario=usuario;
@@ -212,6 +213,44 @@ public class VentanaPelicula extends JFrame {
 		mensaje.add(texto);
 		mensaje.add(im, BorderLayout.SOUTH);
 		
+		mensaje.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// nada
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// nada
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				mensaje.setBackground(new Color(111, 130, 179));
+				im.setBackground(new Color(111, 130, 179));
+				texto.setBackground(new Color(111, 130, 179));
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				mensaje.setBackground(new Color(81, 100, 149));
+				im.setBackground(new Color(131, 160, 199));
+				texto.setBackground(new Color(131, 160, 199));
+				mensaje.setOpaque(true);
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				abrirCarrito();
+				
+			}
+		});
+		
 		panelCentral.add(panelCentralEste, BorderLayout.EAST);
 		panelCentralEste.add(mensaje);
 		
@@ -316,7 +355,7 @@ public class VentanaPelicula extends JFrame {
 		// Scroll
 		JScrollPane scrollComentarios = new JScrollPane(comentarios);
 		scrollComentarios.getVerticalScrollBar().setUnitIncrement(16);
-		scrollComentarios.setBorder(new TitledBorder("Reseñas: "));
+		scrollComentarios.setBorder(new TitledBorder(" Reseñas: Puedes hacer click para ampliarlos "));
 		scrollComentarios.setPreferredSize(new Dimension(0, 350));
 		scrollComentarios.setBackground(new Color(112, 124, 156));
 		scrollComentarios.getViewport().setBackground(new Color(112,124,156));
@@ -468,10 +507,10 @@ public class VentanaPelicula extends JFrame {
 	                       JOptionPane.YES_NO_OPTION,
 	                       JOptionPane.INFORMATION_MESSAGE);
 				
-				if (result == JOptionPane.YES_OPTION) {		// Si - Abrir reseña y borrar comentario
+				if (result == JOptionPane.YES_OPTION) {				// Si - Abrir reseña y borrar comentario
 					VentanaReseña ventanaReseña = new VentanaReseña(p, usuario,VentanaPelicula.this);
 					ventanaReseña.setVisible(true);
-				} else if (result == JOptionPane.NO_OPTION) {									// No - te lleva a tu reseña
+				} else if (result == JOptionPane.NO_OPTION) {		// No - te lleva a tu reseña
 					Comentario comentario = gestor.obtenerComentarioDeUser(usuario, p);
 					VentanaComentario ventanaComentario = new VentanaComentario(p, comentario, usuario, VentanaPelicula.this);
 					ventanaComentario.setVisible(true);
@@ -503,7 +542,25 @@ public class VentanaPelicula extends JFrame {
 		
 		for(Comentario c : listaComentarios) {
 			this.numCom = numCom + 1;
-			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),c.getTexto()} );
+			
+			String texto = "";
+			
+			// Si el comentario es muy largo, cortarlo, poner puntos suspensivos y un (click) para hacer saber que se puede ampliar
+			if (c.getTexto().length() > 20) {
+				String[] tEnt = c.getTexto().split(" ");
+				for (String palabra : tEnt) {
+					if (texto.length() > 170) {
+						texto = texto + "... (Click)";
+						break;
+					}
+					texto = texto + " " + palabra;
+					
+				}
+			} else {
+				texto = c.getTexto();
+			}
+			
+			modeloTablaComentarios.addRow(new Object[] {Double.toString(c.getValoracion()),texto} );
 		}
 			
 		comentarios.setRowHeight(40);									// Agrandar la altura de cada fila de la tabla
@@ -539,6 +596,16 @@ public class VentanaPelicula extends JFrame {
 			im.setOpaque(false);
 		}
 		mensaje.repaint();
+	}
+	
+	
+	public void actualizarBotonCarrito() {
+		
+	}
+	
+	public void abrirCarrito () {
+		VentanaCarrito vc = new VentanaCarrito(vif);
+		vc.setVisible(true);
 	}
 	
 	private class miRendererComentarios extends DefaultTableCellRenderer{
@@ -592,4 +659,5 @@ public class VentanaPelicula extends JFrame {
 			return this;
 		}
 	}
+	
 }

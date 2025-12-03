@@ -28,6 +28,7 @@ import videoteca.domain.Usuario;
 
 public class UsuarioFrame extends JFrame{
 	private Usuario usuario;
+	private VentanaInicioFrame ventanaIncio;
 	private JPanel panelUsuario;
 	private JPanel panelCentral;
 	private JPanel panelPelicula;
@@ -48,6 +49,7 @@ public class UsuarioFrame extends JFrame{
 		
 		//Asignamos el usuario al Frame
 		this.usuario = ventanaInicio.usuario;
+		this.ventanaIncio = ventanaInicio;
 		
 		//Datos del JFrame
 		this.setLayout(new BorderLayout());
@@ -91,6 +93,7 @@ public class UsuarioFrame extends JFrame{
 		
 		//JTables central
 		tablaPeliculas = new JTable(modeloTablaPeliculas);
+		tablaPeliculas.getTableHeader().setReorderingAllowed(false);
 		tablaPeliculas.setDefaultRenderer(Object.class, new MiRendererPeliculas());
 		
 		//Accion para añadir los datos de la pelicula
@@ -205,7 +208,7 @@ public class UsuarioFrame extends JFrame{
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				VentanaPelicula vp = new VentanaPelicula(p, usuario);
+				VentanaPelicula vp = new VentanaPelicula(p, usuario, ventanaIncio);
 				VentanaReseña reseña= new VentanaReseña(p, usuario,vp);
 				reseña.setVisible(true);
 			}
