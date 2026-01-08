@@ -52,16 +52,18 @@ public class GestorBD {
 				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
 				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(TITULO) ) ";
 		
+		// Pelicula (CAMBIADA)
 		String sqlPelicula = "CREATE TABLE IF NOT EXISTS PELICULA (" +
-				"TITULO TEXT PRIMARY KEY," +
-				"DIRECTOR TEXT NOT NULL, " +
-				"REPARTO TEXT NOT NULL," +
-				"GENEROS TEXT NOT NULL," +
-				"AÑO INTEGER NOT NULL, " + 
-				"DURACION INTEGER NOT NULL, " + 
-				"EDAD_RECOMENDADA INTEGER NOT NULL," +
-				"PUNTUACION DOUBLE NOT NULL, " +
-				"PRECIO DOUBLE NOT NULL ) ";	// TODO No se si faltan mas columnas por meter (reparto, generos, edad recomendada, comentarios)
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+				"TITULO TEXT NOT NULL UNIQUE," +
+				"ID_DIRECTOR INTEGER NOT NULL," +
+				"AÑO INTEGER NOT NULL," +
+				"DURACION INTEGER NOT NULL," +
+				"EDAD_RECOMENDADA TEXT NOT NULL," +
+				"PUNTUACION DOUBLE NOT NULL," +
+				"PRECIO DOUBLE NOT NULL," +
+				"FOREIGN KEY (ID_DIRECTOR) REFERENCES DIRECTOR(ID))";
+		
 		
 	    String sqlReserva = "CREATE TABLE IF NOT EXISTS RESERVA (" +
 	            "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -71,6 +73,31 @@ public class GestorBD {
 	            "FECHA_DEVOLUCION TEXT NOT NULL," +
 	            "FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE)," +
 	            "FOREIGN KEY (TITULO_PELICULA) REFERENCES PELICULA(TITULO))";
+		
+	    // Director (NUEVA)
+		String sqlDirector = "CREATE TABLE IF NOT EXISTS DIRECTOR (" +
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+				"NOMBRE TEXT NOT NULL UNIQUE)";
+		
+		// Actor (NUEVA)
+		String sqlActor = "CREATE TABLE IF NOT EXISTS ACTOR (" +
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+				"NOMBRE TEXT NOT NULL UNIQUE)";
+		
+		// Película-Actor (relación N:M,NUEVA)
+		String sqlPeliculaActor = "CREATE TABLE IF NOT EXISTS PELICULA_ACTOR (" +
+				"ID_PELICULA INTEGER NOT NULL," +
+				"ID_ACTOR INTEGER NOT NULL," +
+				"PRIMARY KEY (ID_PELICULA, ID_ACTOR)," +
+				"FOREIGN KEY (ID_PELICULA) REFERENCES PELICULA(ID)," +
+				"FOREIGN KEY (ID_ACTOR) REFERENCES ACTOR(ID))";
+		
+		// Película-Género (relación N:M,NUEVA)
+		String sqlPeliculaGenero = "CREATE TABLE IF NOT EXISTS PELICULA_GENERO (" +
+				"ID_PELICULA INTEGER NOT NULL," +
+				"GENERO TEXT NOT NULL," +
+				"PRIMARY KEY (ID_PELICULA, GENERO)," +
+				"FOREIGN KEY (ID_PELICULA) REFERENCES PELICULA(ID))";
 		
 		try {
 	        java.io.File dbDir = new java.io.File("resources/db");
@@ -83,21 +110,42 @@ public class GestorBD {
 	        Connection con = DriverManager.getConnection(CONNECTION_STRING);
 	        Statement stmt = con.createStatement();
 
-	        // Crear las tablas
+	        // Crear las tablas en orden (primero las independientes, luego las dependientes)
+	        
+	        // independientes
 	        stmt.execute(sqlUsuario);
 	        System.out.println("Tabla USUARIO creada o ya existe");
 	        
-	        stmt.execute(sqlComentario);
-	        System.out.println("Tabla COMENTARIO creada o ya existe");
+	        stmt.execute(sqlDirector);
+	        System.out.println("Tabla DIRECTOR creada o ya existe");
 	        
+	        stmt.execute(sqlActor);
+	        System.out.println("Tabla ACTOR creada o ya existe");
+	        
+	        //PELICULA (depende de DIRECTOR)
 	        stmt.execute(sqlPelicula);
 	        System.out.println("Tabla PELICULA creada o ya existe");
+	        
+	        // Tablas intermedias (dependen de PELICULA)
+	        stmt.execute(sqlPeliculaActor);
+	        System.out.println("Tabla PELICULA_ACTOR creada o ya existe");
+	        
+	        stmt.execute(sqlPeliculaGenero);
+	        System.out.println("Tabla PELICULA_GENERO creada o ya existe");
+	        
+	        // 4. Otras tablas dependientes
+	        stmt.execute(sqlComentario);
+	        System.out.println("Tabla COMENTARIO creada o ya existe");
 	        
 	        stmt.execute(sqlReserva);
 	        System.out.println("Tabla RESERVA creada o ya existe");
 	        
-		}catch (Exception e) {
+	        stmt.close();
+	        con.close();
+	        
+		} catch (Exception e) {
 			System.err.format("* Error inicializando base de datos: %s\n", e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -486,49 +534,62 @@ public class GestorBD {
 	}
 
 	/**
-	 * Registra una nueva película en la base de datos
-	 * @param pelicula Película a registrar
-	 * @return true si se registró correctamente, false en caso contrario
+	 * Registra una nueva película en la base de datos (CAMBIADA)
 	 */
 	public boolean registrarPelicula(Pelicula pelicula) {
 	    boolean registrado = false;
 	    
-	    // Verificar si la película ya existe
 	    if (existePelicula(pelicula.getTitulo())) {
 	        System.out.println("Ya existe una película con ese título");
 	        return false;
 	    }
 	    
-	    String sql = "INSERT INTO PELICULA (TITULO, DIRECTOR, REPARTO, GENEROS, AÑO, DURACION, EDAD_RECOMENDADA, PUNTUACION, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	    
-	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-	         PreparedStatement pst = con.prepareStatement(sql)) {
+	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING)) {
+	        con.setAutoCommit(false); // Iniciar transacción
 	        
-	        // Convertir ArrayList de reparto a String separado por comas
-	        String repartoStr = String.join(",", pelicula.getReparto());
-	        
-	        // Convertir ArrayList de géneros a String separado por comas
-	        ArrayList<String> generosStr = new ArrayList<>();
-	        for (Genero g : pelicula.getGeneros()) {
-	            generosStr.add(g.name()); 
-	        }
-	        String generos = String.join(",", generosStr);
-	        
-	        pst.setString(1, pelicula.getTitulo());
-	        pst.setString(2, pelicula.getDirector());
-	        pst.setString(3, repartoStr);
-	        pst.setString(4, generos);
-	        pst.setInt(5, pelicula.getAñoLanzamiento());
-	        pst.setInt(6, pelicula.getDuracion());
-	        pst.setString(7, pelicula.getEdadRecomendada().name()); // Asumiendo que es un enum
-	        pst.setDouble(8, pelicula.getPuntuacionMedia());
-	        pst.setDouble(9, pelicula.getPrecio());
-	        
-	        if (pst.executeUpdate() == 1) {
+	        try {
+	            //Obtener codigo director
+	            int idDirector = insertarOObtenerDirector(con, pelicula.getDirector());
+	            
+	            // Insertar pelicula
+	            String sqlPelicula = "INSERT INTO PELICULA (TITULO, ID_DIRECTOR, AÑO, DURACION, EDAD_RECOMENDADA, PUNTUACION, PRECIO) " +
+	                                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	            PreparedStatement pstPelicula = con.prepareStatement(sqlPelicula, Statement.RETURN_GENERATED_KEYS);
+	            pstPelicula.setString(1, pelicula.getTitulo());
+	            pstPelicula.setInt(2, idDirector);
+	            pstPelicula.setInt(3, pelicula.getAñoLanzamiento());
+	            pstPelicula.setInt(4, pelicula.getDuracion());
+	            pstPelicula.setString(5, pelicula.getEdadRecomendada().name());
+	            pstPelicula.setDouble(6, pelicula.getPuntuacionMedia());
+	            pstPelicula.setDouble(7, pelicula.getPrecio());
+	            
+	            pstPelicula.executeUpdate();
+	            ResultSet rs = pstPelicula.getGeneratedKeys();
+	            int idPelicula = 0;
+	            if (rs.next()) {
+	                idPelicula = rs.getInt(1);
+	            }
+	            rs.close();
+	            pstPelicula.close();
+	            
+	            // Insertar actores
+	            for (String nombreActor : pelicula.getReparto()) {
+	                int idActor = insertarOObtenerActor(con, nombreActor);
+	                insertarPeliculaActor(con, idPelicula, idActor);
+	            }
+	            
+	            // Insertar géneros
+	            for (Genero genero : pelicula.getGeneros()) {
+	                insertarPeliculaGenero(con, idPelicula, genero.name());
+	            }
+	            
+	            con.commit(); // Confirmar transacción
 	            System.out.println("Película registrada correctamente: " + pelicula.getTitulo());
 	            registrado = true;
-	        } else {
-	            System.out.println("No se pudo registrar la película");
+	            
+	        } catch (Exception e) {
+	            con.rollback(); // Revertir si hay error
+	            throw e;
 	        }
 	        
 	    } catch (Exception e) {
@@ -537,52 +598,39 @@ public class GestorBD {
 	    
 	    return registrado;
 	}
-
 	/**
-	 * Obtiene una película por su título
-	 * @param titulo Título de la película
-	 * @return Película si existe, null en caso contrario
+	 * Obtiene una película por su título (CAMBIADA)
 	 */
 	public Pelicula obtenerPelicula(String titulo) {
 	    Pelicula pelicula = null;
-	    String sql = "SELECT * FROM PELICULA WHERE TITULO = ?";
+	    
+	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE " +
+	                 "FROM PELICULA p " +
+	                 "INNER JOIN DIRECTOR d ON p.ID_DIRECTOR = d.ID " +
+	                 "WHERE p.TITULO = ?";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 	         PreparedStatement pst = con.prepareStatement(sql)) {
 	        
 	        pst.setString(1, titulo);
-	        
 	        ResultSet rs = pst.executeQuery();
 	        
 	        if (rs.next()) {
-	            String director = rs.getString("DIRECTOR");
-	            
-	            // Convertir String de reparto a ArrayList
-	            String repartoStr = rs.getString("REPARTO");
-	            ArrayList<String> reparto = new ArrayList<>();
-	            if (repartoStr != null && !repartoStr.isEmpty()) {
-	                for (String actor : repartoStr.split(",")) {
-	                    reparto.add(actor.trim());
-	                }
-	            }
-	            
-	            // Convertir String de géneros a ArrayList
-	            String generosStr = rs.getString("GENEROS");
-	            ArrayList<Genero> generos = new ArrayList<>();
-	            if (generosStr != null && !generosStr.isEmpty()) {
-	                for (String genero : generosStr.split(",")) {
-	                    generos.add(Genero.valueOf(genero.trim()));
-	                }
-	            }
-	            
+	            int idPelicula = rs.getInt("ID");
+	            String director = rs.getString("DIRECTOR_NOMBRE");
 	            int año = rs.getInt("AÑO");
 	            int duracion = rs.getInt("DURACION");
 	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
 	            double puntuacion = rs.getDouble("PUNTUACION");
 	            double precio = rs.getDouble("PRECIO");
 	            
-	            pelicula = new Pelicula(titulo, director, reparto, generos, año, duracion, edadRecomendada, puntuacion, precio);
+	            // Obtener reparto
+	            ArrayList<String> reparto = obtenerRepartoPelicula(con, idPelicula);
 	            
+	            // Obtener géneros
+	            ArrayList<Genero> generos = obtenerGenerosPelicula(con, idPelicula);
+	            
+	            pelicula = new Pelicula(titulo, director, reparto, generos, año, duracion, edadRecomendada, puntuacion, precio);
 	            System.out.println("Película encontrada: " + titulo);
 	        } else {
 	            System.out.println("No se encontró la película con título: " + titulo);
@@ -597,12 +645,14 @@ public class GestorBD {
 	}
 
 	/**
-	 * Carga todas las películas de la base de datos
-	 * @return Lista de películas
+	 * Carga todas las películas de la base de datos (CAMBIADA)
 	 */
 	public ArrayList<Pelicula> cargarPeliculas() {
 	    ArrayList<Pelicula> peliculas = new ArrayList<>();
-	    String sql = "SELECT * FROM PELICULA";
+	    
+	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE " +
+	                 "FROM PELICULA p " +
+	                 "INNER JOIN DIRECTOR d ON p.ID_DIRECTOR = d.ID";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 	         Statement stmt = con.createStatement()) {
@@ -610,32 +660,20 @@ public class GestorBD {
 	        ResultSet rs = stmt.executeQuery(sql);
 	        
 	        while (rs.next()) {
+	            int idPelicula = rs.getInt("ID");
 	            String titulo = rs.getString("TITULO");
-	            String director = rs.getString("DIRECTOR");
-	            
-	            // Convertir String de reparto a ArrayList
-	            String repartoStr = rs.getString("REPARTO");
-	            ArrayList<String> reparto = new ArrayList<>();
-	            if (repartoStr != null && !repartoStr.isEmpty()) {
-	                for (String actor : repartoStr.split(",")) {
-	                    reparto.add(actor.trim());
-	                }
-	            }
-	            
-	            // Convertir String de géneros a ArrayList
-	            String generosStr = rs.getString("GENEROS");
-	            ArrayList<Genero> generos = new ArrayList<>();
-	            if (generosStr != null && !generosStr.isEmpty()) {
-	                for (String genero : generosStr.split(",")) {
-	                    generos.add(Genero.valueOf(genero.trim()));
-	                }
-	            }
-	            
+	            String director = rs.getString("DIRECTOR_NOMBRE");
 	            int año = rs.getInt("AÑO");
 	            int duracion = rs.getInt("DURACION");
 	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
 	            double puntuacion = rs.getDouble("PUNTUACION");
 	            double precio = rs.getDouble("PRECIO");
+	            
+	            // Obtener reparto
+	            ArrayList<String> reparto = obtenerRepartoPelicula(con, idPelicula);
+	            
+	            // Obtener géneros
+	            ArrayList<Genero> generos = obtenerGenerosPelicula(con, idPelicula);
 	            
 	            Pelicula pelicula = new Pelicula(titulo, director, reparto, generos, año, duracion, edadRecomendada, puntuacion, precio);
 	            peliculas.add(pelicula);
@@ -651,6 +689,133 @@ public class GestorBD {
 	    return peliculas;
 	}
 
+	//Funciones para gestionar las nuevas tablas
+	
+	private int insertarOObtenerDirector(Connection con, String nombre) throws SQLException {
+	    // Comprueba si ya existe
+	    String sqlSelect = "SELECT ID FROM DIRECTOR WHERE NOMBRE = ?";
+	    PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
+	    pstSelect.setString(1, nombre);
+	    ResultSet rs = pstSelect.executeQuery();
+	    
+	    if (rs.next()) {
+	        int id = rs.getInt("ID");
+	        rs.close();
+	        pstSelect.close();
+	        return id;
+	    }
+	    rs.close();
+	    pstSelect.close();
+	    
+	    // Si no existe, insertar
+	    String sqlInsert = "INSERT INTO DIRECTOR (NOMBRE) VALUES (?)";
+	    PreparedStatement pstInsert = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+	    pstInsert.setString(1, nombre);
+	    pstInsert.executeUpdate();
+	    
+	    ResultSet rsKeys = pstInsert.getGeneratedKeys();
+	    int id = 0;
+	    if (rsKeys.next()) {
+	        id = rsKeys.getInt(1);
+	    }
+	    rsKeys.close();
+	    pstInsert.close();
+	    
+	    return id;
+	}
+
+	private int insertarOObtenerActor(Connection con, String nombre) throws SQLException {
+	    // Comprueba si ya existe
+	    String sqlSelect = "SELECT ID FROM ACTOR WHERE NOMBRE = ?";
+	    PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
+	    pstSelect.setString(1, nombre);
+	    ResultSet rs = pstSelect.executeQuery();
+	    
+	    if (rs.next()) {
+	        int id = rs.getInt("ID");
+	        rs.close();
+	        pstSelect.close();
+	        return id;
+	    }
+	    rs.close();
+	    pstSelect.close();
+	    
+	    // Si no existe, insertar
+	    String sqlInsert = "INSERT INTO ACTOR (NOMBRE) VALUES (?)";
+	    PreparedStatement pstInsert = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+	    pstInsert.setString(1, nombre);
+	    pstInsert.executeUpdate();
+	    
+	    ResultSet rsKeys = pstInsert.getGeneratedKeys();
+	    int id = 0;
+	    if (rsKeys.next()) {
+	        id = rsKeys.getInt(1);
+	    }
+	    rsKeys.close();
+	    pstInsert.close();
+	    
+	    return id;
+	}
+
+	/**
+	 * Tabla intermedia entre actor y pelicula
+	 */
+	private void insertarPeliculaActor(Connection con, int idPelicula, int idActor) throws SQLException {
+	    String sql = "INSERT INTO PELICULA_ACTOR (ID_PELICULA, ID_ACTOR) VALUES (?, ?)";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setInt(1, idPelicula);
+	    pst.setInt(2, idActor);
+	    pst.executeUpdate();
+	    pst.close();
+	}
+
+	/**
+	 * Tabla intermedia entre pelicula y genero
+	 */
+	private void insertarPeliculaGenero(Connection con, int idPelicula, String genero) throws SQLException {
+	    String sql = "INSERT INTO PELICULA_GENERO (ID_PELICULA, GENERO) VALUES (?, ?)";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setInt(1, idPelicula);
+	    pst.setString(2, genero);
+	    pst.executeUpdate();
+	    pst.close();
+	}
+
+	private ArrayList<String> obtenerRepartoPelicula(Connection con, int idPelicula) throws SQLException {
+	    ArrayList<String> reparto = new ArrayList<>();
+	    String sql = "SELECT a.NOMBRE FROM ACTOR a " +
+	                 "INNER JOIN PELICULA_ACTOR pa ON a.ID = pa.ID_ACTOR " +
+	                 "WHERE pa.ID_PELICULA = ?";
+	    
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setInt(1, idPelicula);
+	    ResultSet rs = pst.executeQuery();
+	    
+	    while (rs.next()) {
+	        reparto.add(rs.getString("NOMBRE"));
+	    }
+	    
+	    rs.close();
+	    pst.close();
+	    return reparto;
+	}
+
+	private ArrayList<Genero> obtenerGenerosPelicula(Connection con, int idPelicula) throws SQLException {
+	    ArrayList<Genero> generos = new ArrayList<>();
+	    String sql = "SELECT GENERO FROM PELICULA_GENERO WHERE ID_PELICULA = ?";
+	    
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setInt(1, idPelicula);
+	    ResultSet rs = pst.executeQuery();
+	    
+	    while (rs.next()) {
+	        generos.add(Genero.valueOf(rs.getString("GENERO")));
+	    }
+	    
+	    rs.close();
+	    pst.close();
+	    return generos;
+	}
 
 	/**
 	 * Actualiza la puntuación de una película en la base de datos

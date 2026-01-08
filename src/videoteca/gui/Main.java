@@ -71,6 +71,27 @@ public class Main {
 		//	gestor.registrarPelicula(p);
 		//}
 		
+		System.out.println("=== INICIALIZANDO BASE DE DATOS ===");
+		
+		// Inicializar tablas (crea las tablas si no existen)
+		gestor.inicializarTablas();
+		
+		System.out.println("\n=== REGISTRANDO PELÍCULAS EN LA BASE DE DATOS ===");
+		
+		// Registrar todas las películas en la BD
+		int peliculasRegistradas = 0;
+		for (Pelicula p : peliculas) {
+			if (gestor.registrarPelicula(p)) {
+				peliculasRegistradas++;
+			}
+		}
+		
+		System.out.println("\n=== RESUMEN ===");
+		System.out.println("Total de películas a registrar: " + peliculas.size());
+		System.out.println("Películas registradas exitosamente: " + peliculasRegistradas);
+		
+		System.out.println("\n=== CARGANDO PELÍCULAS DESDE LA BASE DE DATOS ===");
+		
 		
 		//Cargar peliculas de la BD
 		peliculas = gestor.cargarPeliculas();
@@ -86,7 +107,6 @@ public class Main {
 //		frame.setVisible(true);
 		
 		
-		gestor.inicializarTablas();
 		
 		//Para ir probando Ventana Catalogo
 		//new VentanaCatalogo(usuario, peliculas);
