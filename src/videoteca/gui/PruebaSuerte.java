@@ -107,8 +107,9 @@ public class PruebaSuerte extends JFrame {
     private JLabel preguntaLabel, tiempoLabel, descuentoLabel;
     private int tiempoRestante = 15;
     private Timer temporizador;
-    private int descuentoAcumulado = 0;
+    private double dineroAcumulado = 0.0;
     private boolean respuestaConfirmada = false;
+    private int preguntasEnsenadas = 0;
 
     private java.util.List<Pregunta> preguntas;
     private Pregunta preguntaActual;
@@ -134,6 +135,8 @@ public class PruebaSuerte extends JFrame {
                 new String[]{"1975", "1977", "1980", "1983"}, 1));
         preguntas.add(new Pregunta("¿Qué director es conocido como 'El maestro del suspense'?",
                 new String[]{"Alfred Hitchcock", "Stanley Kubrick", "Martin Scorsese", "Quentin Tarantino"}, 0));
+        preguntas.add(new Pregunta("¿Qué película NO ha ganado un Oscar a la mejor película?",
+                new String[]{"Anora", "Casablanca", "Moonlight", "La La Land"}, 3));
     }
 
     private void configurarInterfaz() {
@@ -152,7 +155,7 @@ public class PruebaSuerte extends JFrame {
             }
         });
 
-        // Panel superior
+        // -- PANEL SUPERIOR --
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
@@ -172,14 +175,21 @@ public class PruebaSuerte extends JFrame {
         panelSuperior.add(panelInfo, BorderLayout.SOUTH);
         add(panelSuperior, BorderLayout.NORTH);
 
-        // Tabla
+        
+        // -- TABLA --
         tableModel = new OpcionesTableModel();
         tablaOpciones = new JTable(tableModel);
+        
+        // Centrar las letras (la columna 0)
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        tablaOpciones.getColumnModel().getColumn(0).setCellRenderer(renderer);	
 
         tablaOpciones.setRowHeight(35);
         tablaOpciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaOpciones.setFont(new Font("Arial", Font.PLAIN, 14));
-
+        
+        // Añadir el key listener para que la tabla sea funcional con teclas
         tablaOpciones.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -191,7 +201,8 @@ public class PruebaSuerte extends JFrame {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Selecciona tu respuesta:"));
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior
+        
+        // -- PANEL INFERIOR --
         JPanel panelInferior = new JPanel(new BorderLayout());
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
@@ -206,23 +217,34 @@ public class PruebaSuerte extends JFrame {
         panelInferior.add(botonConfirmar, BorderLayout.SOUTH);
         add(panelInferior, BorderLayout.SOUTH);
     }
-
+    
     private void mostrarSiguientePregunta() {
-        if (preguntaIndex < preguntas.size()) {
-            preguntaActual = preguntas.get(preguntaIndex);
-            preguntaLabel.setText((preguntaIndex + 1) + ". " + preguntaActual.getTexto());
-            tableModel.setOpciones(preguntaActual.getOpciones());
-            tiempoRestante = 15;
-            barraTiempo.setMaximum(tiempoRestante);
-            barraTiempo.setValue(tiempoRestante);
-            tiempoLabel.setText("Tiempo: " + tiempoRestante + "s");
-            respuestaConfirmada = false;
-            tablaOpciones.clearSelection();
-            iniciarTemporizador();
-            preguntaIndex++;
-        } else {
-            finDelJuego();
-        }
+    	
+    	if (preguntasEnsenadas != 6) {
+    		if (preguntaIndex < preguntas.size()) {
+    			preguntasEnsenadas += 1;
+	            preguntaActual = preguntas.get(preguntaIndex);
+	            preguntaLabel.setText((preguntaIndex + 1) + ". " + preguntaActual.getTexto());
+	            
+	            // Funcionamiento del temporizador y la barra de tiempo
+	            tableModel.setOpciones(preguntaActual.getOpciones());
+	            tiempoRestante = 15;
+	            barraTiempo.setMaximum(tiempoRestante);
+	            barraTiempo.setValue(tiempoRestante);
+	            tiempoLabel.setText("Tiempo: " + tiempoRestante + "s");
+	            respuestaConfirmada = false;
+	            tablaOpciones.clearSelection();
+	            iniciarTemporizador();
+	            preguntaIndex++;
+            
+	        } else {
+	            finDelJuego();
+	        }
+    	} else {
+    		finDelJuego();
+    	}
+    	
+        
     }
 
     private void iniciarTemporizador() {
@@ -253,6 +275,10 @@ public class PruebaSuerte extends JFrame {
         mostrarSiguientePregunta();
     }
 
+    
+    /**
+     *  Confirma la respuesta del juego según la fila seleccionada.
+     */
     private void confirmarRespuesta() {
         int filaSeleccionada = tablaOpciones.getSelectedRow();
         if (filaSeleccionada == -1) {
@@ -266,32 +292,42 @@ public class PruebaSuerte extends JFrame {
         boolean correcta = (filaSeleccionada == preguntaActual.getRespuestaCorrecta());
 
         if (correcta) {
-            int descuento = calcularDescuento();
-            descuentoAcumulado += descuento;
+            double dinero = calcularDinero();
+            dineroAcumulado += dinero;
+            dineroAcumulado = Math.round(dineroAcumulado * 10.0) / 10.0;
+            
             JOptionPane.showMessageDialog(this,
-                    "¡Correcto!\n+" + descuento + "% de descuento.\nDescuento total: " + descuentoAcumulado + "%");
+                    "¡Correcto!\n+ " + dinero + " €.\nDinero total acumulado en el juego: " + dineroAcumulado + " €");
         } else {
             JOptionPane.showMessageDialog(this,
                     "Incorrecto.\nLa respuesta correcta era:\n" +
                     preguntaActual.getOpciones()[preguntaActual.getRespuestaCorrecta()]);
         }
 
-        descuentoLabel.setText("Descuento: " + descuentoAcumulado + "%");
+        descuentoLabel.setText("Dinero ganado: " + dineroAcumulado + " €");
         mostrarSiguientePregunta();
     }
 
-    private int calcularDescuento() {
-        if (tiempoRestante >= 12) return 5;
-        if (tiempoRestante >= 8) return 4;
-        if (tiempoRestante >= 5) return 3;
-        if (tiempoRestante >= 3) return 2;
-        return 1;
+    
+    /**
+     *  Calcula el dinero ganado en cada pregunta según el tiempo restante.
+     */
+    private double calcularDinero() {
+        if (tiempoRestante >= 12) return 0.5;
+        if (tiempoRestante >= 8) return 0.4;
+        if (tiempoRestante >= 5) return 0.3;
+        if (tiempoRestante >= 3) return 0.2;
+        return 0.1;
     }
 
+    
+    /**
+     *  Método para finalizar el juego.
+     */
     private void finDelJuego() {
         if (temporizador != null) temporizador.cancel();
         JOptionPane.showMessageDialog(this,
-                "¡Juego terminado!\n\nDescuento final: " + descuentoAcumulado + "%");
+                "¡Juego terminado!\n\nDinero final: " + dineroAcumulado + " €");
         dispose();
     }
 
@@ -311,7 +347,8 @@ public class PruebaSuerte extends JFrame {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return (columnIndex == 0) ? (char) ('A' + rowIndex) + "." : opciones[rowIndex];
+        	
+            return (columnIndex == 0) ? (char) ('A' + rowIndex) + "." : " " + opciones[rowIndex];
         }
 
         @Override
