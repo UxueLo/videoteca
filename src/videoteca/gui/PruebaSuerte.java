@@ -85,6 +85,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import videoteca.domain.Usuario;
+import videoteca.jdbc.GestorBD;
+
 import java.util.*;
 import java.util.Timer;
 
@@ -101,6 +105,7 @@ import java.util.Timer;
 
 public class PruebaSuerte extends JFrame {
 
+	private Usuario user;
     private JTable tablaOpciones;
     private JProgressBar barraTiempo;
     private JButton botonConfirmar;
@@ -116,8 +121,13 @@ public class PruebaSuerte extends JFrame {
     private int preguntaIndex = 0;
 
     private OpcionesTableModel tableModel;
+    
+    private GestorBD gestor;
 
-    public PruebaSuerte() {
+    public PruebaSuerte(Usuario user) {
+    	this.user = user;
+    	this.gestor = new GestorBD();
+    	
         inicializarPreguntas();
         configurarInterfaz();
         mostrarSiguientePregunta();
@@ -220,7 +230,7 @@ public class PruebaSuerte extends JFrame {
     
     private void mostrarSiguientePregunta() {
     	
-    	if (preguntasEnsenadas != 6) {
+    	if (preguntasEnsenadas != 5) {
     		if (preguntaIndex < preguntas.size()) {
     			preguntasEnsenadas += 1;
 	            preguntaActual = preguntas.get(preguntaIndex);
@@ -328,6 +338,10 @@ public class PruebaSuerte extends JFrame {
         if (temporizador != null) temporizador.cancel();
         JOptionPane.showMessageDialog(this,
                 "¡Juego terminado!\n\nDinero final: " + dineroAcumulado + " €");
+        
+        user.aumentarSaldo(dineroAcumulado);
+        gestor.actualizarSaldo(user.getNombre(), user.getSaldo());			// Añadir el dinero ganado al saldo del usuario
+        
         dispose();
     }
 

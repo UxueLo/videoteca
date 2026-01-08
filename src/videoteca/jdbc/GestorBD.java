@@ -35,14 +35,17 @@ public class GestorBD {
 	 * Inicializa la base de datos creando las tablas si no existen
 	 */
 	public void inicializarTablas() {
+		// CREACIÓN DE TABLAS:
+		// Usuario
 		String sqlUsuario = "CREATE TABLE IF NOT EXISTS USUARIO (" +
 				"NOMBRE TEXT PRIMARY KEY," +
 				"EMAIL TEXT NOT NULL UNIQUE, " +
 				"EDAD INTEGER NOT NULL, " +
 				"FECHA_NACIMIENTO TEXT NOT NULL, " +
 				"CONTRASEÑA TEXT NOT NULL, " +
-				"SALDO INTEGER DEFAULT 0)";
+				"SALDO DOUBLE DEFAULT 0.0)";
 		
+		// Comentario
 		String sqlComentario = "CREATE TABLE IF NOT EXISTS COMENTARIO (" +
 				"NOMBRE_USUARIO TEXT NOT NULL," +
 				"NOMBRE_PELICULA TEXT NOT NULL, " +
@@ -64,7 +67,7 @@ public class GestorBD {
 				"PRECIO DOUBLE NOT NULL," +
 				"FOREIGN KEY (ID_DIRECTOR) REFERENCES DIRECTOR(ID))";
 		
-		
+		// Reserva
 	    String sqlReserva = "CREATE TABLE IF NOT EXISTS RESERVA (" +
 	            "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
 	            "NOMBRE_USUARIO TEXT NOT NULL," +
@@ -174,7 +177,7 @@ public class GestorBD {
 				int edad = rs.getInt("EDAD");
 				String fechaStr = rs.getString("FECHA_NACIMIENTO");
 				LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
-				int saldo = rs.getInt("SALDO");
+				double saldo = rs.getDouble("SALDO");
 				
 				usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
 				usuario.aumentarSaldo(saldo); // Actualizar el saldo
@@ -243,7 +246,7 @@ public class GestorBD {
 			pst.setInt(3, usuario.getEdad());
 			pst.setString(4, usuario.getFechaNacimineto().toString());
 			pst.setString(5, usuario.getContraseña());
-			pst.setInt(6, usuario.getSaldo());
+			pst.setDouble(6, usuario.getSaldo());
 			
 			if (pst.executeUpdate() == 1) {
 				System.out.println("Usuario registrado correctamente: " + usuario.getNombre());
@@ -282,7 +285,7 @@ public class GestorBD {
 				int edad = rs.getInt("EDAD");
 				String fechaStr = rs.getString("FECHA_NACIMIENTO");
 				LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
-				int saldo = rs.getInt("SALDO");
+				double saldo = rs.getDouble("SALDO");
 				
 				usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
 				usuario.aumentarSaldo(saldo);
@@ -306,14 +309,15 @@ public class GestorBD {
 	 * @param nuevoSaldo Nuevo saldo
 	 * @return true si se actualizó correctamente, false en caso contrario
 	 */
-	public boolean actualizarSaldo(String nombreUsuario, int nuevoSaldo) {
+	public boolean actualizarSaldo(String nombreUsuario, double nuevoSaldo) {
 		boolean actualizado = false;
+		
 		String sql = "UPDATE USUARIO SET SALDO = ? WHERE NOMBRE = ?";
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 		     PreparedStatement pst = con.prepareStatement(sql)) {
 			
-			pst.setInt(1, nuevoSaldo);
+			pst.setDouble(1, nuevoSaldo);
 			pst.setString(2, nombreUsuario);
 			
 			if (pst.executeUpdate() == 1) {
@@ -352,7 +356,7 @@ public class GestorBD {
 	            String fechaStr = rs.getString("FECHA_NACIMIENTO");
 	            LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
 	            String contraseña = rs.getString("CONTRASEÑA");
-	            int saldo = rs.getInt("SALDO");
+	            double saldo = rs.getDouble("SALDO");
 	            
 	            usuario = new Usuario(nombre, email, edad, fechaNacimiento, contraseña);
 	            usuario.aumentarSaldo(saldo);

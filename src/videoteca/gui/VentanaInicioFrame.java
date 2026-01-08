@@ -202,7 +202,7 @@ public class VentanaInicioFrame extends JFrame{
                                 else if (opcion.equals("Carrito")) 
                                     new VentanaCarrito(VentanaInicioFrame.this).setVisible(true);
                                 else if (opcion.equals("Prueba Suerte")) 
-                                    new PruebaSuerte().setVisible(true);
+                                    new PruebaSuerte(usuario).setVisible(true);
                             }
                             break;
                         case "Cerrar sesion":

@@ -11,7 +11,7 @@ public class Usuario {
 	private int edad;
 	private LocalDate fechaNacimineto;
 	private String contraseña;
-	private int saldo = 0;
+	private double saldo = 0.0;
 	private int intentosHechos;
 	private LocalDate ultimoDiaIntento;
 	private ArrayList<Reserva> peliculasAlquiladas = new ArrayList<Reserva>();
@@ -33,7 +33,7 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public void aumentarSaldo(int suma) {
+	public void aumentarSaldo(double suma) {
 		saldo += suma;
 	}
 
@@ -55,7 +55,7 @@ public class Usuario {
 		return contraseña;
 	}
 
-	public int getSaldo() {
+	public double getSaldo() {
 		return saldo;
 	}
 

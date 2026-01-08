@@ -275,7 +275,7 @@ public class UsuarioFrame extends JFrame{
 		holaUsuario.setBounds(300,10,250,40);
 		holaUsuario.setForeground(colorTexto);
 		holaUsuario.setFont(fuenteTexto);
-		JLabel saldoUsuario = new JLabel("Saldo: "+this.usuario.getSaldo());
+		JLabel saldoUsuario = new JLabel("Saldo: "+this.usuario.getSaldo() + " €");
 		saldoUsuario.setBounds(300,60,250,40);
 		saldoUsuario.setForeground(colorTexto);
 		saldoUsuario.setBackground(new Color(128,128,128));
