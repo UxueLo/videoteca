@@ -124,8 +124,8 @@ public class PruebaSuerte extends JFrame {
     
     private GestorBD gestor;
 
-    public PruebaSuerte(Usuario user) {
-    	this.user = user;
+    public PruebaSuerte(VentanaInicioFrame ventanaInicio) {
+    	this.user = ventanaInicio.usuario;
     	this.gestor = new GestorBD();
     	
         inicializarPreguntas();
@@ -335,6 +335,7 @@ public class PruebaSuerte extends JFrame {
      *  Método para finalizar el juego.
      */
     private void finDelJuego() {
+    	
         if (temporizador != null) temporizador.cancel();
         JOptionPane.showMessageDialog(this,
                 "¡Juego terminado!\n\nDinero final: " + dineroAcumulado + " €");
