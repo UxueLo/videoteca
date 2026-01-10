@@ -195,6 +195,7 @@ public class VentanaCarrito extends JFrame {
             //Añadir peliculas al usuario
             for (Pelicula p : carrito) {
             	gestor.registrarReserva(usuario, new Reserva(p, LocalDate.now()));
+            	usuario.setPuntos(usuario.getPuntos()+1);
             }
             
             carrito.clear();

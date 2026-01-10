@@ -217,12 +217,12 @@ public class UsuarioFrame extends JFrame{
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				botonReseñar.setBackground(colorTexto);
+				botonReseñar.setBackground(new Color(111, 130, 179));
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				botonReseñar.setBackground(new Color(158,0,0));
+				botonReseñar.setBackground(new Color(81, 100, 149));
 			}
 			
 			@Override
