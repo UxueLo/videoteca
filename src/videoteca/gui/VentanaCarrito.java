@@ -36,6 +36,7 @@ public class VentanaCarrito extends JFrame {
     }
 
     private void inicializarVentana() {
+    	setIconImage(new ImageIcon("Images/logo.png").getImage());
         setTitle("Carrito de Películas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

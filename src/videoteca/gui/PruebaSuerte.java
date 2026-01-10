@@ -150,11 +150,13 @@ public class PruebaSuerte extends JFrame {
     }
 
     private void configurarInterfaz() {
-        setTitle("Prueba tu suerte - Trivia Cinematográfica");
+        setTitle("Prueba suerte - Trivia Cinematográfica");
         setSize(600, 500);
         setLayout(new BorderLayout(10, 10));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon("Images/logo.png").getImage());
+        setResizable(false);
         
         addWindowListener(new WindowAdapter() {
             @Override
@@ -297,7 +299,6 @@ public class PruebaSuerte extends JFrame {
         }
 
         respuestaConfirmada = true;
-        temporizador.cancel();
 
         boolean correcta = (filaSeleccionada == preguntaActual.getRespuestaCorrecta());
 

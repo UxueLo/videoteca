@@ -76,7 +76,7 @@ public class VentanaComentario extends JFrame {
 			texto.setText(com.getTexto());
 			texto.setFont(new Font("Arial", Font.PLAIN, 20));
 		} else {
-			texto.setText("\n \n \n No hay ningún comentrio en esta reseña");
+			texto.setText("\n\n\n\nNo hay ningún comentrio en esta reseña");
 			texto.setFont(new Font("Arial", Font.ITALIC, 20));
 		}
 		
