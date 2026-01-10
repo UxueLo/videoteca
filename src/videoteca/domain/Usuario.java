@@ -62,7 +62,7 @@ public class Usuario {
 	}
 
 	public double getSaldo() {
-		return saldo;
+		return Math.round(this.saldo * 100.0) / 100.0;
 	}
 
 	public ArrayList<Reserva> getPeliculasAlquiladas() {
