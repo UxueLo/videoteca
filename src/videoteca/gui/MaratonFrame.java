@@ -56,7 +56,7 @@ public class MaratonFrame extends JFrame{
 	    // Configuración de ventana
 	    setTitle("Manta y Maraton");
 	    setDefaultCloseOperation(HIDE_ON_CLOSE);
-	    setSize(750, 800);
+	    setSize(900, 950);
 	    setLocationRelativeTo(null);
 	    setResizable(false);
 	    this.getContentPane().setBackground(colorFondo);
@@ -315,7 +315,7 @@ public class MaratonFrame extends JFrame{
 	private void obtenerCombinacionesAux(int HorasMin, int HorasMax, double presupuesto, ArrayList<ArrayList<Pelicula>> combinaciones, 
 	        ArrayList<Pelicula> aux, ArrayList<Pelicula> peliculas, int transcurrido, int indice) {
 		
-		if (combinaciones.size() >= 100) {//para evitar que pete
+		if (combinaciones.size() >= 50) {//para evitar que pete
 	        return;
 	    }
 	    // CASO BASE: el aux es una combinacion valida, lo añadimos al resultado
