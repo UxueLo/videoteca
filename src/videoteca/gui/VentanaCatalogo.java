@@ -77,6 +77,7 @@ public class VentanaCatalogo extends JFrame {
     }
 
     private void inicializarVentana() {
+    	setIconImage(new ImageIcon("Images/logo.png").getImage());
         setTitle("Catálogo de Películas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

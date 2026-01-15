@@ -36,6 +36,7 @@ public class VentanaCarrito extends JFrame {
     }
 
     private void inicializarVentana() {
+    	setIconImage(new ImageIcon("Images/logo.png").getImage());
         setTitle("Carrito de Películas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -194,6 +195,7 @@ public class VentanaCarrito extends JFrame {
             //Añadir peliculas al usuario
             for (Pelicula p : carrito) {
             	gestor.registrarReserva(usuario, new Reserva(p, LocalDate.now()));
+            	usuario.setPuntos(usuario.getPuntos()+1);
             }
             
             carrito.clear();

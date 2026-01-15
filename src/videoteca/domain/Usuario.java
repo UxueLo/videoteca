@@ -11,11 +11,12 @@ public class Usuario {
 	private int edad;
 	private LocalDate fechaNacimineto;
 	private String contraseña;
-	private int saldo = 0;
+	private double saldo = 0.0;
 	private int intentosHechos;
 	private LocalDate ultimoDiaIntento;
 	private ArrayList<Reserva> peliculasAlquiladas = new ArrayList<Reserva>();
 	private ArrayList<Pelicula> carritoUsuario= new ArrayList<Pelicula>();
+	private int puntos;		// cada vez que alquila una película se le añadirá un punto, que podrá gastar en el juego para conseguir dinero con preguntas
 	
 	
 	//constructor
@@ -33,10 +34,15 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public void aumentarSaldo(int suma) {
+	public void aumentarSaldo(double suma) {
 		saldo += suma;
 	}
 
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
+	}
+
+	
 	//getters
 	public String getNombre() {
 		return nombre;
@@ -55,8 +61,8 @@ public class Usuario {
 		return contraseña;
 	}
 
-	public int getSaldo() {
-		return saldo;
+	public double getSaldo() {
+		return Math.round(this.saldo * 100.0) / 100.0;
 	}
 
 	public ArrayList<Reserva> getPeliculasAlquiladas() {
@@ -73,6 +79,10 @@ public class Usuario {
 
 	public int getIntentosHechos() {
 		return intentosHechos;
+	}
+	
+	public int getPuntos() {
+		return puntos;
 	}
 
 	public void incrementarIntentos() {
