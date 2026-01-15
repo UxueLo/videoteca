@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
@@ -161,31 +163,81 @@ public class MaratonFrame extends JFrame{
 	    btnGenerar.setForeground(Color.WHITE);
 	    btnGenerar.setFont(new Font("Arial", Font.BOLD, 16));
 	    
-	    // EVENTO DEL BOTÓN
+	    // BOTON
+	 // BOTON EVENTO CORREGIDO PARA PROGRESO REAL
 	    btnGenerar.addActionListener(e -> {
-	        int min = (int) horasMin.getSelectedItem();
-	        int max = (int) horasMax.getSelectedItem();
-	        
-	        // Corregir automaticamente si el usuario mete la duracion maxima menor que la minima
-	        if (min > max) {
-	           
-	            horasMax.setSelectedItem(min);
-	            max = min; 
-	            
-	            JOptionPane.showMessageDialog(this, "Se ha cambiado la duracion maxima(se ha igualado con la minima) ya que era invalida: era menor que la duracion minima.");
-	        }
-
-	     // los generos elegidos
-	        ArrayList<Genero> generosElegidos = new ArrayList<>();
+	        int minH = (int) horasMin.getSelectedItem();
+	        int maxH = (int) horasMax.getSelectedItem();
+	        double pres = presupuestoSlider.getValue();
+	        EdadRecomendada ed = (EdadRecomendada) edad.getSelectedItem();
+	        ArrayList<Genero> gens = new ArrayList<>();
 	        for (JCheckBox cb : generos) {
-	            if (cb.isSelected()) {
-	                generosElegidos.add(Genero.valueOf(cb.getText()));
-	            }
+	        	if (cb.isSelected()) {
+	        		gens.add(Genero.valueOf(cb.getText()));
+	        	}
 	        }
 
-	        ArrayList<ArrayList<Pelicula>> resultados = obtenerCombinaciones(min, max, generosElegidos, (EdadRecomendada) edad.getSelectedItem(), presupuestoSlider.getValue());
-	       
-	        mostrarResultados(resultados);
+	       //PANTALLA DE CARGA: IAg
+	        centro.removeAll();
+	        JPanel panelCarga = new JPanel(new GridBagLayout()); 
+	        panelCarga.setBackground(colorFondo);
+	        
+	        JLabel lblCargando = new JLabel("Buscando las mejores combinaciones...");
+	        lblCargando.setForeground(Color.WHITE);
+	        lblCargando.setFont(new Font("Arial", Font.ITALIC, 18));
+	        
+	        JProgressBar barra = new JProgressBar(0, 100);
+	        barra.setValue(0);
+	        barra.setIndeterminate(false); 
+	        barra.setStringPainted(true);
+	        barra.setPreferredSize(new Dimension(300, 20));
+	        barra.setForeground(colorPrincipal);
+	        barra.setBackground(Color.BLACK);
+
+	        JPanel content = new JPanel(new GridLayout(0, 1, 0, 20));
+	        content.setBackground(colorFondo);
+	        content.add(lblCargando);
+	        content.add(barra);
+	        
+	        panelCarga.add(content);
+	        centro.add(panelCarga, BorderLayout.CENTER);
+	        centro.revalidate();
+	        centro.repaint();
+
+	        // 3. SwingWorker con animación forzada
+	        new javax.swing.SwingWorker<ArrayList<ArrayList<Pelicula>>, Integer>() {
+	            @Override
+	            protected ArrayList<ArrayList<Pelicula>> doInBackground() throws Exception {
+	                // Realizamos el cálculo real (esto tardará milisegundos)
+	                ArrayList<ArrayList<Pelicula>> resultadosReales = obtenerCombinaciones(minH, maxH, gens, ed, pres);
+	                
+	                // Forzamos la animación visual de la barra de 0 a 100
+	                // Independientemente de lo que tarde el cálculo
+	                for (int i = 0; i <= 100; i++) {
+	                    Thread.sleep(10); // Controla la velocidad de la carga (10ms * 100 = 1 segundo total)
+	                    publish(i); 
+	                }
+	                
+	                return resultadosReales;
+	            }
+
+	            @Override
+	            protected void process(List<Integer> chunks) {
+	                // Actualizamos la barra con el valor de la animación
+	                int progresoAnimado = chunks.get(chunks.size() - 1);
+	                barra.setValue(progresoAnimado);
+	            }
+
+	            @Override
+	            protected void done() {
+	                try {
+	                    // Una vez termina la animación, mostramos los resultados
+	                    mostrarResultados(get());
+	                } catch (Exception ex) {
+	                    ex.printStackTrace();
+	                }
+	            }
+	        }.execute();
 	    });
 	    panelBoton.add(btnGenerar);
 	    centro.add(panelBoton, BorderLayout.SOUTH);
