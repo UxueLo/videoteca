@@ -133,7 +133,7 @@ public class MaratonFrame extends JFrame{
 	    horasMax.setSelectedItem(5);
 	    panelFiltros.add(crearFilaFormulario("Edad Recomendada:", edad = new JComboBox<>(EdadRecomendada.values())));
 
-	    // FILA PRESUPUESTO: IAg
+	    // FILA PRESUPUESTO:
 	    JPanel filaPres = new JPanel(new BorderLayout(10, 0));
 	    filaPres.setBackground(colorFondo);
 	    presupuestoLabel = new JLabel("Presupuesto: 60€");
@@ -282,7 +282,7 @@ public class MaratonFrame extends JFrame{
 
 	    javax.swing.JScrollPane scroll = new JScrollPane(contenedorScroll);
 	    scroll.setBorder(null);
-	    scroll.getVerticalScrollBar().setUnitIncrement(16); //IAg: scroll mas suave
+	    scroll.getVerticalScrollBar().setUnitIncrement(16); 
 	    centro.add(scroll, BorderLayout.CENTER);
 
 	    centro.revalidate();
