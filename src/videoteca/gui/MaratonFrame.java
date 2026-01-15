@@ -16,19 +16,16 @@ public class MaratonFrame extends JFrame{
 	private Color colorFondo= new Color(35, 35, 35);
 	
 	
-	public MaratonFrame(Usuario usuario, ArrayList<Pelicula> peliculas) {
-		 // Asegurarse de que el usuario no sea null
-	    if (usuario == null) {
-	        this.usuario = new Usuario("", "", 0, null, "");
-	    } else {
-	        this.usuario = usuario;
-	    }
-	    this.peliculas = peliculas;
+	public MaratonFrame(VentanaInicioFrame ventanaInicio, ArrayList<Pelicula> peliculas) {
+		//ASIGNACION DE USUARIO Y PELICULAS POR HACER
+	    this.usuario=ventanaInicio.usuario;
+	    this.peliculas=peliculas;
 	    
 	    //Configuracion de la ventana
 	    setTitle("Manta y Maraton");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setSize(700, 700);
+	    setLocationRelativeTo(null);
 	    setResizable(false);
 	    setBackground(colorFondo);
 	    setIconImage(new ImageIcon("Images/logo.png").getImage());

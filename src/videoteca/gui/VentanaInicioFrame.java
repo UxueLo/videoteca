@@ -147,7 +147,7 @@ public class VentanaInicioFrame extends JFrame{
 		menu.setPreferredSize(new Dimension(300, 0));
 		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
-		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catálogo", "Carrito", "Prueba Suerte", "Cerrar sesion"};
+		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catálogo", "Carrito", "Maraton y manta", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
 			JLabel campo= new JLabel();
 			//si es el usuario: foto y nombre
@@ -186,6 +186,7 @@ public class VentanaInicioFrame extends JFrame{
                             new VentanaCatalogo(VentanaInicioFrame.this, peliculas).setVisible(true);
                             break;
                         case "Usuario":
+                        case "Maraton y manta":
                         case "Carrito":
                         case "Prueba Suerte":
                             // Requieren usuario - VERIFICACIÓN CORREGIDA
@@ -199,6 +200,8 @@ public class VentanaInicioFrame extends JFrame{
                             } else {
                                 if (opcion.equals("Usuario")) 
                                     new UsuarioFrame(VentanaInicioFrame.this).setVisible(true);
+                                else if(opcion.equals("Maraton y manta"))
+                                	new MaratonFrame(VentanaInicioFrame.this, peliculas).setVisible(true);
                                 else if (opcion.equals("Carrito")) 
                                     new VentanaCarrito(VentanaInicioFrame.this).setVisible(true);
                                 else if (opcion.equals("Prueba Suerte")) 
