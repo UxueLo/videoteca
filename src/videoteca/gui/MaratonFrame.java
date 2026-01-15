@@ -2,6 +2,7 @@ package videoteca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -17,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -25,6 +27,7 @@ import videoteca.domain.EdadRecomendada;
 import videoteca.domain.Genero;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 
 public class MaratonFrame extends JFrame{
 	private Usuario usuario;
@@ -168,9 +171,18 @@ public class MaratonFrame extends JFrame{
 	            
 	            JOptionPane.showMessageDialog(this, "Se ha cambiado la duracion maxima(se ha igualado con la minima) ya que era invalida: era menor que la duracion minima.");
 	        }
-	        
-	        // Aquí ya lanzas tu lógica sabiendo que min <= max
-	        
+
+	     // los generos elegidos
+	        ArrayList<Genero> generosElegidos = new ArrayList<>();
+	        for (JCheckBox cb : generos) {
+	            if (cb.isSelected()) {
+	                generosElegidos.add(Genero.valueOf(cb.getText()));
+	            }
+	        }
+
+	        ArrayList<ArrayList<Pelicula>> resultados = obtenerCombinaciones(min, max, generosElegidos, (EdadRecomendada) edad.getSelectedItem(), presupuestoSlider.getValue());
+	       
+	        mostrarResultados(resultados);
 	    });
 	    panelBoton.add(btnGenerar);
 	    centro.add(panelBoton, BorderLayout.SOUTH);
@@ -179,7 +191,102 @@ public class MaratonFrame extends JFrame{
 	    centro.repaint();
 	}
 
-	// metodo para que los combobox no queden demasiado grandes
+	private void mostrarResultados(ArrayList<ArrayList<Pelicula>> combinaciones) {
+		centro.removeAll();
+	    centro.setLayout(new BorderLayout());
+
+	    // boton para volver a los filtros
+	    JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    panelSuperior.setBackground(colorFondo);
+	    JButton btnVolver = new JButton(" ← ");
+	    btnVolver.setBackground(colorPrincipal);
+	    btnVolver.setForeground(Color.WHITE);
+	    btnVolver.setFont(new Font("Arial", Font.BOLD, 12));
+	    btnVolver.addActionListener(e -> inicializarVistaFiltros()); // Repinta los filtros
+	    panelSuperior.add(btnVolver);
+	    centro.add(panelSuperior, BorderLayout.NORTH);
+
+	    // Combinaciones
+	    JPanel panelLista = new JPanel(new GridLayout(0, 1, 0, 10)); 
+	    panelLista.setBackground(colorFondo);
+	    //en caso de que no haya combinaciones: mostrar mensaje. Sino: mostrar combinaciones.
+	    if (combinaciones.isEmpty()) {
+	        JLabel sinResultados = new JLabel("Lo sentimos :(! No hay maratones que cumplan con tus especificaciones.");
+	        sinResultados.setForeground(Color.WHITE);
+	        sinResultados.setHorizontalAlignment(JLabel.CENTER);
+	        panelLista.add(sinResultados);
+	    } else {
+	        for (ArrayList<Pelicula> maraton : combinaciones) {
+	            panelLista.add(crearSeccionMaraton(maraton));
+	        }
+	    }
+	    
+	    JPanel contenedorScroll = new JPanel(new BorderLayout());
+	    contenedorScroll.setBackground(colorFondo);
+	    contenedorScroll.add(panelLista, BorderLayout.NORTH);
+
+	    javax.swing.JScrollPane scroll = new JScrollPane(contenedorScroll);
+	    scroll.setBorder(null);
+	    scroll.getVerticalScrollBar().setUnitIncrement(16); //IAg: scroll mas suave
+	    centro.add(scroll, BorderLayout.CENTER);
+
+	    centro.revalidate();
+	    centro.repaint();
+	}
+	
+
+	private Component crearSeccionMaraton(ArrayList<Pelicula> maraton) {
+		JPanel combinacion = new JPanel(new BorderLayout());
+	    combinacion.setBackground(new Color(45, 45, 45));
+	    combinacion.setBorder(BorderFactory.createCompoundBorder(
+	        BorderFactory.createEmptyBorder(5, 10, 5, 10),
+	        BorderFactory.createLineBorder(colorPrincipal, 1)
+	    ));
+
+	    // Poster
+	    JPanel panelPelis = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+	    panelPelis.setBackground(new Color(45, 45, 45));
+	    
+	    double precioTotal = 0;
+	    for (Pelicula p : maraton) {
+	        JPanel peliIndividual = new JPanel(new BorderLayout());
+	        peliIndividual.setBackground(new Color(45, 45, 45));
+	        //poster
+	        JLabel lblPoster = GestionImagenes.cargarImagen(p.getTitulo(), 100, 150);
+	        lblPoster.setPreferredSize(new Dimension(70, 100));
+	        lblPoster.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+	        //titulo
+	        JLabel lblNombre = new JLabel(p.getTitulo());
+	        lblNombre.setForeground(Color.LIGHT_GRAY);
+	        lblNombre.setFont(new Font("Arial", Font.BOLD, 10));
+	        lblNombre.setHorizontalAlignment(JLabel.CENTER);
+
+	        peliIndividual.add(lblPoster, BorderLayout.CENTER);
+	        peliIndividual.add(lblNombre, BorderLayout.SOUTH);
+	        
+	        panelPelis.add(peliIndividual);
+	        precioTotal += p.getPrecio();
+	    }
+
+	    //precio
+	    JLabel lblPrecio = new JLabel(String.format("%.2f €", precioTotal));
+	    lblPrecio.setForeground(colorPrincipal);
+	    lblPrecio.setFont(new Font("Arial", Font.BOLD, 20));
+	    lblPrecio.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+
+	    combinacion.add(panelPelis, BorderLayout.CENTER);
+	    combinacion.add(lblPrecio, BorderLayout.EAST);
+
+	    return combinacion;
+	}
+
+	private ArrayList<ArrayList<Pelicula>> obtenerCombinaciones(int min, int max, ArrayList<Genero> generosElegidos,
+			EdadRecomendada selectedItem, int value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// metodo para que los combobox no queden demasiado grandes: IAg
 	private JPanel crearFilaFormulario(String texto, JComboBox<?> combo) {
 	    JPanel p = new JPanel(new BorderLayout());
 	    p.setBackground(colorFondo);
