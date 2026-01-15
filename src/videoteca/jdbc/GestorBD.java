@@ -134,6 +134,8 @@ public class GestorBD {
 	        
 	        stmt.execute(sqlEdadRecomendada);
 	        System.out.println("Tabla EDAD_RECOMENDADA creada o ya existe");
+	        //Hay que inicializar las edades recomendadas para que pelicula no de un error
+	        inicializarEdadesRecomendadas(con);
 	        
 	        //PELICULA (depende de DIRECTOR y EdadRecomendada)
 	        stmt.execute(sqlPelicula);
@@ -142,9 +144,6 @@ public class GestorBD {
 	        // Tablas intermedias (dependen de PELICULA)
 	        stmt.execute(sqlPeliculaActor);
 	        System.out.println("Tabla PELICULA_ACTOR creada o ya existe");
-	        
-	        stmt.execute(sqlPeliculaGenero);
-	        System.out.println("Tabla PELICULA_GENERO creada o ya existe");
 	        
 	        // 4. Otras tablas dependientes
 	        stmt.execute(sqlComentario);
