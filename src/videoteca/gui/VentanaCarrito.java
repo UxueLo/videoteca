@@ -120,7 +120,12 @@ public class VentanaCarrito extends JFrame {
 
             JLabel precio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()));
             precio.setForeground(Color.WHITE);
-
+            Font fuente= new Font("Arial", Font.BOLD, 18);
+            nombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+            anyo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            duracion.setAlignmentX(Component.CENTER_ALIGNMENT);
+            precio.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
             info.add(nombre);
             info.add(anyo);
             info.add(duracion);
