@@ -306,24 +306,32 @@ public class MaratonFrame extends JFrame{
 	}
 private void obtenerCombinacionesAux(int HorasMin, int HorasMax, double presupuesto, ArrayList<ArrayList<Pelicula>> combinaciones, 
 		ArrayList<Pelicula> aux, ArrayList<Pelicula> peliculas, int transcurrido) {
-	//CASO BASE: no hay peliculas que cumplan las especificaciones
-	if (peliculas.size()==0) {
-		return;
-	}
-	//CASO BASE: hemos encontrado una combinacion interesante
-	else if (presupuesto>0 && transcurrido<=HorasMax && transcurrido>=HorasMin && !combinaciones.contains(aux)) {
-		combinaciones.add(aux);
-	}
-	//CASO RECURSIVO:
-	else {
-		for (Pelicula p:peliculas) {
-			if (!aux.contains(p)) {
-				aux.add(p);
-				obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto-p.getPrecio(), combinaciones, aux, peliculas, transcurrido+p.getDuracion());
-				aux.removeLast();
-			}
-		}
-	}
+	//CASO BASE: hemos encontrado una valida
+	if (transcurrido >= HorasMin && transcurrido <= HorasMax) {
+		if (!combinaciones.contains(aux)) {
+            combinaciones.add(new ArrayList<>(aux));
+        }
+    }
+
+    // CASO BASE: nos hemos pasado de tiempo o de presupuesto
+	else if (transcurrido > HorasMax || presupuesto < 0 ) {
+        return;
+    }
+	//CASO RECURSIVO
+    else {
+    	for (Pelicula p : peliculas) {
+            if (!aux.contains(p)) {
+                
+                if (p.getPrecio() <= presupuesto && (transcurrido + p.getDuracion()) <= HorasMax) {
+                    aux.add(p);
+                    obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto - p.getPrecio(), 
+                            combinaciones, aux, peliculas, transcurrido + p.getDuracion());
+                    aux.remove(aux.size() - 1);
+                }
+            }
+        }
+    }
+
 }
 	
 // metodo para que los combobox no queden demasiado grandes: IAg
