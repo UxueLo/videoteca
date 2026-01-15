@@ -576,7 +576,6 @@ public class GestorBD {
 		System.out.println("Edades recomendadas inicializadas correctamente");
 	}
 	
-	
 	// Funciones de peliculas
 	
 	/**
