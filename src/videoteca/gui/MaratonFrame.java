@@ -1,10 +1,14 @@
 package videoteca.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import videoteca.domain.Pelicula;
 import videoteca.domain.Usuario;
@@ -27,7 +31,22 @@ public class MaratonFrame extends JFrame{
 	    setSize(700, 700);
 	    setLocationRelativeTo(null);
 	    setResizable(false);
-	    setBackground(colorFondo);
+	    this.getContentPane().setBackground(colorFondo);
 	    setIconImage(new ImageIcon("Images/logo.png").getImage());
+	    
+	    //Layouts principales
+	    setLayout(new BorderLayout());
+	    //texto de pagina
+	    JLabel tituloPagina= new JLabel("Maraton y manta");
+	    tituloPagina.setFont(new Font("Arial", Font.BOLD, 20));
+	    tituloPagina.setForeground(colorPrincipal);
+	    tituloPagina.setHorizontalAlignment(JLabel.CENTER);
+	    add(tituloPagina, BorderLayout.NORTH);
+	    //centro de la ventana
+	    JPanel centro= new JPanel(new BorderLayout());
+	    centro.setOpaque(true);
+	    centro.setBackground(Color.black);
+	    add(centro, BorderLayout.CENTER);
+	    
 	}
 }
