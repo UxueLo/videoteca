@@ -284,55 +284,63 @@ public class MaratonFrame extends JFrame{
 	}
 
 	private ArrayList<ArrayList<Pelicula>> obtenerCombinaciones(int HorasMin, int HorasMax, ArrayList<Genero> generosElegidos,
-			EdadRecomendada edadRecomendada, double presupuesto) {
-		//filtracion
-		ArrayList<Pelicula> peliculasFiltradas= new ArrayList<Pelicula>();
-		for (Pelicula p:peliculas) {
-			boolean añadir=false;
-			for (Genero g: generosElegidos) {
-				if(p.getGeneros().contains(g)) {
-					añadir=true;
-				}
-			}
-			if (añadir==true && p.getEdadRecomendada()==edadRecomendada) {
-				peliculasFiltradas.add(p);
-			}
-		}
-		//llamada al metodo recusivo
-		ArrayList<ArrayList<Pelicula>> combinaciones= new ArrayList<ArrayList<Pelicula>>();
-		ArrayList<Pelicula> aux=new ArrayList<Pelicula>();
-		obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto, combinaciones, aux, peliculasFiltradas, 0);
-		return combinaciones;
+	        EdadRecomendada edadRecomendada, double presupuesto) {
+		
+		int minMinutos = HorasMin * 60;
+	    int maxMinutos = HorasMax * 60;
+	    
+	    ArrayList<Pelicula> peliculasFiltradas = new ArrayList<Pelicula>();
+	    for (Pelicula p : peliculas) {
+	        boolean generoValido = generosElegidos.isEmpty(); 
+	        for (Genero g : generosElegidos) {
+	            if (p.getGeneros().contains(g)) {
+	                generoValido = true;
+	                break;
+	            }
+	        }
+	        
+	        if (generoValido && p.getEdadRecomendada().ordinal() <= edadRecomendada.ordinal()) {
+	            peliculasFiltradas.add(p);
+	        }
+	    }
+
+	    ArrayList<ArrayList<Pelicula>> combinaciones = new ArrayList<ArrayList<Pelicula>>();
+	    ArrayList<Pelicula> aux = new ArrayList<Pelicula>();
+	    
+	    obtenerCombinacionesAux(minMinutos, maxMinutos, presupuesto, combinaciones, aux, peliculasFiltradas, 0, 0);
+	    return combinaciones;
 	}
-private void obtenerCombinacionesAux(int HorasMin, int HorasMax, double presupuesto, ArrayList<ArrayList<Pelicula>> combinaciones, 
-		ArrayList<Pelicula> aux, ArrayList<Pelicula> peliculas, int transcurrido) {
-	//CASO BASE: hemos encontrado una valida
-	if (transcurrido >= HorasMin && transcurrido <= HorasMax) {
-		if (!combinaciones.contains(aux)) {
-            combinaciones.add(new ArrayList<>(aux));
-        }
-    }
 
-    // CASO BASE: nos hemos pasado de tiempo o de presupuesto
-	else if (transcurrido > HorasMax || presupuesto < 0 ) {
-        return;
-    }
-	//CASO RECURSIVO
-    else {
-    	for (Pelicula p : peliculas) {
-            if (!aux.contains(p)) {
-                
-                if (p.getPrecio() <= presupuesto && (transcurrido + p.getDuracion()) <= HorasMax) {
-                    aux.add(p);
-                    obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto - p.getPrecio(), 
-                            combinaciones, aux, peliculas, transcurrido + p.getDuracion());
-                    aux.remove(aux.size() - 1);
-                }
-            }
-        }
-    }
 
-}
+	private void obtenerCombinacionesAux(int HorasMin, int HorasMax, double presupuesto, ArrayList<ArrayList<Pelicula>> combinaciones, 
+	        ArrayList<Pelicula> aux, ArrayList<Pelicula> peliculas, int transcurrido, int indice) {
+		
+		if (combinaciones.size() >= 100) {//para evitar que pete
+	        return;
+	    }
+	    // CASO BASE: el aux es una combinacion valida, lo añadimos al resultado
+	    if (transcurrido >= HorasMin && transcurrido <= HorasMax) {
+	        combinaciones.add(new ArrayList<>(aux));
+	    }
+
+	    //CASO BASE: no es valiudo, nos hemos pasado de presupuesto, indice o tiempo
+	    if (transcurrido > HorasMax || presupuesto < 0 || indice >= peliculas.size()) {
+	        return;
+	    }
+
+	    // RECURSIVIDAD
+	    for (int i = indice; i < peliculas.size(); i++) {
+	        Pelicula p = peliculas.get(i);
+	        
+	        if (p.getPrecio() <= presupuesto && (transcurrido + p.getDuracion()) <= HorasMax) {
+	            aux.add(p);
+	            obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto - p.getPrecio(), 
+	                    combinaciones, aux, peliculas, transcurrido + (int)p.getDuracion(), i + 1);
+	            
+	            aux.remove(aux.size() - 1); 
+	        }
+	    }
+	}
 	
 // metodo para que los combobox no queden demasiado grandes: IAg
 	private JPanel crearFilaFormulario(String texto, JComboBox<?> combo) {
