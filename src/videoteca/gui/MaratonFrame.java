@@ -8,6 +8,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -280,13 +283,50 @@ public class MaratonFrame extends JFrame{
 	    return combinacion;
 	}
 
-	private ArrayList<ArrayList<Pelicula>> obtenerCombinaciones(int min, int max, ArrayList<Genero> generosElegidos,
-			EdadRecomendada selectedItem, int value) {
-		// TODO Auto-generated method stub
-		return null;
+	private ArrayList<ArrayList<Pelicula>> obtenerCombinaciones(int HorasMin, int HorasMax, ArrayList<Genero> generosElegidos,
+			EdadRecomendada edadRecomendada, double presupuesto) {
+		//filtracion
+		ArrayList<Pelicula> peliculasFiltradas= new ArrayList<Pelicula>();
+		for (Pelicula p:peliculas) {
+			boolean añadir=false;
+			for (Genero g: generosElegidos) {
+				if(p.getGeneros().contains(g)) {
+					añadir=true;
+				}
+			}
+			if (añadir==true && p.getEdadRecomendada()==edadRecomendada) {
+				peliculasFiltradas.add(p);
+			}
+		}
+		//llamada al metodo recusivo
+		ArrayList<ArrayList<Pelicula>> combinaciones= new ArrayList<ArrayList<Pelicula>>();
+		ArrayList<Pelicula> aux=new ArrayList<Pelicula>();
+		obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto, combinaciones, aux, peliculasFiltradas, 0);
+		return combinaciones;
 	}
-
-	// metodo para que los combobox no queden demasiado grandes: IAg
+private void obtenerCombinacionesAux(int HorasMin, int HorasMax, double presupuesto, ArrayList<ArrayList<Pelicula>> combinaciones, 
+		ArrayList<Pelicula> aux, ArrayList<Pelicula> peliculas, int transcurrido) {
+	//CASO BASE: no hay peliculas que cumplan las especificaciones
+	if (peliculas.size()==0) {
+		return;
+	}
+	//CASO BASE: hemos encontrado una combinacion interesante
+	else if (presupuesto>0 && transcurrido<=HorasMax && transcurrido>=HorasMin && !combinaciones.contains(aux)) {
+		combinaciones.add(aux);
+	}
+	//CASO RECURSIVO:
+	else {
+		for (Pelicula p:peliculas) {
+			if (!aux.contains(p)) {
+				aux.add(p);
+				obtenerCombinacionesAux(HorasMin, HorasMax, presupuesto-p.getPrecio(), combinaciones, aux, peliculas, transcurrido+p.getDuracion());
+				aux.removeLast();
+			}
+		}
+	}
+}
+	
+// metodo para que los combobox no queden demasiado grandes: IAg
 	private JPanel crearFilaFormulario(String texto, JComboBox<?> combo) {
 	    JPanel p = new JPanel(new BorderLayout());
 	    p.setBackground(colorFondo);
