@@ -15,8 +15,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import videoteca.domain.EdadRecomendada;
@@ -42,117 +44,156 @@ public class MaratonFrame extends JFrame{
 	
 	
 	public MaratonFrame(VentanaInicioFrame ventanaInicio, ArrayList<Pelicula> peliculas) {
-		//ASIGNACION DE USUARIO Y PELICULAS POR HACER
-	    this.usuario=ventanaInicio.usuario;
-	    this.peliculas=peliculas;
+	    this.usuario = ventanaInicio.usuario;
+	    this.peliculas = peliculas;
 	    
-	    //Configuracion de la ventana
+	    // Configuración de ventana
 	    setTitle("Manta y Maraton");
-	    setDefaultCloseOperation(EXIT_ON_CLOSE);
-	    setSize(700, 700);
+	    setDefaultCloseOperation(HIDE_ON_CLOSE);
+	    setSize(750, 800);
 	    setLocationRelativeTo(null);
 	    setResizable(false);
 	    this.getContentPane().setBackground(colorFondo);
 	    setIconImage(new ImageIcon("Images/logo.png").getImage());
-	    
-	    //Layouts principales
 	    setLayout(new BorderLayout());
-	    //texto de pagina
-	    tituloPagina= new JLabel("Maraton y manta");
+
+	    // Título de ventana
+	    tituloPagina = new JLabel("Maraton y manta");
 	    tituloPagina.setFont(new Font("Arial", Font.BOLD, 30));
 	    tituloPagina.setForeground(colorPrincipal);
 	    tituloPagina.setHorizontalAlignment(JLabel.CENTER);
+	    tituloPagina.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 	    add(tituloPagina, BorderLayout.NORTH);
-	    //centro de la ventana
-	    centro= new JPanel(new BorderLayout());
+
+	    // Panel Centro: se ira repintando para mostrar o los filtros o las combinaciones de peliculas
+	    centro = new JPanel(new BorderLayout());
 	    centro.setOpaque(true);
-	    centro.setBackground(Color.black);
+	    centro.setBackground(colorFondo);
 	    add(centro, BorderLayout.CENTER);
-	    //FILTROS
-        panelFiltros = new JPanel(new java.awt.GridLayout(0, 2, 20, 25));
-        panelFiltros.setBackground(colorFondo);
-        panelFiltros.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        // GENEROS 
-        JPanel panelGeneros = new JPanel(new GridLayout(0, 2));
-        panelGeneros.setBackground(colorFondo);
-        generos = new ArrayList<>();
-        Font fuenteChecks = new Font("Arial", Font.PLAIN, 10);
-        for (Genero g : Genero.values()) {
-            JCheckBox act = new JCheckBox(g.toString());
-            act.setForeground(Color.WHITE);
-            act.setBackground(colorFondo);
-            act.setFont(fuenteChecks);
-            generos.add(act);
-            panelGeneros.add(act);
-        }
-        JLabel labelGeneros=new JLabel("Generos: ");
-        labelGeneros.setForeground(Color.white);
-        panelFiltros.add(labelGeneros);
-        panelFiltros.add(panelGeneros);
+	    // Filtros
+	    inicializarVistaFiltros();
+	}
 
-        // TIEMPO
-        Integer[] opcionesHoras = {1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-        horasMin = new JComboBox<>(opcionesHoras);
-        horasMax = new JComboBox<>(opcionesHoras);
-        horasMax.setSelectedItem(5);
-        
-        Dimension dimCombo = new Dimension(100, 30);
-        horasMin.setPreferredSize(dimCombo);
-        horasMax.setPreferredSize(dimCombo);
+	private void inicializarVistaFiltros() {
+	    centro.removeAll(); 
+	    
+	    JPanel contenedorFiltros = new JPanel(new BorderLayout());
+	    contenedorFiltros.setBackground(colorFondo);
+	    
+	    //texto de introduccion
+	    JTextArea introduccion = new JTextArea(
+	    	    "En esta ventana podrás descubrir cuáles son todas las combinaciones\n" +
+	    	    "de maratones que coinciden con lo que buscas! Para ello, solo tienes que introducir\n" +
+	    	    "tus preferencias en los siguientes filtros y pulsar el botón."
+	    	);
+	    introduccion.setEditable(false);
+	    introduccion.setBackground(colorFondo);
+	    introduccion.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+	    introduccion.setForeground(Color.gray);
+	    contenedorFiltros.add(introduccion, BorderLayout.NORTH);
 
-        JLabel horaMinLabel= new JLabel("Duracion minima del maraton: ");
-        horaMinLabel.setForeground(Color.white);
-        panelFiltros.add(horaMinLabel);
-        panelFiltros.add(horasMin);
-        JLabel horaMaxLabel= new JLabel("Duracion maxima del maraton: ");
-        horaMaxLabel.setForeground(Color.white);
-        panelFiltros.add(horaMaxLabel);
-        panelFiltros.add(horasMax);
+	    // FILTROS
+	    panelFiltros = new JPanel(new GridLayout(0, 1, 0, 15));
+	    panelFiltros.setBackground(colorFondo);
+	    panelFiltros.setBorder(BorderFactory.createEmptyBorder(10, 60, 10, 60));
 
-        // EDAD 
-        EdadRecomendada[] opcionesEdad= EdadRecomendada.values();
-        edad = new JComboBox<>(opcionesEdad);
-        JLabel labelEdad= new JLabel("Edad Recomendada: ");
-        labelEdad.setForeground(Color.white);
-        panelFiltros.add(edad);
+	    // Generos
+	    JPanel panelGeneros = new JPanel(new BorderLayout());
+	    panelGeneros.setBackground(colorFondo);
+	    JLabel labelGeneros = new JLabel("Géneros: ");
+	    labelGeneros.setForeground(Color.WHITE);
+	    labelGeneros.setPreferredSize(new Dimension(120, 20));
+	    JPanel panelOpciones = new JPanel(new GridLayout(0, 3));
+	    panelOpciones.setBackground(colorFondo);
+	    generos = new ArrayList<>();
+	    for (Genero g : Genero.values()) {
+	        JCheckBox act = new JCheckBox(g.toString());
+	        act.setForeground(Color.WHITE);
+	        act.setBackground(colorFondo);
+	        act.setFont(new Font("Arial", Font.PLAIN, 10));
+	        generos.add(act);
+	        panelOpciones.add(act);
+	    }
+	    panelGeneros.add(labelGeneros, BorderLayout.WEST);
+	    panelGeneros.add(panelOpciones, BorderLayout.CENTER);
+	    panelFiltros.add(panelGeneros);
 
-        // PRESUPUESTO: 
-        
-        presupuestoSlider = new JSlider(0, 300, 60);
-        presupuestoSlider.setBackground(colorFondo);
-        presupuestoSlider.setForeground(Color.WHITE);
-        presupuestoSlider.setMajorTickSpacing(50); 
-        presupuestoSlider.setPaintTicks(true); 
-        presupuestoSlider.setPaintLabels(true); 
+	    // Duracion
+	    panelFiltros.add(crearFilaFormulario("Duración mínima (h):", horasMin = new JComboBox<>(new Integer[]{1,2,3,4,5,6, 7, 8, 9, 10, 11, 12, 13, 14})));
+	    panelFiltros.add(crearFilaFormulario("Duración máxima (h):", horasMax = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7, 8, 9, 10, 11, 12, 13, 14, 15})));
+	    horasMax.setSelectedItem(5);
+	    panelFiltros.add(crearFilaFormulario("Edad Recomendada:", edad = new JComboBox<>(EdadRecomendada.values())));
 
-        presupuestoLabel = new JLabel("Presupuesto: 60€");
-        presupuestoLabel.setForeground(colorPrincipal);
-        presupuestoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+	    // FILA PRESUPUESTO: IAg
+	    JPanel filaPres = new JPanel(new BorderLayout(10, 0));
+	    filaPres.setBackground(colorFondo);
+	    presupuestoLabel = new JLabel("Presupuesto: 60€");
+	    presupuestoLabel.setForeground(colorPrincipal);
+	    presupuestoLabel.setPreferredSize(new Dimension(140, 20));
+	    presupuestoSlider = new JSlider(0, 300, 60);
+	    presupuestoSlider.setBackground(colorFondo);
+	    presupuestoSlider.setPaintTicks(true);
+	    presupuestoSlider.setPaintLabels(true);
+	    presupuestoSlider.setMajorTickSpacing(100);
+	    presupuestoSlider.addChangeListener(e -> presupuestoLabel.setText("Presupuesto: " + presupuestoSlider.getValue() + "€"));
+	    
+	    filaPres.add(presupuestoLabel, BorderLayout.WEST);
+	    filaPres.add(presupuestoSlider, BorderLayout.CENTER);
+	    panelFiltros.add(filaPres);
 
-        // IA: Evento para que el label se actualice al mover el slider
-        presupuestoSlider.addChangeListener(e -> {
-            presupuestoLabel.setText("Presupuesto: " + presupuestoSlider.getValue() + "€");
-        });
-        panelFiltros.add(presupuestoLabel); 
-        panelFiltros.add(presupuestoSlider);
+	    contenedorFiltros.add(panelFiltros, BorderLayout.CENTER);
+	    centro.add(contenedorFiltros, BorderLayout.CENTER);
 
-        // boton para filtrar
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelBoton.setBackground(colorFondo);
-        panelBoton.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
-        
-        JButton btnGenerar = new JButton("ENCONTRAR MI MARATÓN");
-        btnGenerar.setFont(new Font("Arial", Font.BOLD, 18));
-        btnGenerar.setBackground(colorPrincipal);
-        btnGenerar.setForeground(Color.WHITE);
-        btnGenerar.setFocusPainted(false);
-        btnGenerar.setPreferredSize(new Dimension(300, 50)); 
-        
-        panelBoton.add(btnGenerar);
-        
-        centro.add(panelFiltros, BorderLayout.CENTER);
-        add(panelBoton, BorderLayout.SOUTH);
-        
+	    // BOTÓN 
+	    JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	    panelBoton.setBackground(colorFondo);
+	    panelBoton.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+	    JButton btnGenerar = new JButton("ENCONTRAR MI MARATÓN");
+	    btnGenerar.setPreferredSize(new Dimension(300, 45));
+	    btnGenerar.setBackground(colorPrincipal);
+	    btnGenerar.setForeground(Color.WHITE);
+	    btnGenerar.setFont(new Font("Arial", Font.BOLD, 16));
+	    
+	    // EVENTO DEL BOTÓN
+	    btnGenerar.addActionListener(e -> {
+	        int min = (int) horasMin.getSelectedItem();
+	        int max = (int) horasMax.getSelectedItem();
+	        
+	        // Corregir automaticamente si el usuario mete la duracion maxima menor que la minima
+	        if (min > max) {
+	           
+	            horasMax.setSelectedItem(min);
+	            max = min; 
+	            
+	            JOptionPane.showMessageDialog(this, "Se ha cambiado la duracion maxima(se ha igualado con la minima) ya que era invalida: era menor que la duracion minima.");
+	        }
+	        
+	        // Aquí ya lanzas tu lógica sabiendo que min <= max
+	        
+	    });
+	    panelBoton.add(btnGenerar);
+	    centro.add(panelBoton, BorderLayout.SOUTH);
+
+	    centro.revalidate();
+	    centro.repaint();
+	}
+
+	// metodo para que los combobox no queden demasiado grandes
+	private JPanel crearFilaFormulario(String texto, JComboBox<?> combo) {
+	    JPanel p = new JPanel(new BorderLayout());
+	    p.setBackground(colorFondo);
+	    JLabel l = new JLabel(texto);
+	    l.setForeground(Color.WHITE);
+	    l.setPreferredSize(new Dimension(180, 20));
+	    
+	    JPanel pCombo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    pCombo.setBackground(colorFondo);
+	    combo.setPreferredSize(new Dimension(120, 25));
+	    pCombo.add(combo);
+	    
+	    p.add(l, BorderLayout.WEST);
+	    p.add(pCombo, BorderLayout.CENTER);
+	    return p;
 	}
 }
