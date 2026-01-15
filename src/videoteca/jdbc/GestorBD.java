@@ -132,6 +132,9 @@ public class GestorBD {
 	        stmt.execute(sqlActor);
 	        System.out.println("Tabla ACTOR creada o ya existe");
 	        
+	        stmt.execute(sqlPeliculaGenero);
+	        System.out.println("Tabla PELICULA_GENERO creada o ya existe");
+	        
 	        stmt.execute(sqlEdadRecomendada);
 	        System.out.println("Tabla EDAD_RECOMENDADA creada o ya existe");
 	        //Hay que inicializar las edades recomendadas para que pelicula no de un error
