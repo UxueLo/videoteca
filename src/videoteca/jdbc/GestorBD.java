@@ -55,18 +55,25 @@ public class GestorBD {
 				"FOREIGN KEY (NOMBRE_USUARIO) REFERENCES USUARIO(NOMBRE), " + 
 				"FOREIGN KEY (NOMBRE_PELICULA) REFERENCES PELICULA(TITULO) ) ";
 		
-		// Pelicula (CAMBIADA)
+		// Edad Recomendada (NUEVA TABLA)
+		String sqlEdadRecomendada = "CREATE TABLE IF NOT EXISTS EDAD_RECOMENDADA (" +
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+				"CODIGO TEXT NOT NULL UNIQUE," +
+				"DESCRIPCION TEXT NOT NULL," +
+				"EDAD_MINIMA INTEGER NOT NULL)";
+		
+		// Pelicula (CAMBIADA-EdadRecomendada)
 		String sqlPelicula = "CREATE TABLE IF NOT EXISTS PELICULA (" +
 				"ID INTEGER PRIMARY KEY AUTOINCREMENT," +
 				"TITULO TEXT NOT NULL UNIQUE," +
 				"ID_DIRECTOR INTEGER NOT NULL," +
 				"AÑO INTEGER NOT NULL," +
 				"DURACION INTEGER NOT NULL," +
-				"EDAD_RECOMENDADA TEXT NOT NULL," +
+				"ID_EDAD_RECOMENDADA INTEGER NOT NULL," +
 				"PUNTUACION DOUBLE NOT NULL," +
 				"PRECIO DOUBLE NOT NULL," +
-				"FOREIGN KEY (ID_DIRECTOR) REFERENCES DIRECTOR(ID))";
-		
+				"FOREIGN KEY (ID_DIRECTOR) REFERENCES DIRECTOR(ID)," +
+				"FOREIGN KEY (ID_EDAD_RECOMENDADA) REFERENCES EDAD_RECOMENDADA(ID))";
 		// Reserva
 	    String sqlReserva = "CREATE TABLE IF NOT EXISTS RESERVA (" +
 	            "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -125,7 +132,10 @@ public class GestorBD {
 	        stmt.execute(sqlActor);
 	        System.out.println("Tabla ACTOR creada o ya existe");
 	        
-	        //PELICULA (depende de DIRECTOR)
+	        stmt.execute(sqlEdadRecomendada);
+	        System.out.println("Tabla EDAD_RECOMENDADA creada o ya existe");
+	        
+	        //PELICULA (depende de DIRECTOR y EdadRecomendada)
 	        stmt.execute(sqlPelicula);
 	        System.out.println("Tabla PELICULA creada o ya existe");
 	        
@@ -151,6 +161,7 @@ public class GestorBD {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	//Funciones de gestion del usuario
 
@@ -506,6 +517,64 @@ public class GestorBD {
 		
 	}
 	
+	//Funciones de Edad Recomendada
+	/**
+	 * Inicializa los registros de edades recomendadas en la base de datos
+	 * Solo se ejecuta si la tabla está vacía
+	 */
+	private void inicializarEdadesRecomendadas(Connection con) throws SQLException {
+		// Verifica si ya existe
+		String sqlCheck = "SELECT COUNT(*) FROM EDAD_RECOMENDADA";
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(sqlCheck);
+		
+		if (rs.next() && rs.getInt(1) > 0) {
+			// Ya existe
+			rs.close();
+			stmt.close();
+			System.out.println("Edades recomendadas ya inicializadas");
+			return;
+		}
+		rs.close();
+		stmt.close();
+		
+		// Inserta las edades recomendadas basadas en el enum
+		String sqlInsert = "INSERT INTO EDAD_RECOMENDADA (CODIGO, DESCRIPCION, EDAD_MINIMA) VALUES (?, ?, ?)";
+		PreparedStatement pst = con.prepareStatement(sqlInsert);
+		
+		// TP - Todos los Públicos
+		pst.setString(1, "TP");
+		pst.setString(2, "Todos los Públicos");
+		pst.setInt(3, 0);
+		pst.executeUpdate();
+		
+		// PLUS7
+		pst.setString(1, "PLUS7");
+		pst.setString(2, "Mayores de 7 años");
+		pst.setInt(3, 7);
+		pst.executeUpdate();
+		
+		// PLUS13
+		pst.setString(1, "PLUS13");
+		pst.setString(2, "Mayores de 13 años");
+		pst.setInt(3, 13);
+		pst.executeUpdate();
+		
+		// PLUS16
+		pst.setString(1, "PLUS16");
+		pst.setString(2, "Mayores de 16 años");
+		pst.setInt(3, 16);
+		pst.executeUpdate();
+		
+		// PLUS18
+		pst.setString(1, "PLUS18");
+		pst.setString(2, "Mayores de 18 años");
+		pst.setInt(3, 18);
+		pst.executeUpdate();
+		
+		pst.close();
+		System.out.println("Edades recomendadas inicializadas correctamente");
+	}
 	
 	
 	// Funciones de peliculas
@@ -538,7 +607,7 @@ public class GestorBD {
 	}
 
 	/**
-	 * Registra una nueva película en la base de datos (CAMBIADA)
+	 * Registra una nueva película en la base de datos (ACTUALIZADA CON EDAD_RECOMENDADA)
 	 */
 	public boolean registrarPelicula(Pelicula pelicula) {
 	    boolean registrado = false;
@@ -552,18 +621,21 @@ public class GestorBD {
 	        con.setAutoCommit(false); // Iniciar transacción
 	        
 	        try {
-	            //Obtener codigo director
+	            // Obtener ID del director
 	            int idDirector = insertarOObtenerDirector(con, pelicula.getDirector());
 	            
-	            // Insertar pelicula
-	            String sqlPelicula = "INSERT INTO PELICULA (TITULO, ID_DIRECTOR, AÑO, DURACION, EDAD_RECOMENDADA, PUNTUACION, PRECIO) " +
+	            // Obtener ID de edad recomendada
+	            int idEdadRecomendada = obtenerIdEdadRecomendada(con, pelicula.getEdadRecomendada().name());
+	            
+	            // Insertar película
+	            String sqlPelicula = "INSERT INTO PELICULA (TITULO, ID_DIRECTOR, AÑO, DURACION, ID_EDAD_RECOMENDADA, PUNTUACION, PRECIO) " +
 	                                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 	            PreparedStatement pstPelicula = con.prepareStatement(sqlPelicula, Statement.RETURN_GENERATED_KEYS);
 	            pstPelicula.setString(1, pelicula.getTitulo());
 	            pstPelicula.setInt(2, idDirector);
 	            pstPelicula.setInt(3, pelicula.getAñoLanzamiento());
 	            pstPelicula.setInt(4, pelicula.getDuracion());
-	            pstPelicula.setString(5, pelicula.getEdadRecomendada().name());
+	            pstPelicula.setInt(5, idEdadRecomendada);
 	            pstPelicula.setDouble(6, pelicula.getPuntuacionMedia());
 	            pstPelicula.setDouble(7, pelicula.getPrecio());
 	            
@@ -602,15 +674,17 @@ public class GestorBD {
 	    
 	    return registrado;
 	}
+
 	/**
-	 * Obtiene una película por su título (CAMBIADA)
+	 * Obtiene una película por su título (ACTUALIZADA CON EDAD_RECOMENDADA)
 	 */
 	public Pelicula obtenerPelicula(String titulo) {
 	    Pelicula pelicula = null;
 	    
-	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE " +
+	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE, e.CODIGO as EDAD_CODIGO " +
 	                 "FROM PELICULA p " +
 	                 "INNER JOIN DIRECTOR d ON p.ID_DIRECTOR = d.ID " +
+	                 "INNER JOIN EDAD_RECOMENDADA e ON p.ID_EDAD_RECOMENDADA = e.ID " +
 	                 "WHERE p.TITULO = ?";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
@@ -624,7 +698,8 @@ public class GestorBD {
 	            String director = rs.getString("DIRECTOR_NOMBRE");
 	            int año = rs.getInt("AÑO");
 	            int duracion = rs.getInt("DURACION");
-	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
+	            String edadCodigo = rs.getString("EDAD_CODIGO");
+	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(edadCodigo);
 	            double puntuacion = rs.getDouble("PUNTUACION");
 	            double precio = rs.getDouble("PRECIO");
 	            
@@ -649,14 +724,15 @@ public class GestorBD {
 	}
 
 	/**
-	 * Carga todas las películas de la base de datos (CAMBIADA)
+	 * Carga todas las películas de la base de datos (ACTUALIZADA CON EDAD_RECOMENDADA)
 	 */
 	public ArrayList<Pelicula> cargarPeliculas() {
 	    ArrayList<Pelicula> peliculas = new ArrayList<>();
 	    
-	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE " +
+	    String sql = "SELECT p.*, d.NOMBRE as DIRECTOR_NOMBRE, e.CODIGO as EDAD_CODIGO " +
 	                 "FROM PELICULA p " +
-	                 "INNER JOIN DIRECTOR d ON p.ID_DIRECTOR = d.ID";
+	                 "INNER JOIN DIRECTOR d ON p.ID_DIRECTOR = d.ID " +
+	                 "INNER JOIN EDAD_RECOMENDADA e ON p.ID_EDAD_RECOMENDADA = e.ID";
 	    
 	    try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
 	         Statement stmt = con.createStatement()) {
@@ -669,7 +745,8 @@ public class GestorBD {
 	            String director = rs.getString("DIRECTOR_NOMBRE");
 	            int año = rs.getInt("AÑO");
 	            int duracion = rs.getInt("DURACION");
-	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(rs.getString("EDAD_RECOMENDADA"));
+	            String edadCodigo = rs.getString("EDAD_CODIGO");
+	            EdadRecomendada edadRecomendada = EdadRecomendada.valueOf(edadCodigo);
 	            double puntuacion = rs.getDouble("PUNTUACION");
 	            double precio = rs.getDouble("PRECIO");
 	            
@@ -849,6 +926,30 @@ public class GestorBD {
 	    }
 	    
 	    return actualizado;
+	}
+	
+	/**
+	 * Obtiene el ID de una edad recomendada por su código
+	 */
+	private int obtenerIdEdadRecomendada(Connection con, String codigo) throws SQLException {
+	    String sql = "SELECT ID FROM EDAD_RECOMENDADA WHERE CODIGO = ?";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setString(1, codigo);
+	    ResultSet rs = pst.executeQuery();
+	    
+	    int id = -1;
+	    if (rs.next()) {
+	        id = rs.getInt("ID");
+	    }
+	    
+	    rs.close();
+	    pst.close();
+	    
+	    if (id == -1) {
+	        throw new SQLException("No se encontró la edad recomendada con código: " + codigo);
+	    }
+	    
+	    return id;
 	}
 	
 	//Funciones de Reserva
