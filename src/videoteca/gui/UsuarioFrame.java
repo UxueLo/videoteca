@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import videoteca.domain.Pelicula;
 import videoteca.domain.Reserva;
 import videoteca.domain.Usuario;
+import videoteca.io.GestionImagenes;
 import videoteca.jdbc.GestorBD;
 
 public class UsuarioFrame extends JFrame{
@@ -98,6 +99,7 @@ public class UsuarioFrame extends JFrame{
 		
 		//JTables central
 		tablaPeliculas = new JTable(modeloTablaPeliculas);
+		tablaPeliculas.setRowHeight(100);
 		tablaPeliculas.getTableHeader().setReorderingAllowed(false);
 		tablaPeliculas.setDefaultRenderer(Object.class, new MiRendererPeliculas());
 		
@@ -252,12 +254,13 @@ public class UsuarioFrame extends JFrame{
 
 	private void cargarPeliculas() {
 	    modeloTablaPeliculas.setColumnIdentifiers(new Object[] {
-	            "Título", "Fecha de Reserva", "Fecha de Devolución"
+	            "Poster", "Título", "Fecha de Reserva", "Fecha de Devolución"
 	        });
 		
 		ArrayList<Reserva> listaReservas = gestor.obtenerReservasDeUsuario(usuario);
 		for(Reserva r : listaReservas) {
-			modeloTablaPeliculas.addRow(new Object[] {r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
+			ImageIcon poster= (ImageIcon) GestionImagenes.cargarImagen(r.getPelicula().getTitulo(), 60, 100).getIcon();
+			modeloTablaPeliculas.addRow(new Object[] {poster, r.getPelicula().getTitulo(),r.getFechaReserva(),r.getFechaDevolucion()} );
 		}
 
 	}
@@ -299,26 +302,38 @@ public class UsuarioFrame extends JFrame{
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if(column==0) {
-				setHorizontalAlignment(JLabel.LEFT);
-			}else {
-				setHorizontalAlignment(JLabel.CENTER);
-			}
-			if(isSelected) {
-				setBackground(new Color(62, 71, 82));
-				setForeground(Color.white);
-			}else {
-				if (row%2==0) {
-					setBackground(new Color(232, 226, 220));
-					setForeground(Color.black);
-				}else {
-					setBackground(Color.white);
-					setForeground(Color.black);
-				}
-			}
-			
-			
-			return this;
+
+	        if (column == 0) {
+	            setText(""); 
+	            if (value instanceof ImageIcon) {
+	                setIcon((ImageIcon) value); 
+	            }
+	            setHorizontalAlignment(JLabel.CENTER);
+	        } 
+	        
+	        else {
+	            setIcon(null);
+	            if (column == 1) { 
+	                setHorizontalAlignment(JLabel.LEFT);
+	            } else { 
+	                setHorizontalAlignment(JLabel.CENTER);
+	            }
+	        }
+
+	        if (isSelected) {
+	            setBackground(new Color(62, 71, 82));
+	            setForeground(Color.white);
+	        } else {
+	            if (row % 2 == 0) {
+	                setBackground(new Color(232, 226, 220));
+	                setForeground(Color.black);
+	            } else {
+	                setBackground(Color.white);
+	                setForeground(Color.black);
+	            }
+	        }
+	        
+	        return this;
 		}
 	}
 	
