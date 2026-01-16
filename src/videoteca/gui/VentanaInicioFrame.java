@@ -147,7 +147,7 @@ public class VentanaInicioFrame extends JFrame{
 		menu.setPreferredSize(new Dimension(300, 0));
 		menu.setLayout(new GridLayout(8,1, 30, 30));
 		
-		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catálogo", "Carrito", "Maraton y manta", "Prueba Suerte", "Cerrar sesion"};
+		String [] opciones = {"Usuario","Iniciar Sesion", "Registrarse", "Catálogo", "Carrito", "Maratón y manta", "Prueba Suerte", "Cerrar sesion"};
 		for (String opcion:opciones) {
 			JLabel campo= new JLabel();
 			//si es el usuario: foto y nombre
