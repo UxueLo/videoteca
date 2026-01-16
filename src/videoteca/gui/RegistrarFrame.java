@@ -2,6 +2,8 @@ package videoteca.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -133,11 +135,21 @@ public class RegistrarFrame extends JFrame{
 			labelFechaNacimiento.setBounds(80,290,230,30);;
 			
 			//fechaNacimiento
-			//TODO añadir yyyy-mm-dd
 			fechaNacimiento = new JTextField();
 			fechaNacimiento.setForeground(colorTexto);
 			fechaNacimiento.setFont(fuenteTexto);
 			fechaNacimiento.setBounds(310,290,430,35);
+			//añadir yyyy-mm-dd
+			fechaNacimiento.setText("2000-01-01");
+			// Listener para que inicie sesion al darle a Enter
+			fechaNacimiento.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						registrarUsuario();
+					}
+				}
+			});
 			
 			//botonRegistrarse
 			botonIniciarSesion = new JButton();
