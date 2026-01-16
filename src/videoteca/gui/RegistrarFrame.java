@@ -140,7 +140,7 @@ public class RegistrarFrame extends JFrame{
 			fechaNacimiento.setFont(fuenteTexto);
 			fechaNacimiento.setBounds(310,290,430,35);
 			//añadir yyyy-mm-dd
-			fechaNacimiento.setText("2000-01-01");
+			fechaNacimiento.setText("YYYY-MM-DD");
 			// Listener para que inicie sesion al darle a Enter
 			fechaNacimiento.addKeyListener(new KeyAdapter() {
 				@Override
