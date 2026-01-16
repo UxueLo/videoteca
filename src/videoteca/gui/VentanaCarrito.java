@@ -56,8 +56,10 @@ public class VentanaCarrito extends JFrame {
 
         // PANEL CENTRAL DEL CARRITO
         panelCarrito = new JPanel();
-        panelCarrito.setLayout(new BoxLayout(panelCarrito, BoxLayout.Y_AXIS));
+        panelCarrito.setLayout(new GridLayout(0, 4, 20, 20)); // 0 filas (ilimitadas), 4 columnas, espacio de 20px
         panelCarrito.setBackground(new Color(32,32,32));
+        panelCarrito.setBorder(new EmptyBorder(20, 20, 20, 20));
+        
         JScrollPane scroll = new JScrollPane(panelCarrito);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -95,43 +97,50 @@ public class VentanaCarrito extends JFrame {
         double total = 0;
 
         for (Pelicula p : carrito) {
-            JPanel panelPeli = new JPanel(new BorderLayout());
-            panelPeli.setBackground(Color.DARK_GRAY);
-            panelPeli.setBorder(new EmptyBorder(10, 10, 10, 10));
+            // Panel individual para cada película
+            JPanel panelPeli = new JPanel();
+            panelPeli.setLayout(new BoxLayout(panelPeli, BoxLayout.Y_AXIS));
+            panelPeli.setBackground(new Color(60, 60, 60));
+            panelPeli.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(111, 130, 179), 2),
+                new EmptyBorder(15, 15, 15, 15)
+            ));
 
-            // Imagen cargada mediante GestionImagenes
+            // Imagen (poster)
             JLabel lblImg = GestionImagenes.cargarImagen(p.getTitulo(), 150, 210);
-            panelPeli.add(lblImg, BorderLayout.WEST);
+            lblImg.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelPeli.add(lblImg);
+            panelPeli.add(Box.createVerticalStrut(10));
 
-            // Info de la película
-            JPanel info = new JPanel();
-            info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-            info.setBackground(Color.DARK_GRAY);
-
+            // Nombre de la película
             JLabel nombre = new JLabel(p.getTitulo());
             nombre.setForeground(Color.WHITE);
             nombre.setFont(new Font("SansSerif", Font.BOLD, 16));
+            nombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelPeli.add(nombre);
+            panelPeli.add(Box.createVerticalStrut(5));
 
+            // Año
             JLabel anyo = new JLabel("Año: " + p.getAñoLanzamiento());
             anyo.setForeground(Color.WHITE);
+            anyo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelPeli.add(anyo);
+            panelPeli.add(Box.createVerticalStrut(5));
 
+            // Duración
             JLabel duracion = new JLabel("Duración: " + p.getDuracion() + " min");
             duracion.setForeground(Color.WHITE);
-
-            JLabel precio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()));
-            precio.setForeground(Color.WHITE);
-            Font fuente= new Font("Arial", Font.BOLD, 18);
-            nombre.setAlignmentX(Component.CENTER_ALIGNMENT);
-            anyo.setAlignmentX(Component.CENTER_ALIGNMENT);
             duracion.setAlignmentX(Component.CENTER_ALIGNMENT);
-            precio.setAlignmentX(Component.CENTER_ALIGNMENT);
-            
-            info.add(nombre);
-            info.add(anyo);
-            info.add(duracion);
-            info.add(precio);
+            panelPeli.add(duracion);
+            panelPeli.add(Box.createVerticalStrut(5));
 
-            panelPeli.add(info, BorderLayout.CENTER);
+            // Precio
+            JLabel precio = new JLabel(String.format("Precio: %.2f €", p.getPrecio()));
+            precio.setForeground(new Color(111, 130, 179));
+            precio.setFont(new Font("Arial", Font.BOLD, 16));
+            precio.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelPeli.add(precio);
+            panelPeli.add(Box.createVerticalStrut(10));
 
             // Botón quitar
             JButton btnQuitar = new JButton("Quitar");
@@ -143,7 +152,6 @@ public class VentanaCarrito extends JFrame {
             panelPeli.add(btnQuitar, BorderLayout.EAST);
 
             panelCarrito.add(panelPeli);
-            panelCarrito.add(Box.createVerticalStrut(15));
 
             total += p.getPrecio();
         }
