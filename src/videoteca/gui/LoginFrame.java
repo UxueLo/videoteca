@@ -2,6 +2,8 @@ package videoteca.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -90,6 +92,15 @@ public class LoginFrame extends JFrame{
 		contraseña.setForeground(colorTexto);
 		contraseña.setFont(fuenteTexto);
 		contraseña.setBounds(240,200,480,40);
+		// Listener para que inicie sesion al darle a Enter en contraseña
+		contraseña.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					iniciarSesion();
+				}
+			}
+		});
 		
 		//botonIniciarSesion
 		botonInicarSesion = new JButton();
