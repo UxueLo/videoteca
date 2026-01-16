@@ -267,11 +267,17 @@ public class UsuarioFrame extends JFrame{
 
 	private void inicializarPanelUsuario() {
 		
-		//Icono usuario
-		ImageIcon iconoUsuario = new ImageIcon("Images/iconoUsuario.png");
-		JLabel labelIconoUsuario = new JLabel();
-		labelIconoUsuario.setIcon(iconoUsuario);
-		labelIconoUsuario.setBounds(10,5,70,70);
+	    //Icono usuario
+	    ImageIcon iconoUsuarioOriginal = new ImageIcon("Images/iconoUsuario.png");
+	    // Escalar la imagen a un tamaño más grande y apropiado
+	    java.awt.Image imagenEscalada = iconoUsuarioOriginal.getImage().getScaledInstance(90, 90, java.awt.Image.SCALE_SMOOTH);
+	    ImageIcon iconoUsuario = new ImageIcon(imagenEscalada);
+	    
+	    JLabel labelIconoUsuario = new JLabel();
+	    labelIconoUsuario.setIcon(iconoUsuario);
+	    labelIconoUsuario.setBounds(150, 10, 90, 90); // Ajustado el tamaño y posición
+	    labelIconoUsuario.setHorizontalAlignment(JLabel.CENTER);
+	    labelIconoUsuario.setVerticalAlignment(JLabel.CENTER);
 		
 		//Labels datos usuario
 		JLabel holaUsuario = new JLabel(" Hola! "+this.usuario.getNombre());
